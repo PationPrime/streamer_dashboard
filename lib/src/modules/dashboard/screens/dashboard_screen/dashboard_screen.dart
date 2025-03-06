@@ -22,23 +22,5 @@ class _DashboardScreenState extends State<DashboardScreen> {
             ),
           ],
         ),
-        //   slivers: [
-        // SliverList.separated(
-        //   itemBuilder: (context, index) => Container(
-        //     height: 100,
-        //     color: Color.fromRGBO(
-        //       Random().nextInt(255),
-        //       Random().nextInt(255),
-        //       Random().nextInt(255),
-        //       1,
-        //     ),
-        //   ),
-        //   separatorBuilder: (_, __) => const SizedBox(
-        //     height: 15,
-        //   ),
-        //   itemCount: 100,
-        // )
-        //   ],
-        // ),
       );
 }

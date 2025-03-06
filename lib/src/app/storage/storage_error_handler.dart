@@ -5,10 +5,8 @@ import '../errors/errors.dart';
 import '../failure/failure.dart';
 
 class StorageErrorHandler extends ErrorHandler {
-  /// Конструктор класса [StorageErrorHandler]
   const StorageErrorHandler();
 
-  /// Переопределение карты ошибок типа [Failure]
   @protected
   @override
   Map<String, Failure Function(ApiError)> get errorCodeToFailure => {
@@ -16,4 +14,7 @@ class StorageErrorHandler extends ErrorHandler {
               message: apiError.message,
             ),
       };
+
+  @override
+  List<String> get connectionTimeoutExcludedUris => [];
 }

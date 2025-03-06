@@ -1,4 +1,4 @@
-part of 'twitch_authorization_contoller.dart';
+part of 'twitch_authorization_controller.dart';
 
 final class TwitchAuthorizationInitialState
     extends BaseAuthorizationInitialState {}

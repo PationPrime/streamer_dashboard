@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
@@ -52,5 +54,7 @@ class MainV1TokenModel extends Equatable {
   factory MainV1TokenModel.fromJson(Map<String, dynamic> json) =>
       _$MainV1TokenModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$MainV1TokenModelToJson(this);
+  Map<String, dynamic> toMap() => _$MainV1TokenModelToJson(this);
+
+  String toJson() => jsonEncode(toMap());
 }

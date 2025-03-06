@@ -4,19 +4,19 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/window.dart';
 import 'package:flutter_acrylic/window_effect.dart';
-import 'package:streamer_dashboard/src/app/api_client/client/client.dart';
 import 'package:streamer_dashboard/src/app/app.dart';
 import 'package:streamer_dashboard/src/app/router/app_router_provider.dart';
 import 'package:streamer_dashboard/src/app/tools/app_logger.dart';
 import 'package:window_manager/window_manager.dart';
 
+import '../api_client/client/concrete_client.dart';
 import '../app_sytem_tray/app_sytem_tray.dart';
 import '../repositories/repositories.dart';
 import '../storage/storage.dart';
 
 abstract final class AppModule {
   static final _apiClient = ConcreteApiClient.singleton();
-  static final _secureLocalStorage = AppSecureStorage.instance;
+  static final _appSecureLocalStorage = AppSecureStorage.instance;
   static final _router = AppRouterProvider.instance;
   static const _appLogger = AppLogger(where: 'AppModule');
 
@@ -24,7 +24,9 @@ abstract final class AppModule {
     'donations': DonationsRepository(),
     'authentication': AuthenticationRepository(
       _apiClient,
-      _secureLocalStorage,
+    ),
+    'twitch_api': TwitchApiRepository(
+      _apiClient,
     ),
   };
 
@@ -42,6 +44,7 @@ abstract final class AppModule {
             router: _router,
             apiClient: _apiClient,
             repositories: _repositories,
+            appSecureStorage: _appSecureLocalStorage,
           ),
         );
       },

@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 
-import '../api_client/client/client.dart';
+import '../api_client/client/concrete_client.dart';
 import '../errors/errors.dart';
 
 abstract interface class BaseRepositoryInterface {

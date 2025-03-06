@@ -1,12 +1,11 @@
 part of 'authentication_repository_interface.dart';
 
-class AuthenticationRepository implements AuthenticationRepositoryInterface {
+final class AuthenticationRepository
+    implements AuthenticationRepositoryInterface {
   final ConcreteApiClient _apiClient;
-  final LocalStorageInterface _localStorage;
 
   AuthenticationRepository(
     this._apiClient,
-    this._localStorage,
   );
 
   @override
@@ -20,19 +19,23 @@ class AuthenticationRepository implements AuthenticationRepositoryInterface {
     required TwitchLoginDto twitchLoginDto,
   }) async {
     try {
-      final response = await _apiClient.twitchApiV1.post(
+      final response = await _apiClient.twitchAuthClient.post(
         'token',
         data: twitchLoginDto.toMap(),
       );
 
       final data = response.data;
-      final twitchTokenModel = TwitchTokenModel.fromJson(data);
+
+      final twitchTokenModel = TwitchTokenModel.fromJsonWithLastUpdateTime(
+        data,
+      );
 
       return Right(twitchTokenModel);
     } catch (error, stackTrace) {
       return Left(
         errorHandler.handleError(
           error,
+          stackTrace: stackTrace,
         ),
       );
     }

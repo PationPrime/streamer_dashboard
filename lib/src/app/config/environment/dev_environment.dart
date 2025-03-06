@@ -8,5 +8,6 @@ class DevEnvironment extends AppEnvironment {
           receiveTimeout: DevelopConfig.receiveTimeout,
           defaultLocale: DevelopConfig.defaultLocale,
           twitchAuthBaseUrl: DevelopConfig.twitchAuthBaseUrl,
+          twitchApiBaseUrl: DevelopConfig.twitchApiBaseUrl,
         );
 }

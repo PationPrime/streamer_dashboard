@@ -12,6 +12,9 @@ environment_config:
     twitchAuthBaseUrl:
       type: String
       default: https://id.twitch.tv/oauth2/
+    twitchApiBaseUrl:
+      type: String
+      default: https://api.twitch.tv/
     connectTimeout:
       type: int
       default: 15000

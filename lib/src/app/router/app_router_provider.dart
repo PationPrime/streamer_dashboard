@@ -1,6 +1,7 @@
 import 'package:go_router/go_router.dart';
 import 'package:streamer_dashboard/src/app/router/navigation_path.dart';
 import 'package:streamer_dashboard/src/app/router/root_wrapper_route.dart';
+import 'package:streamer_dashboard/src/modules/profiles/screens/profiles_screen/profiles_screen.dart';
 
 import '../../modules/authentication/module.dart';
 import '../../modules/dashboard/module.dart';

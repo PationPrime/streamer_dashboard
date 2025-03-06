@@ -23,7 +23,7 @@ class AppSecureStorage implements LocalStorageInterface {
   Future<void> clearAllData() async {}
 
   @override
-  Future<void> deleteToken() {
+  Future<void> deleteMainApiV1Token() {
     throw UnimplementedError();
   }
 
@@ -75,7 +75,7 @@ class AppSecureStorage implements LocalStorageInterface {
 
       final tokenDataMap = jsonDecode(tokenDataJson) as Map<String, dynamic>;
 
-      return TwitchTokenModel.fromJson(
+      return TwitchTokenModel.fromJsonWithLastUpdateTime(
         tokenDataMap,
       );
     } catch (error, stackTrace) {
@@ -83,6 +83,21 @@ class AppSecureStorage implements LocalStorageInterface {
         'Error getting twitch token: $error',
         stackTrace: stackTrace,
         lexicalScope: 'getTwitchToken method',
+      );
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> deleteTwitchToken() async {
+    try {
+      await _secureStorage.delete(key: 'twitch_token');
+    } catch (error, stacTrace) {
+      _appLogger.logError(
+        'Error deleting twitch token: $error',
+        stackTrace: stacTrace,
+        lexicalScope: 'deleteTwitchToken method',
       );
 
       rethrow;

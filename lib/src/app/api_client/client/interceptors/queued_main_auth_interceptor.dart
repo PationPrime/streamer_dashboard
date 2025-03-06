@@ -49,7 +49,7 @@ class QueuedMainAuthInterceptor extends QueuedInterceptor {
       stackTrace: error?.stackTrace,
     );
 
-    await _localStorage.deleteToken();
+    await _localStorage.deleteMainApiV1Token();
 
     final context = appRouter.configuration.navigatorKey.currentContext;
 
@@ -105,7 +105,7 @@ class QueuedMainAuthInterceptor extends QueuedInterceptor {
         return handler.reject(error);
       },
       (token) async {
-        await _localStorage.deleteToken();
+        await _localStorage.deleteMainApiV1Token();
         await _localStorage.setToken(token);
 
         _token = token;

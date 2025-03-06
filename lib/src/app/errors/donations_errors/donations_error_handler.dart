@@ -13,4 +13,7 @@ class DonationsErrorHandler extends ErrorHandler {
               dioException: apiError.dioException,
             ),
       };
+
+  @override
+  List<String> get connectionTimeoutExcludedUris => [];
 }

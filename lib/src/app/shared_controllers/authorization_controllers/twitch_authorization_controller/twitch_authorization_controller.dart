@@ -8,10 +8,10 @@ import '../../../errors/constants/constants.dart';
 
 part 'twitch_authorization_state.dart';
 
-class TwitchAuthorizationContoller extends BaseAuthorizationController {
+class TwitchAuthorizationController extends BaseAuthorizationController {
   late final _appLogger = AppLogger(where: '$this');
 
-  TwitchAuthorizationContoller({
+  TwitchAuthorizationController({
     required super.localStorageInterface,
   }) {
     chechAuthorizationState();
@@ -21,6 +21,10 @@ class TwitchAuthorizationContoller extends BaseAuthorizationController {
   FutureOr<void> chechAuthorizationState() async {
     try {
       final twitchTokenModel = await localStorageInterface.getTwitchToken();
+
+      _appLogger.logMessage(
+        'twitchTokenModel: $twitchTokenModel',
+      );
 
       if (twitchTokenModel is! TwitchTokenModel ||
           twitchTokenModel.accessToken.isEmpty ||
@@ -52,7 +56,8 @@ class TwitchAuthorizationContoller extends BaseAuthorizationController {
   }
 
   @override
-  FutureOr<void> signOut() {
+  FutureOr<void> signOut() async {
+    await localStorageInterface.deleteTwitchToken();
     emit(Unauthorized());
   }
 }

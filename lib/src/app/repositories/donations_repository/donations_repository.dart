@@ -1,8 +1,6 @@
 part of 'donations_repository_interface.dart';
 
-class DonationsRepository implements DonationsRepositoryInterface {
-  late final _appLogger = AppLogger(where: '$this');
-
+final class DonationsRepository implements DonationsRepositoryInterface {
   @override
   ConcreteApiClient get apiClient => throw UnimplementedError();
 
@@ -19,13 +17,11 @@ class DonationsRepository implements DonationsRepositoryInterface {
 
       return Right(data);
     } catch (error, stackTrace) {
-      _appLogger.logError(
-        "error: $error",
-        stackTrace: stackTrace,
-      );
-
       return Left(
-        errorHandler.handleError(error),
+        errorHandler.handleError(
+          error,
+          stackTrace: stackTrace,
+        ),
       );
     }
   }

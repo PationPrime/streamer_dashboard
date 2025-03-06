@@ -39,6 +39,13 @@ class _AppGoRouter {
             ),
           ),
           GoRoute(
+            name: NavigationPath.profiles,
+            path: "/${NavigationPath.profiles}",
+            pageBuilder: (context, state) => FadeInPage(
+              child: const ProfilesScreen(),
+            ),
+          ),
+          GoRoute(
             name: NavigationPath.settings,
             path: "/${NavigationPath.settings}",
             pageBuilder: (context, state) => FadeInPage(

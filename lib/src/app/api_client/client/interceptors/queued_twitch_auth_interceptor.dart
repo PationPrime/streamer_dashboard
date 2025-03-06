@@ -5,18 +5,23 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
+import 'package:streamer_dashboard/src/assets_gen/assets.gen.dart';
 
+import '../../../dto/dto.dart';
 import '../../../models/models.dart';
+import '../../../shared_controllers/shared_controllers.dart';
 import '../../../storage/storage.dart';
 import '../../../tools/tools.dart';
 
+// Maybe should add some polymorphism on it?...:)
 class QueuedTwitchAuthInterceptor extends QueuedInterceptor {
   late final _appLogger = AppLogger(where: '$this');
   final _localStorage = AppSecureStorage.instance;
-  final Dio apiClient;
+  final Dio twitchApiClient;
+  final Dio twitchAuthClient;
   final String baseUrl;
   final GoRouter appRouter;
-  MainV1TokenModel? _token;
+  TwitchTokenModel? _twitchToken;
 
   final List<
       ({
@@ -29,11 +34,12 @@ class QueuedTwitchAuthInterceptor extends QueuedInterceptor {
   QueuedTwitchAuthInterceptor({
     required this.baseUrl,
     required this.appRouter,
-    required this.apiClient,
+    required this.twitchApiClient,
+    required this.twitchAuthClient,
   });
 
   bool _shouldRefreshToken(DioException error) =>
-      (error.response?.statusCode == 401 || error.response?.statusCode == 403);
+      error.response?.statusCode == 401 || error.response?.statusCode == 403;
 
   bool _mustForceLogout(DioException error) =>
       error.response?.statusCode == 400 ||
@@ -44,39 +50,62 @@ class QueuedTwitchAuthInterceptor extends QueuedInterceptor {
     String? reason,
     DioException? error,
   }) async {
-    _appLogger.logError(
-      'Force logout reason: $reason',
-      stackTrace: error?.stackTrace,
-    );
+    try {
+      _appLogger.logError(
+        'Force logout reason: $reason',
+        stackTrace: error?.stackTrace,
+      );
 
-    await _localStorage.deleteToken();
+      final context = appRouter.configuration.navigatorKey.currentContext;
 
-    final context = appRouter.configuration.navigatorKey.currentContext;
+      if (context is BuildContext && context.mounted) {
+        context.read<TwitchAuthorizationController>().signOut();
+      } else {
+        _appLogger.logError('context not found');
+      }
+    } catch (error, stackTrace) {
+      _appLogger.logError(
+        'Force logout error: $error',
+        stackTrace: stackTrace,
+      );
 
-    // if (context is BuildContext && context.mounted) {
-    //   context.read<AuthorizationController>().signOut();
-    // } else {
-    //   _appLogger.logError('context not found');
-    // }
+      rethrow;
+    }
   }
 
-  Future<Either<DioException, MainV1TokenModel>> _refreshToken(
-    MainV1TokenModel token,
+  Future<Either<DioException, TwitchTokenModel>> _refreshToken(
+    TwitchTokenModel token,
   ) async {
     try {
-      final response = await apiClient.post(
-        'login/refresh_token/',
-        data: {
-          "refresh_token": token.refreshToken,
-        },
+      Map<String, dynamic> responseData = {};
+
+      final additionalJsonData = await JsonTool.readJsonFileFromAsset(
+        Assets.additionalData.twitchAppData,
       );
 
-      final jsonData = jsonDecode(
-        response.data,
+      final twitchRefreshTokenDto = TwitchRefreshTokenDto(
+        refreshToken: token.refreshToken,
+        clientId: additionalJsonData['client_id'],
+        clientSecret: additionalJsonData['client_secret'],
       );
 
-      final freshToken = MainV1TokenModel.fromJson(
-        jsonData,
+      final response = await twitchAuthClient.post(
+        'token',
+        data: twitchRefreshTokenDto.toMap(),
+      );
+
+      final data = response.data;
+
+      if (data is String) {
+        responseData = jsonDecode(
+          response.data,
+        );
+      } else {
+        responseData = data;
+      }
+
+      final freshToken = TwitchTokenModel.fromJsonWithLastUpdateTime(
+        responseData,
       );
 
       return Right(freshToken);
@@ -89,7 +118,7 @@ class QueuedTwitchAuthInterceptor extends QueuedInterceptor {
     dynamic handler,
   ) async {
     final refreshingResponse = await _refreshToken(
-      _token!,
+      _twitchToken!,
     );
 
     await refreshingResponse.fold(
@@ -105,22 +134,27 @@ class QueuedTwitchAuthInterceptor extends QueuedInterceptor {
         return handler.reject(error);
       },
       (token) async {
-        await _localStorage.deleteToken();
-        await _localStorage.setToken(token);
+        final additionalJsonData = await JsonTool.readJsonFileFromAsset(
+          Assets.additionalData.twitchAppData,
+        );
 
-        _token = token;
+        await _localStorage.deleteTwitchToken();
+        await _localStorage.setTwitchToken(token);
+
+        _twitchToken = token;
 
         for (final requestNeedRetry in _requestsNeedRetry) {
           final headers = requestNeedRetry.options.headers;
 
           headers['Authorization'] = 'Bearer ${token.accessToken}';
+          headers['Client-Id'] = additionalJsonData['client_id'];
 
           final newOptions = requestNeedRetry.options.copyWith(
             headers: headers,
           );
 
           try {
-            final response = await apiClient.fetch(
+            final response = await twitchApiClient.fetch(
               newOptions,
             );
 
@@ -143,59 +177,90 @@ class QueuedTwitchAuthInterceptor extends QueuedInterceptor {
     RequestOptions options,
     RequestInterceptorHandler handler,
   ) async {
-    // final ignoreAuth = _skipPaths.contains(
-    //   options.uri.path,
-    // );
+    try {
+      final additionalJsonData = await JsonTool.readJsonFileFromAsset(
+        Assets.additionalData.twitchAppData,
+      );
 
-    // if (ignoreAuth) {
-    //   return handler.next(options);
-    // }
+      final ignoreAuth = _skipPaths.contains(
+            options.uri.path,
+          ) ||
+          options.extra['no_auth_extra'] == true;
 
-    // _token = await _localStorage.getToken();
+      if (ignoreAuth) {
+        return handler.next(options);
+      }
 
-    // if (_token is RTTokenModel && !_token!.isAccessTokenAlive) {
-    //   await _refreshTokenProcess(handler).then(
-    //     (_) => handler.next(
-    //       options,
-    //     ),
-    //   );
-    // }
+      _twitchToken = await _localStorage.getTwitchToken();
 
-    // final headers = options.headers;
-    // headers['Authorization'] = 'Bearer ${_token?.accessToken}';
+      if (_twitchToken == null || _twitchToken?.accessToken == null) {
+        _appLogger.logError(
+          'Twitch token must be provided, but not found',
+        );
 
-    // final newOptions = options.copyWith(headers: headers);
+        return;
+      }
 
-    return handler.next(
-      options,
-      // newOptions,
-    );
+      if (_twitchToken is TwitchTokenModel &&
+          !_twitchToken!.isAccessTokenAlive) {
+        await _refreshTokenProcess(handler).then(
+          (_) => handler.next(
+            options,
+          ),
+        );
+      }
+
+      final headers = options.headers;
+
+      headers['Authorization'] = 'Bearer ${_twitchToken?.accessToken}';
+      headers['Client-Id'] = additionalJsonData['client_id'];
+
+      _appLogger.logArgsList(
+        {
+          'URL': options.uri,
+          'HEADERS': headers,
+        },
+      );
+
+      final newOptions = options.copyWith(
+        headers: headers,
+      );
+
+      return handler.next(
+        newOptions,
+      );
+    } catch (error, stackTrace) {
+      _appLogger.logError(
+        'onRequest error: $error',
+        stackTrace: stackTrace,
+      );
+    }
   }
 
   @override
   void onError(DioException err, ErrorInterceptorHandler handler) async {
-    // _token = await _localStorage.getToken();
+    _twitchToken = await _localStorage.getTwitchToken();
 
-    // final response = err.response;
+    final response = err.response;
 
-    // if (_shouldRefreshToken(err)) {
-    //   if (_token is! RTTokenModel) {
-    //     return await _forceLogout(
-    //       reason: 'refresh token not found',
-    //     );
-    //   }
+    if (_shouldRefreshToken(err)) {
+      if (_twitchToken is! TwitchTokenModel) {
+        return await _forceLogout(
+          reason: 'refresh token not found',
+        );
+      }
 
-    //   _requestsNeedRetry.add(
-    //     (
-    //       options: response!.requestOptions,
-    //       handler: handler,
-    //     ),
-    //   );
+      _requestsNeedRetry.add(
+        (
+          options: response!.requestOptions,
+          handler: handler,
+        ),
+      );
 
-    //   await _refreshTokenProcess(handler);
-    // } else {
-    handler.next(err);
-    // }
+      await _refreshTokenProcess(handler);
+    } else {
+      handler.next(err);
+    }
   }
 
   @override
