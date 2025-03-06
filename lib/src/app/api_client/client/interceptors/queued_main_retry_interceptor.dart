@@ -5,7 +5,7 @@ import '../../../tools/tools.dart';
 import '../failed_request.dart';
 
 class QueuedRetryInterceptor extends QueuedInterceptor {
-  final _logger = const AppLogger(where: 'RetryInterceptor');
+  final _logger = const AppLogger(where: 'QueuedRetryInterceptor');
   static final appRouter = AppRouterProvider.instance;
 
   QueuedRetryInterceptor();

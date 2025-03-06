@@ -15,10 +15,21 @@ final class ApiV1 extends ApiClient {
         );
 }
 
+final class TwtitchApiV1 extends ApiClient {
+  TwtitchApiV1({
+    required super.environment,
+    required GoRouter appRouter,
+  }) : super(
+          baseUrl: environment.twitchAuthBaseUrl,
+        );
+}
+
 final class ConcreteApiClient {
   static final _instance = ConcreteApiClient._();
 
-  late Dio v1;
+  late Dio mainV1;
+
+  late Dio twitchApiV1;
 
   factory ConcreteApiClient.singleton() => _instance;
 
@@ -29,20 +40,36 @@ final class ConcreteApiClient {
   void setupApiClient() {
     final environment = AppEnvironment.instance;
 
-    final v1Instance = ApiV1(
+    final mainV1Instance = ApiV1(
       environment: environment,
       appRouter: AppRouterProvider.instance,
     );
 
-    v1 = v1Instance.apiClient
+    final twitchV1Instance = TwtitchApiV1(
+      environment: environment,
+      appRouter: AppRouterProvider.instance,
+    );
+
+    mainV1 = mainV1Instance.apiClient
       ..interceptors.addAll(
         [
-          QueuedAuthInterceptor(
+          QueuedMainAuthInterceptor(
             baseUrl: environment.baseUrl,
             appRouter: AppRouterProvider.instance,
-            apiClient: v1Instance.apiClient,
+            apiClient: mainV1Instance.apiClient,
           ),
           QueuedRetryInterceptor(),
+        ],
+      );
+
+    twitchApiV1 = twitchV1Instance.apiClient
+      ..interceptors.addAll(
+        [
+          QueuedTwitchAuthInterceptor(
+            baseUrl: environment.twitchAuthBaseUrl,
+            appRouter: AppRouterProvider.instance,
+            apiClient: twitchV1Instance.apiClient,
+          ),
         ],
       );
   }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:streamer_dashboard/src/app/extensions/extensions.dart';
 
-import '../../../assets_gen/assets.gen.dart';
 import '../widgets.dart';
 import 'buttons.dart';
 

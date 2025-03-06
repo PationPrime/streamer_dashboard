@@ -11,7 +11,17 @@ abstract class LocalStorageInterface {
 
   Future<void> deleteToken();
 
-  Future<void> setToken(TokenModel token);
+  Future<void> setToken(MainV1TokenModel token);
 
-  Future<TokenModel> getToken();
+  Future<void> setTwitchToken(TwitchTokenModel token);
+
+  Future<MainV1TokenModel> getToken();
+
+  Future<TwitchTokenModel?> getTwitchToken();
+
+  Future<void> saveDonationAlertsWidgetWevbViewUrl(
+    String widgetWebViewUrl,
+  );
+
+  Future<String?> getDonationAlertsWidgetWevbViewUrl();
 }

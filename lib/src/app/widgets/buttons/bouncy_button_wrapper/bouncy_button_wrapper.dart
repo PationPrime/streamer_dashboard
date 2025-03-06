@@ -1,5 +1,3 @@
-library src.app.widgets.r_bouncy_button_wrapper;
-
 import 'package:flutter/material.dart';
 import 'package:streamer_dashboard/src/app/extensions/extensions.dart';
 

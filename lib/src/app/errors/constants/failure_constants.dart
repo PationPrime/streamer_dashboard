@@ -14,6 +14,20 @@ class OtherFailure extends Failure {
         );
 }
 
+class TwitchAuthorizationCheckFailure extends Failure {
+  final String errorCode;
+
+  const TwitchAuthorizationCheckFailure({
+    this.errorCode = 'twitch_authorization_check_error',
+    super.message = 'Twitch authorization check failed',
+    super.stackTrace,
+    super.response,
+    super.dioException,
+  }) : super(
+          code: errorCode,
+        );
+}
+
 class Code400Failure extends Failure {
   final String? errorMessage;
 

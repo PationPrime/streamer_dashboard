@@ -29,12 +29,34 @@ class MockLocalStorage implements LocalStorageInterface {
   }
 
   @override
-  Future<void> setToken(TokenModel token) {
+  Future<void> setToken(MainV1TokenModel token) {
     throw UnimplementedError();
   }
 
   @override
-  Future<TokenModel> getToken() {
+  Future<MainV1TokenModel> getToken() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setTwitchToken(TwitchTokenModel token) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<TwitchTokenModel> getTwitchToken() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getDonationAlertsWidgetWevbViewUrl() {
+    // TODO: implement getDonationAlertsWidgetWevbViewUrl
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> saveDonationAlertsWidgetWevbViewUrl(String widgetWebViewUrl) {
+    // TODO: implement saveDonationAlertsWidgetWevbViewUrl
     throw UnimplementedError();
   }
 }

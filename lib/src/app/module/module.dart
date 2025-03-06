@@ -11,11 +11,22 @@ import 'package:streamer_dashboard/src/app/tools/app_logger.dart';
 import 'package:window_manager/window_manager.dart';
 
 import '../app_sytem_tray/app_sytem_tray.dart';
+import '../repositories/repositories.dart';
+import '../storage/storage.dart';
 
 abstract final class AppModule {
   static final _apiClient = ConcreteApiClient.singleton();
+  static final _secureLocalStorage = AppSecureStorage.instance;
   static final _router = AppRouterProvider.instance;
   static const _appLogger = AppLogger(where: 'AppModule');
+
+  static final Map<String, BaseRepositoryInterface> _repositories = {
+    'donations': DonationsRepository(),
+    'authentication': AuthenticationRepository(
+      _apiClient,
+      _secureLocalStorage,
+    ),
+  };
 
   static Future<void> init() async {
     await runZonedGuarded(
@@ -30,6 +41,7 @@ abstract final class AppModule {
           StreamerDashboardApp(
             router: _router,
             apiClient: _apiClient,
+            repositories: _repositories,
           ),
         );
       },

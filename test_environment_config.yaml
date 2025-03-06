@@ -1,0 +1,23 @@
+environment_config:
+  path: src/app/config/test_environment_config.dart
+  class: TestingConfig
+
+  fields:
+    configName:
+      type: String
+      default: test
+    baseUrl:
+      type: String
+      default: https://localhost:8080
+    twitchAuthBaseUrl:
+      type: String
+      default: https://id.twitch.tv/oauth2/
+    connectTimeout:
+      type: int
+      default: 15000
+    receiveTimeout:
+      type: int
+      default: 15000
+    defaultLocale:
+      type: String
+      default: en_US

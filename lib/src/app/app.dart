@@ -5,35 +5,57 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
 import 'package:streamer_dashboard/src/app/api_client/client/client.dart';
 
+import '../modules/modules.dart';
 import 'app_window_manager/app_window_manager.dart';
 import 'design_system/design_system.dart';
 import 'global_scroll_notification_observer/global_scroll_notification_observer.dart';
+import 'repositories/repositories.dart';
 
 class StreamerDashboardApp extends StatelessWidget {
   final GoRouter router;
   final ConcreteApiClient apiClient;
+  final Map<String, BaseRepositoryInterface> repositories;
 
-  const StreamerDashboardApp({
-    super.key,
-    required this.router,
-    required this.apiClient,
-  });
+  const StreamerDashboardApp(
+      {super.key,
+      required this.router,
+      required this.apiClient,
+      required this.repositories});
 
   @override
-  Widget build(BuildContext context) => MultiBlocProvider(
+  Widget build(BuildContext context) => MultiRepositoryProvider(
         providers: [
-          BlocProvider<AppThemeController>(
-            create: (context) => AppThemeController(),
+          RepositoryProvider<DonationsRepositoryInterface>(
+            create: (_) => repositories['donations'] as DonationsRepository,
+          ),
+          RepositoryProvider<AuthenticationRepositoryInterface>(
+            create: (_) =>
+                repositories['authentication'] as AuthenticationRepository,
           ),
         ],
-        child: GlobalScrollNotificationObserver(
-          child: BlocBuilder<AppThemeController, AppThemeState>(
-            builder: (context, appThemeState) => AppThemeConfig(
-              type: appThemeState.themeType,
-              child: GestureDetector(
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: _StreamerDashboardAppView(
-                  router: router,
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<AppThemeController>(
+              create: (context) => AppThemeController(),
+            ),
+            BlocProvider<DonationsController>(
+              create: (context) => DonationsController(),
+            ),
+            BlocProvider<AuthenticationController>(
+              create: (context) => AuthenticationController(
+                context.read<AuthenticationRepositoryInterface>(),
+              ),
+            ),
+          ],
+          child: GlobalScrollNotificationObserver(
+            child: BlocBuilder<AppThemeController, AppThemeState>(
+              builder: (context, appThemeState) => AppThemeConfig(
+                type: appThemeState.themeType,
+                child: GestureDetector(
+                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                  child: _StreamerDashboardAppView(
+                    router: router,
+                  ),
                 ),
               ),
             ),

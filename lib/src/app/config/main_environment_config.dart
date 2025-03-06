@@ -5,5 +5,5 @@ class MainEnvironmentConfig {
 
   static const int receiveTimeout = 15000;
 
-  static const String defaultLocale = 'ru_RU';
+  static const String defaultLocale = 'en_US';
 }

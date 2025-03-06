@@ -1,12 +1,13 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'token_model.dart';
+part of 'main_v1_token_model.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-TokenModel _$TokenModelFromJson(Map<String, dynamic> json) => TokenModel(
+MainV1TokenModel _$MainV1TokenModelFromJson(Map<String, dynamic> json) =>
+    MainV1TokenModel(
       accessToken: json['accessToken'] as String,
       refreshToken: json['refreshToken'] as String,
       accessTokenTtl: (json['accessTokenTtl'] as num?)?.toInt() ?? 300,
@@ -16,7 +17,7 @@ TokenModel _$TokenModelFromJson(Map<String, dynamic> json) => TokenModel(
           : DateTime.parse(json['dateTime'] as String),
     );
 
-Map<String, dynamic> _$TokenModelToJson(TokenModel instance) =>
+Map<String, dynamic> _$MainV1TokenModelToJson(MainV1TokenModel instance) =>
     <String, dynamic>{
       'accessToken': instance.accessToken,
       'refreshToken': instance.refreshToken,

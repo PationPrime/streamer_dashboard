@@ -7,5 +7,6 @@ class TestingEnvironment extends AppEnvironment {
           connectTimeout: TestingConfig.connectTimeout,
           receiveTimeout: TestingConfig.receiveTimeout,
           defaultLocale: TestingConfig.defaultLocale,
+          twitchAuthBaseUrl: TestingConfig.twitchAuthBaseUrl,
         );
 }

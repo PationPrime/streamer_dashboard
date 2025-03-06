@@ -1,4 +1,6 @@
 import 'dart:io';
+
+import 'package:external_webview_window/external_webview_window.dart';
 import 'package:flutter/foundation.dart';
 import 'package:system_tray/system_tray.dart';
 import 'package:window_manager/window_manager.dart';
@@ -8,8 +10,9 @@ import '../tools/app_logger.dart';
 
 abstract final class AppSystemTray {
   static final _systemTray = SystemTray();
+  static final _externalWebviewWindowPlugin = ExternalWebviewWindow();
 
-  static const _rtLogger = AppLogger(
+  static const _appLogger = AppLogger(
     where: 'AppSystemTray',
   );
 
@@ -37,17 +40,29 @@ abstract final class AppSystemTray {
     await _menu.buildFrom(
       [
         MenuItemLabel(
-          label: 'Развернуть',
+          label: 'Expand',
           onClicked: (_) => windowManager.show(),
         ),
         MenuItemLabel(
-          label: 'Свернуть',
+          label: 'Collapse',
           onClicked: (_) => windowManager.hide(),
         ),
         MenuSeparator(),
         MenuItemLabel(
-          label: 'Закрыть',
-          onClicked: (_) => windowManager.close(),
+          label: 'Close',
+          onClicked: (_) async {
+            try {
+              /// Closing CEF before shut down
+              await _externalWebviewWindowPlugin.closeCEFWebViewWindow();
+            } catch (error, stackTrace) {
+              _appLogger.logError(
+                'Failed to release all dependent resources before closing the application: $error',
+                stackTrace: stackTrace,
+              );
+            } finally {
+              await windowManager.close();
+            }
+          },
         ),
       ],
     );

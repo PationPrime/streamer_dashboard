@@ -1,6 +1,6 @@
 name: streamer_dashboard
 description: "Streamer Dashboard Flutter App"
-publish_to: 'none' 
+publish_to: "none"
 version: 1.0.0+1
 
 environment:
@@ -15,7 +15,6 @@ dependencies:
   dartz: ^0.10.1
   dio: ^5.8.0+1
   flutter_secure_storage: ^9.2.4
-  youtube_player_flutter: ^9.1.1
   equatable: ^2.0.7
   environment_config: ^3.2.0
   flutter_bloc: ^9.0.0
@@ -24,13 +23,22 @@ dependencies:
   json_annotation: ^4.9.0
   go_router: ^14.8.0
   yt: ^2.2.5+6
-  flutter_inappwebview: ^6.1.5
+  flutter_inappwebview:
+    git:
+      url: https://github.com/PationPrime/flutter_inappwebview.git
+      path: flutter_inappwebview
+      ref: master
   system_tray: ^2.0.3
   window_manager: ^0.4.2
   win32: ^5.8.0
   icons_launcher: ^3.0.0
   flutter_acrylic: ^1.1.0
   flutter_keyboard_visibility: ^6.0.0
+  url_launcher: ^6.3.1
+  external_webview_window:
+    git:
+      url: https://github.com/PationPrime/external_webview_window.git
+      ref: main
 
 dev_dependencies:
   flutter_test:
@@ -51,17 +59,17 @@ icons_launcher:
       image_path: "assets/app_logo/app_logo.png"
     windows:
       enable: true
-      image_path: "assets/app_logo/app_logo.png"  
+      image_path: "assets/app_logo/app_logo.png"
 
 flutter_gen:
   output: lib/src/assets_gen/
   integrations:
-    flutter_svg: true 
+    flutter_svg: true
 
 flutter:
   assets:
     - assets/icons/
     - assets/app_logo/
+    - additional_data/
 
   uses-material-design: true
-

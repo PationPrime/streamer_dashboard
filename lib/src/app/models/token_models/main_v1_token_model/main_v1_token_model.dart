@@ -1,10 +1,10 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
-part 'token_model.g.dart';
+part 'main_v1_token_model.g.dart';
 
 @JsonSerializable()
-class TokenModel extends Equatable {
+class MainV1TokenModel extends Equatable {
   final String accessToken;
   final String refreshToken;
   final int accessTokenTtl;
@@ -17,7 +17,7 @@ class TokenModel extends Equatable {
 
   bool get isRefreshTokenAlive => true;
 
-  const TokenModel({
+  const MainV1TokenModel({
     required this.accessToken,
     required this.refreshToken,
     this.accessTokenTtl = 300,
@@ -34,14 +34,14 @@ class TokenModel extends Equatable {
         dateTime,
       ];
 
-  TokenModel copyWith({
+  MainV1TokenModel copyWith({
     String? accessToken,
     String? refreshToken,
     DateTime? dateTime,
     int? accessTokenTtl,
     int? refreshTokenTtl,
   }) =>
-      TokenModel(
+      MainV1TokenModel(
         accessToken: accessToken ?? this.accessToken,
         refreshToken: refreshToken ?? this.refreshToken,
         accessTokenTtl: accessTokenTtl ?? this.accessTokenTtl,
@@ -49,8 +49,8 @@ class TokenModel extends Equatable {
         dateTime: dateTime ?? this.dateTime,
       );
 
-  factory TokenModel.fromJson(Map<String, dynamic> json) =>
-      _$TokenModelFromJson(json);
+  factory MainV1TokenModel.fromJson(Map<String, dynamic> json) =>
+      _$MainV1TokenModelFromJson(json);
 
-  Map<String, dynamic> toJson() => _$TokenModelToJson(this);
+  Map<String, dynamic> toJson() => _$MainV1TokenModelToJson(this);
 }

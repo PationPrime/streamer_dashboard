@@ -10,13 +10,13 @@ import '../../../models/models.dart';
 import '../../../storage/storage.dart';
 import '../../../tools/tools.dart';
 
-class QueuedAuthInterceptor extends QueuedInterceptor {
+class QueuedTwitchAuthInterceptor extends QueuedInterceptor {
   late final _appLogger = AppLogger(where: '$this');
   final _localStorage = AppSecureStorage.instance;
   final Dio apiClient;
   final String baseUrl;
   final GoRouter appRouter;
-  TokenModel? _token;
+  MainV1TokenModel? _token;
 
   final List<
       ({
@@ -26,7 +26,7 @@ class QueuedAuthInterceptor extends QueuedInterceptor {
 
   final List<String> _skipPaths = [];
 
-  QueuedAuthInterceptor({
+  QueuedTwitchAuthInterceptor({
     required this.baseUrl,
     required this.appRouter,
     required this.apiClient,
@@ -60,8 +60,8 @@ class QueuedAuthInterceptor extends QueuedInterceptor {
     // }
   }
 
-  Future<Either<DioException, TokenModel>> _refreshToken(
-    TokenModel token,
+  Future<Either<DioException, MainV1TokenModel>> _refreshToken(
+    MainV1TokenModel token,
   ) async {
     try {
       final response = await apiClient.post(
@@ -75,7 +75,7 @@ class QueuedAuthInterceptor extends QueuedInterceptor {
         response.data,
       );
 
-      final freshToken = TokenModel.fromJson(
+      final freshToken = MainV1TokenModel.fromJson(
         jsonData,
       );
 
