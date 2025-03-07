@@ -1,12 +1,13 @@
 class NavigationPath {
-  static const String root = '/';
-  static const String home = 'home';
-  static const String dashboard = 'dashboard';
-  static const String settings = 'settings';
-  static const String donations = 'donations';
-  static const String liveStreams = 'live-streams';
-  static const String profiles = 'profiles';
-  static const String authentication = 'authentication';
-  static const String loginTwitch = 'login-twitch';
-  static const String loginYoutube = 'login-youtube';
+  static const root = '/';
+  static const home = 'home';
+  static const dashboard = 'dashboard';
+  static const settings = 'settings';
+  static const donations = 'donations';
+  static const liveStreams = 'live-streams';
+  static const profiles = 'profiles';
+  static const streamWidgets = 'stream-widgets';
+  static const authentication = 'authentication';
+  static const loginTwitch = 'login-twitch';
+  static const loginYoutube = 'login-youtube';
 }

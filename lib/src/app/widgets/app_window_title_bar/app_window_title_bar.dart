@@ -65,6 +65,12 @@ class _AppWindowTitleBarState extends State<AppWindowTitleBar> {
           height: 40,
           decoration: BoxDecoration(
             color: context.color.background,
+            border: Border(
+              bottom: BorderSide(
+                color: context.color.border,
+                width: 0.2,
+              ),
+            ),
           ),
           child: Row(
             children: [

@@ -34,6 +34,8 @@ class _RootWrapperRouteState extends State<RootWrapperRoute> {
       case 4:
         context.pushNamed(NavigationPath.profiles);
       case 5:
+        context.pushNamed(NavigationPath.streamWidgets);
+      case 6:
         context.pushNamed(NavigationPath.settings);
       default:
         context.pushNamed(NavigationPath.root);
@@ -156,6 +158,22 @@ class _RootWrapperRouteState extends State<RootWrapperRoute> {
                         color: context.color.mainWhite,
                         assetPath: Assets.appLogo.appLogoPng.path,
                         label: 'Profiles',
+                        labelColor: context.color.mainWhite,
+                      ),
+                    ),
+                    AppNavigationBarItem(
+                      activeIcon: FinalizeIcon(
+                        expanded: !isPortrait,
+                        color: context.color.primary,
+                        assetPath: Assets.appLogo.appLogoPng.path,
+                        label: 'Stream Widgets',
+                      ),
+                      inActiveIcon: FinalizeIcon(
+                        expanded: !isPortrait,
+                        isActive: false,
+                        color: context.color.mainWhite,
+                        assetPath: Assets.appLogo.appLogoPng.path,
+                        label: 'Stream Widgets',
                         labelColor: context.color.mainWhite,
                       ),
                     ),

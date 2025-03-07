@@ -1,13 +1,8 @@
 import 'package:go_router/go_router.dart';
 import 'package:streamer_dashboard/src/app/router/navigation_path.dart';
 import 'package:streamer_dashboard/src/app/router/root_wrapper_route.dart';
-import 'package:streamer_dashboard/src/modules/profiles/screens/profiles_screen/profiles_screen.dart';
 
-import '../../modules/authentication/module.dart';
-import '../../modules/dashboard/module.dart';
-import '../../modules/donations/module.dart';
-import '../../modules/live_streams/module.dart';
-import '../../modules/settings/module.dart';
+import '../../modules/modules.dart';
 import 'navigator_key_provider.dart';
 import 'page_types/page_types.dart';
 

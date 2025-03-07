@@ -46,6 +46,13 @@ class _AppGoRouter {
             ),
           ),
           GoRoute(
+            name: NavigationPath.streamWidgets,
+            path: "/${NavigationPath.streamWidgets}",
+            pageBuilder: (context, state) => FadeInPage(
+              child: const StreamWidgetsScreen(),
+            ),
+          ),
+          GoRoute(
             name: NavigationPath.settings,
             path: "/${NavigationPath.settings}",
             pageBuilder: (context, state) => FadeInPage(
