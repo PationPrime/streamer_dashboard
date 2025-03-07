@@ -12,15 +12,9 @@ class _StreamWidgetsScreenState extends State<StreamWidgetsScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
         body: ListView(
-          padding: EdgeInsets.symmetric(
-            horizontal: 20,
-            vertical: 15,
-          ),
           children: [
             Container(
               color: Colors.greenAccent,
-              height: 300,
-              width: 100,
               child: FallingBalls(),
             ),
           ],

@@ -8,18 +8,20 @@ part 'ball_painter.dart';
 part 'ball_physics.dart';
 
 class FallingBalls extends StatefulWidget {
-  final double? height;
-  final double? widht;
+  final double height;
+  final double widht;
   final double minBallRadius;
   final double maxBallRadius;
 
   const FallingBalls({
     super.key,
-    this.height,
-    this.widht,
+    this.height = 400,
+    this.widht = 300,
     this.minBallRadius = 10,
     this.maxBallRadius = 20,
-  }) : assert(minBallRadius <= maxBallRadius);
+  }) : assert(
+          minBallRadius <= maxBallRadius,
+        );
 
   @override
   State<FallingBalls> createState() => _FallingBallsState();
@@ -112,7 +114,10 @@ class _FallingBallsState extends State<FallingBalls>
 
   @override
   Widget build(BuildContext context) => CustomPaint(
-        size: Size(300, 400),
+        size: Size(
+          widget.widht,
+          widget.height,
+        ),
         painter: BallPainter(
           balls: balls,
         ),
