@@ -18,7 +18,7 @@ class TwitchAuthorizationController extends BaseAuthorizationController {
   }
 
   @override
-  FutureOr<void> chechAuthorizationState() async {
+  Future<void> chechAuthorizationState() async {
     try {
       final twitchTokenModel = await localStorageInterface.getTwitchToken();
 

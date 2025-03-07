@@ -45,14 +45,8 @@ class AuthenticationController extends Cubit<AuthenticationState> {
         data,
       );
 
-      final twitchOAuth2Uri = Uri.parse(
-        '${TwitchConstants.oauth2Url}?client_id=${_twitchLoginDto.clientId}&redirect_uri=${_twitchLoginDto.redirectUri}&response_type=code&scope=user:read:email',
-      );
-
       emit(
-        state.copyWith(
-          twitchOAuth2Uri: twitchOAuth2Uri,
-        ),
+        const AuthenticationState(),
       );
     } catch (error, stackTrace) {
       _appLogger.logError(
@@ -62,8 +56,14 @@ class AuthenticationController extends Cubit<AuthenticationState> {
     }
   }
 
-  Future<void> loginTwitch({
-    required String authCode,
+  Future<void> forceCloseCEF() async {
+    _repositoryInterface.cancelWebViewEventsSubscription();
+
+    await _repositoryInterface.externalWebviewWindowPlugin
+        .closeCEFWebViewWindow();
+  }
+
+  Future<void> loginTwitchOAuth2({
     VoidCallback? onSuccessCallback,
     VoidCallback? onFailureCallback,
   }) async {
@@ -73,6 +73,61 @@ class AuthenticationController extends Cubit<AuthenticationState> {
       );
     }
 
+    final response = await _repositoryInterface.loginOAuth2Twitch(
+      twitchLoginDto: _twitchLoginDto,
+      onLoadEnd: (uri) async {
+        if ("$uri".startsWith(_twitchLoginDto.redirectUri)) {
+          final queryParameters = uri.queryParameters;
+
+          if (!queryParameters.containsKey('code') ||
+              queryParameters['code'] == null) {
+            _appLogger.logError(
+              "code field does not exist or it's value is null",
+            );
+          } else {
+            await _repositoryInterface.externalWebviewWindowPlugin
+                .closeCEFWebViewWindow();
+
+            _repositoryInterface.cancelWebViewEventsSubscription();
+
+            /// Now login via Twitch with auth code
+            await _loginTwitch(
+              authCode: queryParameters['code']!,
+              onSuccessCallback: onSuccessCallback,
+              onFailureCallback: onFailureCallback,
+            );
+          }
+        }
+      },
+    );
+
+    response.fold(
+      (failure) {
+        _appLogger.logError(
+          'loginTwitchOAuth2 login failure: ${failure.message}',
+          stackTrace: failure.stackTrace,
+          lexicalScope: 'loginTwitchOAuth2 method',
+        );
+
+        emit(
+          state.copyWith(
+            twitchConnetionFailure: failure,
+          ),
+        );
+      },
+      (success) => emit(
+        state.copyWith(
+          isTwitchConneting: false,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _loginTwitch({
+    required String authCode,
+    VoidCallback? onSuccessCallback,
+    VoidCallback? onFailureCallback,
+  }) async {
     emit(
       state.copyWith(
         isTwitchConneting: true,
@@ -105,6 +160,12 @@ class AuthenticationController extends Cubit<AuthenticationState> {
         onFailureCallback?.call();
       },
       (twitchTokenModel) async {
+        _appLogger.logArgsList(
+          {
+            'twitch TOKEN': twitchTokenModel,
+          },
+        );
+
         try {
           await _localStorageInterface.setTwitchToken(
             twitchTokenModel,
@@ -143,5 +204,14 @@ class AuthenticationController extends Cubit<AuthenticationState> {
         }
       },
     );
+  }
+
+  @override
+  Future<void> close() {
+    _appLogger.logMessage(
+      'AuthenticationController Close',
+    );
+
+    return super.close();
   }
 }

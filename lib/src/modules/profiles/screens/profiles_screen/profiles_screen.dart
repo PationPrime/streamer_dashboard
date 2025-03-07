@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:streamer_dashboard/src/app/extensions/extensions.dart';
+import 'package:streamer_dashboard/src/app/models/models.dart';
 import 'package:streamer_dashboard/src/modules/modules.dart';
 
 import '../../../../app/shared_controllers/authorization_controllers/base_authorization_controller/base_authorization_controller.dart';
@@ -49,7 +50,21 @@ class _ProfilesScreenState extends State<ProfilesScreen> {
                           constraints: BoxConstraints(
                             maxWidth: 400,
                           ),
-                          child: TwitchStreamerProfileScreen(),
+                          child: twitchStreamerProfileState.loading
+                              ? SizedBox(
+                                  height: 100,
+                                  width: 100,
+                                  child: Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                                )
+                              : twitchStreamerProfileState.profileModel
+                                      is! TwitchUserModel
+                                  ? const SizedBox()
+                                  : TwitchStreamerProfileScreen(
+                                      profileModel: twitchStreamerProfileState
+                                          .profileModel!,
+                                    ),
                         ),
                       ],
                     ),

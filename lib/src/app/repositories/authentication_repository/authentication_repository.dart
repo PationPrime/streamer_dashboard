@@ -15,6 +15,62 @@ final class AuthenticationRepository
   ErrorHandler get errorHandler => const AuthenticationErrorHandler();
 
   @override
+  ExternalWebviewWindow get externalWebviewWindowPlugin =>
+      ExternalWebviewWindow();
+
+  @override
+  void subscribeToWebViewEvents({
+    GenericEventCallback<Uri>? onLoadStart,
+    GenericEventCallback<Uri>? onLoadEnd,
+    GenericEventCallback<Uri>? onURLChanged,
+    GenericEventCallback<Uri>? onLoadError,
+  }) =>
+      externalWebviewWindowPlugin.subscribeToWebViewEvents(
+        onLoadStart: onLoadStart,
+        onLoadEnd: onLoadEnd,
+        onURLChanged: onURLChanged,
+        onLoadError: onLoadError,
+      );
+
+  @override
+  void cancelWebViewEventsSubscription() =>
+      externalWebviewWindowPlugin.cancelWebViewEventsSubscription();
+
+  @override
+  Future<Either<Failure, bool>> loginOAuth2Twitch({
+    required TwitchLoginDto twitchLoginDto,
+    required GenericEventCallback<Uri> onLoadEnd,
+  }) async {
+    try {
+      cancelWebViewEventsSubscription();
+
+      subscribeToWebViewEvents(
+        onLoadEnd: onLoadEnd,
+      );
+
+      final oauthUrl = '${apiClient.twitchAuthClient.options.baseUrl}authorize';
+
+      final twitchOAuth2Uri = Uri.parse(
+        '$oauthUrl?client_id=${twitchLoginDto.clientId}&redirect_uri=${twitchLoginDto.redirectUri}&response_type=code&scope=user:read:email',
+      );
+
+      await externalWebviewWindowPlugin.openCEFWebViewWindow(
+        url: '$twitchOAuth2Uri',
+        windowTitle: TwitchConstants.webviewWindowTitle,
+      );
+
+      return const Right(true);
+    } catch (error, stackTrace) {
+      return Left(
+        errorHandler.handleError(
+          error,
+          stackTrace: stackTrace,
+        ),
+      );
+    }
+  }
+
+  @override
   Future<Either<Failure, TwitchTokenModel>> loginTwitch({
     required TwitchLoginDto twitchLoginDto,
   }) async {

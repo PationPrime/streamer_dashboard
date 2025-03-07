@@ -62,17 +62,41 @@ class $AssetsIconsGen {
   SvgGenImage get iconArrowForwardWhite =>
       const SvgGenImage('assets/icons/icon_arrow_forward_white.svg');
 
+  /// File path: assets/icons/icon_close.svg
+  SvgGenImage get iconClose => const SvgGenImage('assets/icons/icon_close.svg');
+
+  /// File path: assets/icons/icon_refresh copy.svg
+  SvgGenImage get iconRefreshCopy =>
+      const SvgGenImage('assets/icons/icon_refresh copy.svg');
+
   /// File path: assets/icons/icon_refresh.svg
   SvgGenImage get iconRefresh =>
       const SvgGenImage('assets/icons/icon_refresh.svg');
+
+  /// File path: assets/icons/icon_restart.svg
+  SvgGenImage get iconRestart =>
+      const SvgGenImage('assets/icons/icon_restart.svg');
+
+  /// File path: assets/icons/icon_search.svg
+  SvgGenImage get iconSearch =>
+      const SvgGenImage('assets/icons/icon_search.svg');
+
+  /// File path: assets/icons/icon_send.svg
+  SvgGenImage get iconSend => const SvgGenImage('assets/icons/icon_send.svg');
 
   /// File path: assets/icons/icon_square.svg
   SvgGenImage get iconSquare =>
       const SvgGenImage('assets/icons/icon_square.svg');
 
+  /// File path: assets/icons/icon_tool.svg
+  SvgGenImage get iconTool => const SvgGenImage('assets/icons/icon_tool.svg');
+
   /// File path: assets/icons/icon_twitch.svg
   SvgGenImage get iconTwitch =>
       const SvgGenImage('assets/icons/icon_twitch.svg');
+
+  /// File path: assets/icons/icon_user.svg
+  SvgGenImage get iconUser => const SvgGenImage('assets/icons/icon_user.svg');
 
   /// File path: assets/icons/icon_youtube.svg
   SvgGenImage get iconYoutube =>
@@ -92,9 +116,16 @@ class $AssetsIconsGen {
         iconArrowBack,
         iconArrowForward,
         iconArrowForwardWhite,
+        iconClose,
+        iconRefreshCopy,
         iconRefresh,
+        iconRestart,
+        iconSearch,
+        iconSend,
         iconSquare,
+        iconTool,
         iconTwitch,
+        iconUser,
         iconYoutube,
         minus,
         minusWhite

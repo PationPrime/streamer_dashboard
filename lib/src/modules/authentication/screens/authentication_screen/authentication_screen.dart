@@ -1,15 +1,13 @@
-import 'package:external_webview_window/external_webview_window.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:streamer_dashboard/src/app/constants/constants.dart';
 import 'package:streamer_dashboard/src/app/extensions/app_theme_extension.dart';
 import 'package:streamer_dashboard/src/app/shared_controllers/shared_controllers.dart';
 import 'package:streamer_dashboard/src/app/widgets/widgets.dart';
-import 'package:streamer_dashboard/src/modules/authentication/controllers/authentication_controller/authentication_controller.dart';
+import 'package:streamer_dashboard/src/modules/modules.dart';
 
 import '../../../../app/failure/failure.dart';
 import '../../../../app/models/models.dart';
-import '../../../../app/tools/tools.dart';
 import '../../../../assets_gen/assets.gen.dart';
 
 class AuthenticationScreen extends StatefulWidget {
@@ -20,53 +18,25 @@ class AuthenticationScreen extends StatefulWidget {
 }
 
 class _AuthenticationScreenState extends State<AuthenticationScreen> {
-  late final _appLoger = AppLogger(where: '$this');
-
-  final _externalWebViewWindowPlugin = ExternalWebviewWindow();
-
   late List<AuthenticationButtonModel> _buttonModels = [];
 
   Future<void> _showAuthenticationCEFWindow() async {
     final authenticationController = context.read<AuthenticationController>();
 
-    final authenticationState = authenticationController.state;
+    authenticationController.loginTwitchOAuth2(
+      onSuccessCallback: () async {
+        await context
+            .read<TwitchAuthorizationController>()
+            .chechAuthorizationState();
 
-    if (authenticationState.twitchOAuth2Uri == null) {
-      return;
-    }
-
-    await _externalWebViewWindowPlugin.openCEFWebViewWindow(
-      url: '${authenticationState.twitchOAuth2Uri}',
-      windowTitle: TwitchConstants.webviewWindowTitle,
-    );
-  }
-
-  void _subscribeToWebViewEvents() {
-    final authenticationController = context.read<AuthenticationController>();
-
-    _externalWebViewWindowPlugin.subscribeToWebViewEvents(
-      onLoadEnd: (url) async {
-        if ("$url".startsWith('https://streamallin.com/auth/twitch/')) {
-          final queryParameters = url.queryParameters;
-          if (queryParameters.containsKey('code') &&
-              queryParameters['code'] != null) {
-            _externalWebViewWindowPlugin.closeCEFWebViewWindow();
-
-            /// Try to login via Twitch
-            await authenticationController.loginTwitch(
-              authCode: queryParameters['code']!,
-
-              /// Check twitch authorization state after login
-              onSuccessCallback: context
-                  .read<TwitchAuthorizationController>()
-                  .chechAuthorizationState,
-            );
-          } else {
-            _appLoger.logError(
-              "code field does not exist or it's value is null",
-            );
-          }
+        if (!context.mounted) {
+          return;
         }
+
+        // ignore: use_build_context_synchronously
+        await context
+            .read<TwitchStreamerProfileController>()
+            .getStreamerProfile();
       },
     );
   }
@@ -84,14 +54,6 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         onTap: _showAuthenticationCEFWindow,
       ),
     ];
-
-    _subscribeToWebViewEvents();
-  }
-
-  @override
-  void dispose() {
-    _externalWebViewWindowPlugin.cancelWebViewEventsSubscription();
-    super.dispose();
   }
 
   void _showErrorDialog(
@@ -158,10 +120,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
         listener: (context, authenticationState) async {
           if (authenticationState.twitchConnetionFailure is Failure) {
             _showErrorDialog(authenticationState);
-
-            await _externalWebViewWindowPlugin.closeCEFWebViewWindow();
-
-            _externalWebViewWindowPlugin.cancelWebViewEventsSubscription();
+            await context.read<AuthenticationController>().forceCloseCEF();
           }
         },
         builder: (context, authenticationState) => Scaffold(

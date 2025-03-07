@@ -198,6 +198,13 @@ class QueuedTwitchAuthInterceptor extends QueuedInterceptor {
           'Twitch token must be provided, but not found',
         );
 
+        handler.reject(
+          DioException(
+            requestOptions: options,
+            message: 'Twitch token must be provided, but not found',
+          ),
+        );
+
         return;
       }
 
