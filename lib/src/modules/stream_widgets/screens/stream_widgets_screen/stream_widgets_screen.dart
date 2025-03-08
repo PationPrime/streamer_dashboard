@@ -11,13 +11,6 @@ class StreamWidgetsScreen extends StatefulWidget {
 class _StreamWidgetsScreenState extends State<StreamWidgetsScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: ListView(
-          children: [
-            Container(
-              color: Colors.greenAccent,
-              child: FallingBalls(),
-            ),
-          ],
-        ),
+        body: FallingBalls(),
       );
 }

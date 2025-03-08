@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:streamer_dashboard/src/app/extensions/extensions.dart';
+import 'package:streamer_dashboard/src/app/tools/app_logger.dart';
 
 part 'ball.dart';
 part 'ball_painter.dart';
@@ -58,9 +59,11 @@ class _FallingBallsState extends State<FallingBalls>
   }
 
   void _spawnBall() {
+    if (balls.length > 4) balls.clear();
+
     final ball = Ball(
       position: _basePosition(
-        maxWidth: 300,
+        maxWidth: widget.widht,
       ),
       velocity: _baseVelocity(),
       radius: _circleRadius(
@@ -90,11 +93,12 @@ class _FallingBallsState extends State<FallingBalls>
       );
 
       /// Collision with the bottom constraint (maxHeight value)
-      if (ball.position.dy + ball.radius > 400) {
+      if (ball.position.dy + ball.radius > widget.height) {
         ball.position = _updatePosition(
           position: ball.position,
-          maxHeight: 400,
+          maxHeight: widget.height,
           radius: ball.radius,
+          maxWidth: widget.widht,
         );
 
         ball.velocity = _updateVelocity(
@@ -105,21 +109,25 @@ class _FallingBallsState extends State<FallingBalls>
 
       /// Check collision
       for (final otherBall in balls) {
-        if (ball != otherBall && _checkCollision(ball, otherBall)) {
-          _resolveCollision(ball, otherBall);
+        if (ball != otherBall && _checkBallsCollision(ball, otherBall)) {
+          _resolveBallsCollision(ball, otherBall);
         }
       }
     }
   }
 
   @override
-  Widget build(BuildContext context) => CustomPaint(
-        size: Size(
-          widget.widht,
-          widget.height,
-        ),
-        painter: BallPainter(
-          balls: balls,
+  Widget build(BuildContext context) => Align(
+        alignment: Alignment.topLeft,
+        child: Container(
+          color: Colors.white,
+          height: widget.height,
+          width: widget.widht,
+          child: ClipRect(
+            child: BallLeafRenderObjectWidget(
+              balls: balls,
+            ),
+          ),
         ),
       );
 

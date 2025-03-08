@@ -16,7 +16,7 @@ mixin BallPhysics {
   /// Gravity
   static const _defaultGravityValue = 0.1;
 
-  bool _checkCollision(
+  bool _checkBallsCollision(
     Ball ball1,
     Ball ball2,
   ) {
@@ -24,7 +24,21 @@ mixin BallPhysics {
     return distance < (ball1.radius + ball2.radius);
   }
 
-  void _resolveCollision(
+  bool _checkBoxConstraintsCollision({
+    required Ball ball,
+    required Size size,
+  }) {
+    return false;
+  }
+
+  void _resolveBallAndConstraintsCollision({
+    required Ball ball,
+    required Size size,
+  }) {
+    print(ball.position);
+  }
+
+  void _resolveBallsCollision(
     Ball ball1,
     Ball ball2,
   ) {
@@ -116,6 +130,7 @@ mixin BallPhysics {
 
     /// Constrained height
     required double maxHeight,
+    required double maxWidth,
     required double radius,
   }) =>
       Offset(
