@@ -3,11 +3,13 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  external_webview_window
   flutter_acrylic
   flutter_inappwebview_windows
   flutter_secure_storage_windows
   screen_retriever_windows
   system_tray
+  url_launcher_windows
   window_manager
 )
 

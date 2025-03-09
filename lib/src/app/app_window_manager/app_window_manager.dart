@@ -261,13 +261,13 @@ class _AppWindowManagerState extends State<AppWindowManager> {
     windowManager.setSize(
       const Size(
         900,
-        1200,
+        800,
       ),
     );
     windowManager.setMinimumSize(
       const Size(
         900,
-        1200,
+        800,
       ),
     );
 

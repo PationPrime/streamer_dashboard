@@ -3,37 +3,81 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
-import 'package:streamer_dashboard/src/app/api_client/client/client.dart';
+import 'package:streamer_dashboard/src/app/shared_controllers/authorization_controllers/twitch_authorization_controller/twitch_authorization_controller.dart';
+import 'package:streamer_dashboard/src/app/storage/storage.dart';
 
+import '../modules/modules.dart';
+import 'api_client/client/concrete_client.dart';
 import 'app_window_manager/app_window_manager.dart';
 import 'design_system/design_system.dart';
 import 'global_scroll_notification_observer/global_scroll_notification_observer.dart';
+import 'repositories/repositories.dart';
 
 class StreamerDashboardApp extends StatelessWidget {
   final GoRouter router;
   final ConcreteApiClient apiClient;
+  final Map<String, BaseRepositoryInterface> repositories;
+  final AppSecureStorage appSecureStorage;
 
   const StreamerDashboardApp({
     super.key,
     required this.router,
     required this.apiClient,
+    required this.repositories,
+    required this.appSecureStorage,
   });
 
   @override
-  Widget build(BuildContext context) => MultiBlocProvider(
+  Widget build(BuildContext context) => MultiRepositoryProvider(
         providers: [
-          BlocProvider<AppThemeController>(
-            create: (context) => AppThemeController(),
+          RepositoryProvider<DonationsRepositoryInterface>(
+            create: (_) => repositories['donations'] as DonationsRepository,
+          ),
+          RepositoryProvider<AuthenticationRepositoryInterface>(
+            create: (_) =>
+                repositories['authentication'] as AuthenticationRepository,
+          ),
+          RepositoryProvider<TwitchApiRepositoryInterface>(
+            create: (_) => repositories['twitch_api'] as TwitchApiRepository,
           ),
         ],
-        child: GlobalScrollNotificationObserver(
-          child: BlocBuilder<AppThemeController, AppThemeState>(
-            builder: (context, appThemeState) => AppThemeConfig(
-              type: appThemeState.themeType,
-              child: GestureDetector(
-                onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-                child: _StreamerDashboardAppView(
-                  router: router,
+        child: MultiBlocProvider(
+          providers: [
+            BlocProvider<AppThemeController>(
+              create: (context) => AppThemeController(),
+            ),
+            BlocProvider<DonationsController>(
+              create: (context) => DonationsController(),
+            ),
+            BlocProvider<TwitchAuthorizationController>(
+              create: (context) => TwitchAuthorizationController(
+                localStorageInterface: appSecureStorage,
+              ),
+            ),
+            BlocProvider<AuthenticationController>(
+              create: (context) => AuthenticationController(
+                context.read<AuthenticationRepositoryInterface>(),
+                appSecureStorage,
+              ),
+            ),
+            BlocProvider<TwitchStreamerProfileController>(
+              create: (context) => TwitchStreamerProfileController(
+                context.read<TwitchApiRepositoryInterface>(),
+              ),
+            ),
+            BlocProvider<StreamWidgetsController>(
+              create: (context) => StreamWidgetsController(),
+            ),
+          ],
+          child: GlobalScrollNotificationObserver(
+            child: BlocBuilder<AppThemeController, AppThemeState>(
+              builder: (context, appThemeState) => AppThemeConfig(
+                type: appThemeState.themeType,
+                child: GestureDetector(
+                  onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+                  child: _StreamerDashboardAppView(
+                    router: router,
+                  ),
                 ),
               ),
             ),

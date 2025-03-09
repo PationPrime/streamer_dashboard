@@ -21,7 +21,6 @@ class PrimaryButton extends StatelessWidget {
   final GestureTapCallback? onTap;
   final Widget? customContent;
   final Widget? icon;
-  final Color? iconColor;
   final int? counter;
   final bool expanded;
   final bool loading;
@@ -50,7 +49,6 @@ class PrimaryButton extends StatelessWidget {
     this.counter,
     this.customContent,
     this.loading = false,
-    this.iconColor,
     this.onPressHoverColor,
     this.useSplash = true,
     this.fontWeight500,
@@ -71,7 +69,7 @@ class PrimaryButton extends StatelessWidget {
           duration: _kDuration,
           decoration: BoxDecoration(
             color: enabled
-                ? buttonColor ?? context.color.active
+                ? buttonColor ?? context.color.cancel
                 : context.color.disabled,
             borderRadius: BorderRadius.circular(borderRadius),
             border: borderColor is! Color
@@ -108,7 +106,6 @@ class PrimaryButton extends StatelessWidget {
                               title: title,
                               titleStyle: titleStyle,
                               icon: icon,
-                              iconColor: iconColor,
                               titleColor: titleColor,
                               counter: counter,
                             ),

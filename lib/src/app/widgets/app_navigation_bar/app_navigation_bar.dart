@@ -8,7 +8,7 @@ import 'app_navigation_bar_item.dart';
 class AppNavigationBar extends StatefulWidget {
   final List<AppNavigationBarItem> items;
   final int activeIndex;
-  final Function(int)? onActiveIndexChanged;
+  final void Function(int)? onActiveIndexChanged;
   final double landscapeWidth;
   final double portraitHeight;
   final Color? backgroundColor;
@@ -112,121 +112,129 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
   Widget build(BuildContext context) {
     final deviceType = DeviceSizeData.deviceType;
 
-    final isPortrait =
-        MediaQuery.of(context).orientation == Orientation.portrait;
+    final isPortrait = false;
+    // MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Align(
       alignment: isPortrait ? Alignment.bottomCenter : Alignment.centerLeft,
       child: Padding(
         padding: isPortrait ? widget.portraitMargin : widget.landscapeMargin,
         child: Container(
-          width: isPortrait ? null : widget.landscapeWidth,
-          height: isPortrait ? widget.portraitHeight : null,
-          decoration: BoxDecoration(
-            color: widget.backgroundColor ?? context.color.background,
-            border: widget.border,
-            borderRadius: isPortrait
-                ? widget.portraitBorderRadius
-                : widget.landscapeBorderRadius,
-            boxShadow: widget.boxShadow ??
-                [
-                  BoxShadow(
-                    color: context.color.lightBorder.withOpacity(0.2),
-                    offset: const Offset(0, 0),
-                    spreadRadius: 5,
-                    blurRadius: 20,
+            width:
+                //  isPortrait ? null :
+
+                widget.landscapeWidth,
+            height:
+
+                //  isPortrait ?
+
+                // widget.portraitHeight,
+                null,
+            decoration: BoxDecoration(
+              color: widget.backgroundColor ?? context.color.background,
+              border: widget.border,
+              borderRadius: isPortrait
+                  ? widget.portraitBorderRadius
+                  : widget.landscapeBorderRadius,
+              boxShadow: widget.boxShadow ??
+                  [
+                    BoxShadow(
+                      color: context.color.lightBorder.withOpacity(0.2),
+                      offset: const Offset(0, 0),
+                      spreadRadius: 5,
+                      blurRadius: 20,
+                    ),
+                  ],
+            ),
+            child:
+
+                // !isPortrait
+                // && !deviceType.isMobile
+                // ?
+                Column(
+              children: [
+                if (widget.logo is Widget) widget.logo!,
+                Expanded(
+                  flex: widget.additionalItems is! List<AppNavigationBarItem>
+                      ? 1
+                      : (widget.items.length + 7).clamp(1, 11),
+                  child: ListView.separated(
+                    padding: widget.contentPadding,
+                    itemCount: widget.items.length,
+                    itemBuilder: (context, index) {
+                      final item = widget.items[index];
+                      final isActive = index == _activeIndex;
+
+                      return BouncyButtonWrapper(
+                        onTap: () => _onActiveIndexChanged(
+                          index,
+                        ),
+                        child: isActive
+                            ? (item.activeIcon ?? item.inActiveIcon)
+                            : item.inActiveIcon,
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) =>
+                        SizedBox(
+                      height: widget.buttonVerticalButtonBottomPadding,
+                    ),
                   ),
-                ],
-          ),
-          child: !isPortrait && !deviceType.isMobile
-              ? Column(
-                  children: [
-                    if (widget.logo is Widget) widget.logo!,
-                    Expanded(
-                      flex:
-                          widget.additionalItems is! List<AppNavigationBarItem>
-                              ? 1
-                              : (widget.items.length + 7).clamp(1, 11),
+                ),
+                if (widget.additionalItems is List<AppNavigationBarItem>)
+                  Expanded(
+                    flex: widget.additionalItems!.length,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        border: Border(
+                          top: BorderSide(
+                            width: 0.5,
+                            color: widget.additionalItemsDividerColor ??
+                                context.color.mainWhite,
+                            style: BorderStyle.solid,
+                          ),
+                        ),
+                      ),
                       child: ListView.separated(
-                        padding: widget.contentPadding,
-                        itemCount: widget.items.length,
+                        padding: widget.additionalItemsMargin,
+                        itemCount: widget.additionalItems!.length,
                         itemBuilder: (context, index) {
-                          final item = widget.items[index];
-                          final isActive = index == _activeIndex;
+                          final additionalItem = widget.additionalItems![index];
 
                           return BouncyButtonWrapper(
-                            onTap: () => _onActiveIndexChanged(
-                              index,
-                            ),
-                            child: isActive
-                                ? (item.activeIcon ?? item.inActiveIcon)
-                                : item.inActiveIcon,
+                            onTap: additionalItem.onTap,
+                            child: additionalItem.inActiveIcon,
                           );
                         },
-                        separatorBuilder: (BuildContext context, int index) =>
-                            SizedBox(
-                          height: widget.buttonVerticalButtonBottomPadding,
+                        separatorBuilder: (context, index) => SizedBox(
+                          height: widget.additionalItems!.length - 1 == index
+                              ? 0
+                              : widget.additionalButtonVerticalBottomPadding,
                         ),
                       ),
                     ),
-                    if (widget.additionalItems is List<AppNavigationBarItem>)
-                      Expanded(
-                        flex: widget.additionalItems!.length,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            border: Border(
-                              top: BorderSide(
-                                width: 0.5,
-                                color: widget.additionalItemsDividerColor ??
-                                    context.color.mainWhite,
-                                style: BorderStyle.solid,
-                              ),
-                            ),
-                          ),
-                          child: ListView.separated(
-                            padding: widget.additionalItemsMargin,
-                            itemCount: widget.additionalItems!.length,
-                            itemBuilder: (context, index) {
-                              final additionalItem =
-                                  widget.additionalItems![index];
-
-                              return BouncyButtonWrapper(
-                                onTap: additionalItem.onTap,
-                                child: additionalItem.inActiveIcon,
-                              );
-                            },
-                            separatorBuilder: (context, index) => SizedBox(
-                              height: widget.additionalItems!.length - 1 ==
-                                      index
-                                  ? 0
-                                  : widget
-                                      .additionalButtonVerticalBottomPadding,
-                            ),
-                          ),
-                        ),
-                      ),
-                  ],
-                )
-              : Padding(
-                  padding: widget.contentPadding,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      for (final item in widget.items)
-                        Center(
-                          child: BouncyButtonWrapper(
-                            onTap: () => _onActiveIndexChanged(
-                              widget.items.indexOf(item),
-                            ),
-                            child: item == widget.items[_activeIndex]
-                                ? (item.activeIcon ?? item.inActiveIcon)
-                                : item.inActiveIcon,
-                          ),
-                        ),
-                    ],
                   ),
-                ),
-        ),
+              ],
+            )
+            // : Padding(
+            //     padding: widget.contentPadding,
+            //     child: Row(
+            //       mainAxisAlignment: MainAxisAlignment.center,
+            //       children: [
+            //         for (final item in widget.items)
+            //           Center(
+            //             child: BouncyButtonWrapper(
+            //               onTap: () => _onActiveIndexChanged(
+            //                 widget.items.indexOf(item),
+            //               ),
+            //               child: item == widget.items[_activeIndex]
+            //                   ? (item.activeIcon ?? item.inActiveIcon)
+            //                   : item.inActiveIcon,
+            //             ),
+            //           ),
+            //       ],
+            //     ),
+            //   ),
+            ),
       ),
     );
   }

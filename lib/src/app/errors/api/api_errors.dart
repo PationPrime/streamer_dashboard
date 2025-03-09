@@ -1,8 +1,12 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:equatable/equatable.dart';
+import 'package:flutter/material.dart';
 
 import '../../failure/failure.dart';
-import '../../router/app_router_provider.dart';
+import '../../router/navigator_key_provider.dart';
+import '../../tools/tools.dart';
 import '../constants/failure_constants.dart';
 
 part 'error_handler.dart';

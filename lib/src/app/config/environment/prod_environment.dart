@@ -7,5 +7,7 @@ class ProdEnvironment extends AppEnvironment {
           connectTimeout: ProductionConfig.connectTimeout,
           receiveTimeout: ProductionConfig.receiveTimeout,
           defaultLocale: ProductionConfig.defaultLocale,
+          twitchAuthBaseUrl: ProductionConfig.twitchAuthBaseUrl,
+          twitchApiBaseUrl: ProductionConfig.twitchApiBaseUrl,
         );
 }

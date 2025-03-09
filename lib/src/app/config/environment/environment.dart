@@ -17,12 +17,16 @@ abstract class AppEnvironment {
   static const _fallbackAppEnvironment = DevEnvironment();
 
   final String baseUrl;
+  final String twitchAuthBaseUrl;
+  final String twitchApiBaseUrl;
   final int connectTimeout;
   final int receiveTimeout;
   final String defaultLocale;
 
   const AppEnvironment._({
     required this.baseUrl,
+    required this.twitchAuthBaseUrl,
+    required this.twitchApiBaseUrl,
     required this.connectTimeout,
     required this.receiveTimeout,
     required this.defaultLocale,

@@ -6,7 +6,6 @@ class _PrimaryButtonTitle extends StatelessWidget {
   final String? title;
   final TextStyle? titleStyle;
   final Widget? icon;
-  final Color? iconColor;
   final Color? titleColor;
   final int? counter;
   final bool? fontWeight500;
@@ -16,7 +15,6 @@ class _PrimaryButtonTitle extends StatelessWidget {
     this.title,
     this.titleStyle,
     this.icon,
-    this.iconColor,
     this.titleColor,
     this.counter,
     this.fontWeight500,
@@ -30,17 +28,11 @@ class _PrimaryButtonTitle extends StatelessWidget {
             if (icon != null)
               WidgetSpan(
                 alignment: PlaceholderAlignment.middle,
-                child: ColorFiltered(
-                  colorFilter: ColorFilter.mode(
-                    iconColor ?? Colors.white,
-                    BlendMode.srcATop,
-                  ),
-                  child: Container(
-                    width: 24,
-                    height: 24,
-                    margin: const EdgeInsets.only(right: 10),
-                    child: icon!,
-                  ),
+                child: Container(
+                  width: 24,
+                  height: 24,
+                  margin: const EdgeInsets.only(right: 10),
+                  child: icon!,
                 ),
               ),
             TextSpan(

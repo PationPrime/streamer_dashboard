@@ -13,14 +13,49 @@ class _AppGoRouter {
           GoRoute(
             path: NavigationPath.root,
             name: NavigationPath.root,
-            pageBuilder: (context, state) => MaterialPage(
+            pageBuilder: (context, state) => FadeInPage(
               child: const DashboardScreen(),
+            ),
+          ),
+          GoRoute(
+            name: NavigationPath.donations,
+            path: "/${NavigationPath.donations}",
+            pageBuilder: (context, state) => FadeInPage(
+              child: const DonationsScreen(),
+            ),
+          ),
+          GoRoute(
+            name: NavigationPath.liveStreams,
+            path: "/${NavigationPath.liveStreams}",
+            pageBuilder: (context, state) => FadeInPage(
+              child: const LiveStreamsScreen(),
+            ),
+          ),
+          GoRoute(
+            name: NavigationPath.authentication,
+            path: "/${NavigationPath.authentication}",
+            pageBuilder: (context, state) => FadeInPage(
+              child: const AuthenticationScreen(),
+            ),
+          ),
+          GoRoute(
+            name: NavigationPath.profiles,
+            path: "/${NavigationPath.profiles}",
+            pageBuilder: (context, state) => FadeInPage(
+              child: const ProfilesScreen(),
+            ),
+          ),
+          GoRoute(
+            name: NavigationPath.streamWidgets,
+            path: "/${NavigationPath.streamWidgets}",
+            pageBuilder: (context, state) => FadeInPage(
+              child: const StreamWidgetsScreen(),
             ),
           ),
           GoRoute(
             name: NavigationPath.settings,
             path: "/${NavigationPath.settings}",
-            pageBuilder: (context, state) => MaterialPage(
+            pageBuilder: (context, state) => FadeInPage(
               child: const SettingsScreen(),
             ),
           ),

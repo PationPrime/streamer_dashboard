@@ -2,13 +2,13 @@ import 'package:dio/dio.dart';
 
 import '../../config/environment/environment.dart';
 
-base class ApiClient {
+base class BaseApiClient {
   final AppEnvironment environment;
   final Map<String, dynamic> headers;
   final List<Interceptor> interceptors;
   final String? baseUrl;
 
-  const ApiClient({
+  const BaseApiClient({
     required this.environment,
     this.headers = const {},
     this.interceptors = const [],

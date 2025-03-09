@@ -24,17 +24,42 @@ class MockLocalStorage implements LocalStorageInterface {
   Future<void> clearAllData() async => _storage.clear();
 
   @override
-  Future<void> deleteToken() {
+  Future<void> deleteMainApiV1Token() {
     throw UnimplementedError();
   }
 
   @override
-  Future<void> setToken(TokenModel token) {
+  Future<void> setToken(MainV1TokenModel token) {
     throw UnimplementedError();
   }
 
   @override
-  Future<TokenModel> getToken() {
+  Future<MainV1TokenModel> getToken() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setTwitchToken(TwitchTokenModel token) {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<TwitchTokenModel> getTwitchToken() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> deleteTwitchToken() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<String?> getDonationAlertsWidgetWevbViewUrl() {
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> saveDonationAlertsWidgetWevbViewUrl(String widgetWebViewUrl) {
     throw UnimplementedError();
   }
 }

@@ -12,6 +12,19 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/flutter_svg.dart' as _svg;
 import 'package:vector_graphics/vector_graphics.dart' as _vg;
 
+class $AdditionalDataGen {
+  const $AdditionalDataGen();
+
+  /// File path: additional_data/donations.json
+  String get donations => 'additional_data/donations.json';
+
+  /// File path: additional_data/twitch_app_data.json
+  String get twitchAppData => 'additional_data/twitch_app_data.json';
+
+  /// List of all assets
+  List<String> get values => [donations, twitchAppData];
+}
+
 class $AssetsAppLogoGen {
   const $AssetsAppLogoGen();
 
@@ -49,13 +62,45 @@ class $AssetsIconsGen {
   SvgGenImage get iconArrowForwardWhite =>
       const SvgGenImage('assets/icons/icon_arrow_forward_white.svg');
 
+  /// File path: assets/icons/icon_close.svg
+  SvgGenImage get iconClose => const SvgGenImage('assets/icons/icon_close.svg');
+
+  /// File path: assets/icons/icon_refresh copy.svg
+  SvgGenImage get iconRefreshCopy =>
+      const SvgGenImage('assets/icons/icon_refresh copy.svg');
+
   /// File path: assets/icons/icon_refresh.svg
   SvgGenImage get iconRefresh =>
       const SvgGenImage('assets/icons/icon_refresh.svg');
 
+  /// File path: assets/icons/icon_restart.svg
+  SvgGenImage get iconRestart =>
+      const SvgGenImage('assets/icons/icon_restart.svg');
+
+  /// File path: assets/icons/icon_search.svg
+  SvgGenImage get iconSearch =>
+      const SvgGenImage('assets/icons/icon_search.svg');
+
+  /// File path: assets/icons/icon_send.svg
+  SvgGenImage get iconSend => const SvgGenImage('assets/icons/icon_send.svg');
+
   /// File path: assets/icons/icon_square.svg
   SvgGenImage get iconSquare =>
       const SvgGenImage('assets/icons/icon_square.svg');
+
+  /// File path: assets/icons/icon_tool.svg
+  SvgGenImage get iconTool => const SvgGenImage('assets/icons/icon_tool.svg');
+
+  /// File path: assets/icons/icon_twitch.svg
+  SvgGenImage get iconTwitch =>
+      const SvgGenImage('assets/icons/icon_twitch.svg');
+
+  /// File path: assets/icons/icon_user.svg
+  SvgGenImage get iconUser => const SvgGenImage('assets/icons/icon_user.svg');
+
+  /// File path: assets/icons/icon_youtube.svg
+  SvgGenImage get iconYoutube =>
+      const SvgGenImage('assets/icons/icon_youtube.svg');
 
   /// File path: assets/icons/minus.svg
   SvgGenImage get minus => const SvgGenImage('assets/icons/minus.svg');
@@ -71,18 +116,40 @@ class $AssetsIconsGen {
         iconArrowBack,
         iconArrowForward,
         iconArrowForwardWhite,
+        iconClose,
+        iconRefreshCopy,
         iconRefresh,
+        iconRestart,
+        iconSearch,
+        iconSend,
         iconSquare,
+        iconTool,
+        iconTwitch,
+        iconUser,
+        iconYoutube,
         minus,
         minusWhite
       ];
 }
 
+class $AssetsImagesGen {
+  const $AssetsImagesGen();
+
+  /// File path: assets/images/plastic_transparent_cup.png
+  AssetGenImage get plasticTransparentCup =>
+      const AssetGenImage('assets/images/plastic_transparent_cup.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [plasticTransparentCup];
+}
+
 class Assets {
   const Assets._();
 
+  static const $AdditionalDataGen additionalData = $AdditionalDataGen();
   static const $AssetsAppLogoGen appLogo = $AssetsAppLogoGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
+  static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 
 class AssetGenImage {

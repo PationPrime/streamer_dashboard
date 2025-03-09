@@ -1,0 +1,37 @@
+environment_config:
+  path: src/app/config/main_environment_config.dart
+  class: MainEnvironmentConfig
+  dev_extension: dev
+
+  fields:
+    currentConfigName:
+      type: String
+      default: unknown
+    connectTimeout:
+      type: int
+      default: 15000
+    receiveTimeout:
+      type: int
+      default: 15000
+    defaultLocale:
+      type: String
+      default: en_US
+
+  extensions:
+    dev: # dev config extension
+      fields:
+        currentConfigName:
+          type: String
+          default: develop
+
+    test: # test config extension
+      fields:
+        currentConfigName:
+          type: String
+          default: test
+
+    prod: # production config extension
+      fields:
+        currentConfigName:
+          type: String
+          default: production
