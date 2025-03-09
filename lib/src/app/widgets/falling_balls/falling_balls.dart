@@ -4,8 +4,9 @@ import 'package:flutter/material.dart';
 import 'package:streamer_dashboard/src/app/extensions/extensions.dart';
 
 part 'ball.dart';
-part 'ball_painter.dart';
 part 'ball_physics.dart';
+part 'falling_balls_render_box.dart';
+part 'falling_balls_render_object_widget.dart';
 
 class FallingBalls extends StatefulWidget {
   final double minBallRadius;
@@ -55,7 +56,7 @@ class _FallingBallsState extends State<FallingBalls>
   }
 
   @override
-  Widget build(BuildContext context) => BallLeafRenderObjectWidget(
+  Widget build(BuildContext context) => _FallingBallsLeafRenderObjectWidget(
         controller: _controller,
         minBallRadius: widget.minBallRadius,
         maxBallRadius: widget.maxBallRadius,

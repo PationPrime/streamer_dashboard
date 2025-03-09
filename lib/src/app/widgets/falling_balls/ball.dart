@@ -5,8 +5,8 @@ class Ball {
   Offset position;
   Offset velocity;
 
-  double get mass =>
-      radius.pow2().toDouble() * pi; // Приблизительная масса шара
+  /// Approximate ball mass
+  double get mass => radius.pow2().toDouble() * pi;
 
   Ball({
     required this.position,

@@ -1,43 +1,6 @@
 part of 'falling_balls.dart';
 
-class BallLeafRenderObjectWidget extends LeafRenderObjectWidget {
-  final AnimationController controller;
-  final double minBallRadius;
-  final double maxBallRadius;
-  final bool showCollisionShape;
-  final double bottomMargin;
-
-  const BallLeafRenderObjectWidget({
-    super.key,
-    required this.controller,
-    required this.minBallRadius,
-    required this.maxBallRadius,
-    required this.showCollisionShape,
-    required this.bottomMargin,
-  });
-
-  @override
-  RenderObject createRenderObject(BuildContext context) => BallLeafRenderBox(
-        controller: controller,
-        minBallRadius: minBallRadius,
-        maxBallRadius: maxBallRadius,
-        showCollisionShape: showCollisionShape,
-        bottomMargin: bottomMargin,
-      );
-
-  @override
-  void updateRenderObject(
-    BuildContext context,
-    covariant BallLeafRenderBox renderObject,
-  ) =>
-      renderObject
-        ..minBallRadius = minBallRadius
-        ..maxBallRadius = maxBallRadius
-        ..showCollisionShape = showCollisionShape
-        ..bottomMargin = bottomMargin;
-}
-
-class BallLeafRenderBox extends RenderBox with BallPhysics {
+class _FallingBallsRenderBox extends RenderBox with BallPhysics {
   bool _initialized = false;
   Size? _size;
 
@@ -188,7 +151,7 @@ class BallLeafRenderBox extends RenderBox with BallPhysics {
     );
   }
 
-  BallLeafRenderBox({
+  _FallingBallsRenderBox({
     required AnimationController controller,
     required double minBallRadius,
     required double maxBallRadius,
