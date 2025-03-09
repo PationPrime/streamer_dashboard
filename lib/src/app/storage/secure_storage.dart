@@ -75,7 +75,7 @@ class AppSecureStorage implements LocalStorageInterface {
 
       final tokenDataMap = jsonDecode(tokenDataJson) as Map<String, dynamic>;
 
-      return TwitchTokenModel.fromJsonWithLastUpdateTime(
+      return TwitchTokenModel.fromJson(
         tokenDataMap,
       );
     } catch (error, stackTrace) {

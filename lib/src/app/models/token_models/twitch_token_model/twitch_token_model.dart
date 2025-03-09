@@ -35,10 +35,15 @@ class TwitchTokenModel extends BaseTokenModel {
         lastUpdateTime: lastUpdateTime ?? super.lastUpdateTime,
       );
 
+  factory TwitchTokenModel.fromJson(
+    Map<String, dynamic> json,
+  ) =>
+      _$TwitchTokenModelFromJson(json);
+
   factory TwitchTokenModel.fromJsonWithLastUpdateTime(
     Map<String, dynamic> json,
   ) {
-    final model = _$TwitchTokenModelFromJson(json);
+    final model = TwitchTokenModel.fromJson(json);
 
     return model.copyWith(
       lastUpdateTime: DateTime.now(),
