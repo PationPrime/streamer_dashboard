@@ -16,6 +16,7 @@ mixin BallPhysics {
   /// Gravity
   static const _defaultGravityValue = 0.1;
 
+  /// Collisions
   bool _checkBallsCollision(
     Ball ball1,
     Ball ball2,
@@ -24,18 +25,126 @@ mixin BallPhysics {
     return distance < (ball1.radius + ball2.radius);
   }
 
-  bool _checkBoxConstraintsCollision({
+  bool _checkBallLeftWallCollision({
     required Ball ball,
-    required Size size,
+  }) =>
+      ball.position.dx - ball.radius < 0;
+
+  bool _checkBallRightWallCollision({
+    required Ball ball,
+    required double maxWidth,
+  }) =>
+      ball.position.dx + ball.radius > maxWidth;
+
+  void _resolveBallLeftWallCollision({
+    required Ball ball,
   }) {
-    return false;
+    ball.position = Offset(
+      ball.radius,
+      ball.position.dy,
+    );
+
+    ball.velocity = Offset(
+      -ball.velocity.dx * _defaultVelocityMultiplier,
+      ball.velocity.dy,
+    );
   }
 
-  void _resolveBallAndConstraintsCollision({
-    required Ball ball,
-    required Size size,
+  /// Функция, возвращающая ближайшую точку на отрезке [lineStartPoint,lineEndPoint] относительно точки [point]
+  Offset _closestPointOnLine(
+    Offset lineStartPoint,
+    Offset lineEndPoint,
+    Offset point,
+  ) {
+    final directedLine = lineEndPoint - lineStartPoint;
+
+    final coef = ((point - lineStartPoint).dot(directedLine)) /
+        directedLine.distanceSquared;
+
+    final clampedCoef = coef.clamp(0.0, 1.0);
+
+    return lineStartPoint + directedLine * clampedCoef;
+  }
+
+  /// Функция для обработки столкновения шара с наклонной стороной (линейным сегментом)
+  void _handleLineCollision(
+    Ball ball,
+    Offset lineStartPoint,
+    Offset lineEndPoint, {
+    double restitution = 0.8,
   }) {
-    print(ball.position);
+    final closest = _closestPointOnLine(
+      lineStartPoint,
+      lineEndPoint,
+      ball.position,
+    );
+
+    final dist = (ball.position - closest).distance;
+
+    if (dist < ball.radius) {
+      // Вычисляем нормаль столкновения – направление от ближайшей точки к центру шара
+      final normal = (ball.position - closest).normalize();
+      // Корректируем позицию, чтобы шарик не проникал внутрь: смещаем его до границы
+      ball.position = closest + normal * ball.radius;
+      // Отражаем скорость вдоль нормали с учетом коэффициента упругости
+      final dot = ball.velocity.dot(normal);
+      ball.velocity = ball.velocity - normal * (dot * (1 + restitution));
+    }
+  }
+
+  void _updateBallCollisionWithShape(
+    Ball ball,
+    Size size,
+  ) {
+    final topLeft = Offset(
+      0,
+      0,
+    );
+
+    final topRight = Offset(
+      size.width,
+      0,
+    );
+
+    final bottomRight = Offset(
+      size.width - 100,
+      size.height,
+    );
+
+    final bottomLeft = Offset(
+      100,
+      size.height,
+    );
+
+    // Проверяем столкновение с левой наклонной стороной (от topLeft до bottomLeft)
+    _handleLineCollision(ball, topLeft, bottomLeft);
+
+    // Проверяем столкновение с правой наклонной стороной (от topRight до bottomRight)
+    _handleLineCollision(ball, topRight, bottomRight);
+
+    // Обработка горизонтальной нижней стороны (если требуется)
+    // Здесь для примера проверяем нижнюю грань, определённую нижними точками трапеции.
+    final bottomY = size.height;
+
+    if (ball.position.dy + ball.radius > bottomY) {
+      ball.position = Offset(ball.position.dx, bottomY - ball.radius);
+      ball.velocity = Offset(ball.velocity.dx, -ball.velocity.dy * 0.8);
+    }
+  }
+
+  void _resolveBallRightWallCollision({
+    required Ball ball,
+    required double maxWidth,
+  }) {
+    ball.position = Offset(
+      maxWidth - ball.radius,
+      ball.position.dy,
+    );
+
+    ball.velocity = Offset(
+      -ball.velocity.dx * _defaultVelocityMultiplier,
+      ball.velocity.dy,
+    );
   }
 
   void _resolveBallsCollision(
@@ -56,6 +165,45 @@ mixin BallPhysics {
 
     ball1.velocity += normal * (impulse * ball2.mass);
     ball2.velocity -= normal * (impulse * ball1.mass);
+  }
+
+  void _handleShapeCollisions(Ball ball, RRect shape) {
+    // Проверка столкновения с левой стороной
+    if (ball.position.dx - ball.radius < shape.left) {
+      ball.position = Offset(shape.left + ball.radius, ball.position.dy);
+      ball.velocity = Offset(-ball.velocity.dx * 0.8, ball.velocity.dy);
+    }
+    // Правая сторона
+    if (ball.position.dx + ball.radius > shape.right) {
+      ball.position = Offset(shape.right - ball.radius, ball.position.dy);
+      ball.velocity = Offset(-ball.velocity.dx * 0.8, ball.velocity.dy);
+    }
+    // Нижняя сторона
+    if (ball.position.dy + ball.radius > shape.bottom) {
+      ball.position = Offset(ball.position.dx, shape.bottom - ball.radius);
+      ball.velocity = Offset(ball.velocity.dx, -ball.velocity.dy * 0.8);
+    }
+
+    // Обработка углов (пример для нижнего левого угла)
+    if (ball.position.dx < shape.left + shape.blRadiusX &&
+        ball.position.dy > shape.bottom - shape.blRadiusY) {
+      final cornerCenter = Offset(
+        shape.left + shape.blRadiusX,
+        shape.bottom - shape.blRadiusY,
+      );
+
+      final distance = (ball.position - cornerCenter).distance;
+      if (distance < ball.radius) {
+        // Нормаль столкновения: вектор от центра дуги к центру шара
+        final normal = (ball.position - cornerCenter) / distance;
+        // Корректируем позицию, чтобы шар не проникал в область угла
+        ball.position = cornerCenter + normal * ball.radius;
+        // Инвертируем скорость вдоль нормали (с коэффициентом упругости)
+        final dot = ball.velocity.dx * normal.dx + ball.velocity.dy * normal.dy;
+        ball.velocity = ball.velocity - normal * (dot * 1.8);
+      }
+    }
+    // Аналогичные проверки для правого нижнего угла (и при необходимости для верхних углов)
   }
 
   /// Velocity

@@ -132,12 +132,24 @@ class $AssetsIconsGen {
       ];
 }
 
+class $AssetsImagesGen {
+  const $AssetsImagesGen();
+
+  /// File path: assets/images/plastic_transparent_cup.png
+  AssetGenImage get plasticTransparentCup =>
+      const AssetGenImage('assets/images/plastic_transparent_cup.png');
+
+  /// List of all assets
+  List<AssetGenImage> get values => [plasticTransparentCup];
+}
+
 class Assets {
   const Assets._();
 
   static const $AdditionalDataGen additionalData = $AdditionalDataGen();
   static const $AssetsAppLogoGen appLogo = $AssetsAppLogoGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
+  static const $AssetsImagesGen images = $AssetsImagesGen();
 }
 
 class AssetGenImage {
