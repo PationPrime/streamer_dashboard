@@ -92,10 +92,11 @@ mixin BallPhysics {
     }
   }
 
-  void _updateBallCollisionWithShape(
-    Ball ball,
-    Size size,
-  ) {
+  void _updateBallCollisionWithShape({
+    required Ball ball,
+    required Size size,
+    required double bottomWidth,
+  }) {
     final topLeft = Offset(
       0,
       0,
@@ -107,12 +108,12 @@ mixin BallPhysics {
     );
 
     final bottomRight = Offset(
-      size.width - 100,
+      size.width - bottomWidth,
       size.height,
     );
 
     final bottomLeft = Offset(
-      100,
+      bottomWidth,
       size.height,
     );
 

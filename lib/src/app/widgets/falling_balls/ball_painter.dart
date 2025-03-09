@@ -4,12 +4,16 @@ class BallLeafRenderObjectWidget extends LeafRenderObjectWidget {
   final AnimationController controller;
   final double minBallRadius;
   final double maxBallRadius;
+  final bool showCollisionShape;
+  final double bottomMargin;
 
   const BallLeafRenderObjectWidget({
     super.key,
     required this.controller,
     required this.minBallRadius,
     required this.maxBallRadius,
+    required this.showCollisionShape,
+    required this.bottomMargin,
   });
 
   @override
@@ -17,6 +21,8 @@ class BallLeafRenderObjectWidget extends LeafRenderObjectWidget {
         controller: controller,
         minBallRadius: minBallRadius,
         maxBallRadius: maxBallRadius,
+        showCollisionShape: showCollisionShape,
+        bottomMargin: bottomMargin,
       );
 
   @override
@@ -26,7 +32,9 @@ class BallLeafRenderObjectWidget extends LeafRenderObjectWidget {
   ) =>
       renderObject
         ..minBallRadius = minBallRadius
-        ..maxBallRadius = maxBallRadius;
+        ..maxBallRadius = maxBallRadius
+        ..showCollisionShape = showCollisionShape
+        ..bottomMargin = bottomMargin;
 }
 
 class BallLeafRenderBox extends RenderBox with BallPhysics {
@@ -34,6 +42,15 @@ class BallLeafRenderBox extends RenderBox with BallPhysics {
   Size? _size;
 
   late AnimationController _controller;
+
+  late bool _showCollisionShape;
+  bool get showCollisionShape => _showCollisionShape;
+
+  set showCollisionShape(bool value) {
+    if (_showCollisionShape == value) return;
+    _showCollisionShape = value;
+    markNeedsPaint();
+  }
 
   late double _minBallRadius;
   double get minBallRadius => _minBallRadius;
@@ -53,10 +70,18 @@ class BallLeafRenderBox extends RenderBox with BallPhysics {
     markNeedsPaint();
   }
 
+  late double _bottomMargin;
+  double get bottomMargin => _bottomMargin;
+
+  set bottomMargin(double value) {
+    if (_bottomMargin == value) return;
+    _bottomMargin = value;
+    markNeedsPaint();
+  }
+
   set controller(AnimationController value) {
     if (_controller == value) return;
     _controller = value;
-
     markNeedsPaint();
   }
 
@@ -85,10 +110,6 @@ class BallLeafRenderBox extends RenderBox with BallPhysics {
         );
       }
 
-      // if (_figureRect is RRect) {
-      //   _handleShapeCollisions(ball, _figureRect!);
-      // }
-
       /// Check with other ball collisions
       for (final otherBall in balls) {
         if (ball != otherBall && _checkBallsCollision(ball, otherBall)) {
@@ -99,8 +120,9 @@ class BallLeafRenderBox extends RenderBox with BallPhysics {
       // Обрабатываем столкновение с трапецией
 
       _updateBallCollisionWithShape(
-        ball,
-        size,
+        ball: ball,
+        size: size,
+        bottomWidth: _bottomMargin,
       );
     }
 
@@ -161,7 +183,7 @@ class BallLeafRenderBox extends RenderBox with BallPhysics {
     _balls.add(ball);
 
     Future.delayed(
-      Duration(milliseconds: 100),
+      Duration(milliseconds: 500),
       () => _spawnBall(size),
     );
   }
@@ -170,9 +192,13 @@ class BallLeafRenderBox extends RenderBox with BallPhysics {
     required AnimationController controller,
     required double minBallRadius,
     required double maxBallRadius,
+    required bool showCollisionShape,
+    required double bottomMargin,
   })  : _controller = controller,
+        _showCollisionShape = showCollisionShape,
         _minBallRadius = minBallRadius,
-        _maxBallRadius = maxBallRadius;
+        _maxBallRadius = maxBallRadius,
+        _bottomMargin = bottomMargin;
 
   @override
   void performLayout() {
@@ -185,19 +211,21 @@ class BallLeafRenderBox extends RenderBox with BallPhysics {
     }
   }
 
-  @override
-  void paint(PaintingContext context, Offset offset) {
-    final canvas = context.canvas;
-
-    final Path trapezoidPath = Path()
+  void _drawCollisionShape({
+    required Canvas canvas,
+    required Size size,
+    required Offset offset,
+    required double bottomWidth,
+  }) {
+    final trapezoidPath = Path()
       ..moveTo(offset.dx, offset.dy)
       ..lineTo(offset.dx + size.width, offset.dy)
       ..lineTo(
-        offset.dx + size.width - 100,
+        offset.dx + size.width - bottomWidth,
         offset.dy + size.height,
       )
       ..lineTo(
-        offset.dx + 100,
+        offset.dx + bottomWidth,
         size.height + offset.dy,
       )
       ..close();
@@ -206,6 +234,20 @@ class BallLeafRenderBox extends RenderBox with BallPhysics {
       trapezoidPath,
       Paint()..color = Colors.white,
     );
+  }
+
+  @override
+  void paint(PaintingContext context, Offset offset) {
+    final canvas = context.canvas;
+
+    if (_showCollisionShape) {
+      _drawCollisionShape(
+        canvas: canvas,
+        size: size,
+        offset: offset,
+        bottomWidth: _bottomMargin,
+      );
+    }
 
     final paint = Paint()..color = Colors.redAccent;
 
