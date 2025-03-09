@@ -15,7 +15,7 @@ class FallingBalls extends StatefulWidget {
   const FallingBalls({
     super.key,
     this.minBallRadius = 10,
-    this.maxBallRadius = 15,
+    this.maxBallRadius = 40,
     this.controllerUpdateDuration = const Duration(
       milliseconds: 16,
     ), // equals to 60 FPS

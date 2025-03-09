@@ -145,7 +145,7 @@ class BallLeafRenderBox extends RenderBox with BallPhysics {
   }
 
   void _spawnBall(Size size) {
-    if (balls.length > 4) return;
+    if (balls.length > 30) return;
 
     final ball = Ball(
       position: _basePosition(
@@ -161,7 +161,7 @@ class BallLeafRenderBox extends RenderBox with BallPhysics {
     _balls.add(ball);
 
     Future.delayed(
-      Duration(seconds: 1),
+      Duration(milliseconds: 100),
       () => _spawnBall(size),
     );
   }

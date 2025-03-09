@@ -13,13 +13,13 @@ class _StreamWidgetsScreenState extends State<StreamWidgetsScreen> {
   Widget build(BuildContext context) => Scaffold(
         body: Stack(
           children: [
-            Positioned(
-              right: 10,
-              bottom: 100,
-              child: SizedBox(
-                height: 400,
-                width: 350,
-                child: FallingBalls(),
+            Positioned.fill(
+              child: Center(
+                child: SizedBox(
+                  height: 500,
+                  width: 450,
+                  child: FallingBalls(),
+                ),
               ),
             ),
           ],
