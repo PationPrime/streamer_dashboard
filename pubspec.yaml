@@ -38,8 +38,11 @@ dependencies:
   shelf: ^1.4.1
   shelf_static: ^1.1.2
   shelf_router: ^1.1.4
-  webview_widgets:
-    path: webview_widgets/
+  shelf_web_socket: ^1.0.2
+  web_socket_channel: ^2.4.0
+  live_stream_widgets:
+    path: live_stream_widgets/
+  encrypt: ^5.0.3
 
 dev_dependencies:
   flutter_test:

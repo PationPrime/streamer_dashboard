@@ -1,10 +1,17 @@
+import 'dart:math' as math;
+
 import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
+import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:shelf_static/shelf_static.dart';
+import 'package:streamer_dashboard/src/app/constants/constants.dart';
+import 'package:streamer_dashboard/src/app/errors/app_error_handler/app_error_handler.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../../../../app/failure/failure.dart';
 import '../../../../app/tools/tools.dart';
 
 part 'stream_widgets_state.dart';
@@ -12,92 +19,100 @@ part 'stream_widgets_state.dart';
 class StreamWidgetsController extends Cubit<StreamWidgetsState> {
   late final _appLogger = AppLogger(where: '$this');
 
-  HttpServer? _server;
+  final List<WebSocketChannel> clients = [];
+  static const _webAppRelativePath = 'live_stream_widgets\\build\\web';
+  static const _defualtWebDocument = 'index.html';
+  static const _webAppHost = NetworkConstants.localhost;
+  static const _bridgeServerHost = NetworkConstants.localhost;
+  static const _errorHandler = AppErrorHandler();
 
-  static const _host = 'localhost';
-
-  int _port = 5550;
-
+  HttpServer? _webAppHostingServer;
   int _connectionAttempts = 0;
 
   StreamWidgetsController()
       : super(
           const StreamWidgetsInitialState(),
         ) {
-    _startWidgetsHosting(
-      stopBeforeStart: false,
-    );
+    _init();
   }
 
-  Future<bool> _isPortAvailable() async {
-    if (_connectionAttempts >= 20) return false;
+  Future<int?> _isPortAvailable(int port) async {
+    if (_connectionAttempts >= 20) return null;
 
     try {
       final server = await ServerSocket.bind(
         InternetAddress.loopbackIPv4,
-        _port,
+        port,
       );
 
       await server.close();
 
-      return true;
+      return port;
     } catch (error, stackTrace) {
       _appLogger.logError(
-        'Exception: port $_port is not available. Retrying...',
+        'Exception: port $port is not available. Retrying...',
         stackTrace: stackTrace,
         sign: '👾',
       );
 
       _connectionAttempts++;
-      _port++;
+      port++;
 
-      return await _isPortAvailable();
+      return await _isPortAvailable(
+        port,
+      );
     }
   }
 
   Future<void> _startWidgetsHosting({
     bool stopBeforeStart = true,
   }) async {
-    emit(
-      state.copyWith(
-        isProcessing: true,
-      ),
-    );
-
     try {
       if (stopBeforeStart) {
-        await stopWidgetsHosting();
+        await _stopWidgetsHosting();
       }
 
-      final isAvailable = await _isPortAvailable();
+      // final port = math.Random().nextInt(800) + 10000;
 
-      if (!isAvailable) {
+      final port = 5555;
+
+      final availablePort = await _isPortAvailable(
+        port,
+      );
+
+      if (availablePort is! int) {
         throw Exception(
-          'Exception: port $_port is not available!',
+          'Exception: Failed to find free hosting port',
         );
       }
 
       final handler = createStaticHandler(
-        'webview_widgets\\build\\web',
-        defaultDocument: 'index.html',
+        _webAppRelativePath,
+        defaultDocument: _defualtWebDocument,
       );
 
-      _server = await shelf_io.serve(
+      _webAppHostingServer = await shelf_io.serve(
         handler,
-        _host,
-        _port,
+        _webAppHost,
+        port,
       );
 
-      if (_server == null) {
+      if (_webAppHostingServer == null) {
         throw Exception('Failed to start hosting. Server is null!');
       }
 
+      final webAppHostingUri = Uri.parse(
+        'http://${_webAppHostingServer!.address.host}:${_webAppHostingServer!.port}/main?bridgeUrl=${state.bridgeServerHostingUri}',
+      );
+
       emit(
         state.copyWith(
-          hostingUri: Uri.parse(
-            'http://${_server!.address.host}:${_server!.port}',
-          ),
+          webAppHostingUri: webAppHostingUri,
         ),
+      );
+
+      _appLogger.logMessage(
+        'Stream Widgets starts at $webAppHostingUri',
       );
 
       ///
@@ -105,6 +120,146 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
       _appLogger.logError(
         'Start hosting server failed! $error',
         stackTrace: stackTrace,
+      );
+    }
+  }
+
+  Future<void> _stopWidgetsHosting() async {
+    try {
+      if (_webAppHostingServer == null) {
+        throw Exception(
+          'Failed to stop widgets hosting! Server is null!',
+        );
+      }
+
+      await _webAppHostingServer!.close();
+
+      _appLogger.logMessage('Server stopped.');
+
+      _webAppHostingServer = null;
+    } catch (error, stackTrace) {
+      _appLogger.logError(
+        'Failed to stop widgets hosting! $error',
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  void _broadcastBridgeServerMessage({
+    required String message,
+    required WebSocketChannel sender,
+  }) {
+    for (final client in clients) {
+      if (client != sender) {
+        client.sink.add(message);
+      }
+    }
+  }
+
+  Future<void> _startBridgeServer() async {
+    try {
+      // final port = math.Random().nextInt(800) + 11000;
+      final port = 5505;
+      final availablePort = await _isPortAvailable(port);
+
+      if (availablePort is! int) {
+        throw Exception(
+          'Exception: Failed to find free hosting port',
+        );
+      }
+
+      final handler = webSocketHandler(
+        (WebSocketChannel webSocket) {
+          _appLogger.logMessage(
+            'New connection',
+          );
+
+          // Add new client
+          clients.add(webSocket);
+
+          webSocket.stream.listen(
+            (message) {
+              _appLogger.logMessage(
+                'Message received: $message',
+              );
+
+              _broadcastBridgeServerMessage(
+                message: message,
+                sender: webSocket,
+              );
+            },
+            onDone: () {
+              _appLogger.logMessage(
+                'Client disconnected',
+              );
+
+              clients.remove(webSocket);
+            },
+            onError: (error) {
+              _appLogger.logMessage(
+                'WebSocket error: $error',
+              );
+
+              clients.remove(webSocket);
+            },
+          );
+        },
+      );
+
+      final bridgeServer = await shelf_io.serve(
+        handler,
+        _bridgeServerHost,
+        availablePort,
+      );
+
+      emit(
+        state.copyWith(
+          bridgeServerHostingUri: Uri.parse(
+            'ws://${bridgeServer.address.host}:${bridgeServer.port}',
+          ),
+        ),
+      );
+
+      _appLogger.logMessage(
+        'WebSocket starts at ${state.bridgeServerHostingUri}',
+      );
+    } catch (error, stackTrace) {
+      _appLogger.logError(
+        'Failed to start bridge server: $error',
+        stackTrace: stackTrace,
+      );
+    }
+  }
+
+  Future<void> _init() async {
+    if (state.isProcessing) return;
+
+    emit(
+      state.copyWith(
+        isProcessing: true,
+      ),
+    );
+
+    try {
+      await _startBridgeServer();
+      await _startWidgetsHosting(
+        stopBeforeStart: false,
+      );
+    } catch (error, stackTrace) {
+      _appLogger.logError(
+        'Failed to start bridge server: $error',
+        stackTrace: stackTrace,
+      );
+
+      final failure = _errorHandler.handleError(
+        error,
+        stackTrace: stackTrace,
+      );
+
+      emit(
+        state.copyWith(
+          failure: failure,
+        ),
       );
     } finally {
       emit(
@@ -115,24 +270,23 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
     }
   }
 
-  Future<void> stopWidgetsHosting() async {
-    try {
-      if (_server == null) {
-        throw Exception(
-          'Failed to stop widgets hosting! Server is null!',
-        );
-      }
-
-      await _server!.close();
-
-      _appLogger.logMessage('Server stopped.');
-
-      _server = null;
-    } catch (error, stackTrace) {
-      _appLogger.logError(
-        'Failed to stop widgets hosting! $error',
-        stackTrace: stackTrace,
+  Future<void> retryInit() async {
+    if (state.failure is Failure) {
+      emit(
+        state.clearFailure(),
       );
     }
+
+    await _init();
+  }
+
+  Future<void> shutdownServer() async {
+    await _stopWidgetsHosting();
+  }
+
+  @override
+  Future<void> close() {
+    shutdownServer();
+    return super.close();
   }
 }
