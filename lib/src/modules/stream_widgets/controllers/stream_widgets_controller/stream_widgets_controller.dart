@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
+import 'package:shelf/shelf.dart';
 import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:shelf_static/shelf_static.dart';
@@ -22,6 +23,8 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
   final List<WebSocketChannel> clients = [];
   static const _webAppRelativePath = 'live_stream_widgets\\build\\web';
   static const _defualtWebDocument = 'index.html';
+  static const _faviconFile = 'favicon.ico';
+  static const _faviconPath = '$_webAppRelativePath\\$_faviconFile';
   static const _webAppHost = NetworkConstants.localhost;
   static const _bridgeServerHost = NetworkConstants.localhost;
   static const _errorHandler = AppErrorHandler();
@@ -72,9 +75,7 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
         await _stopWidgetsHosting();
       }
 
-      // final port = math.Random().nextInt(800) + 10000;
-
-      final port = 5555;
+      final port = math.Random().nextInt(800) + 10000;
 
       final availablePort = await _isPortAvailable(
         port,
@@ -85,11 +86,36 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
           'Exception: Failed to find free hosting port',
         );
       }
-
-      final handler = createStaticHandler(
+      final staticHandler = createStaticHandler(
         _webAppRelativePath,
         defaultDocument: _defualtWebDocument,
+        serveFilesOutsidePath: true,
       );
+
+      handler(Request request) async {
+        final path = request.url.path;
+        final filePath = '$_webAppRelativePath\\$path';
+
+        if (path == _faviconFile) {
+          if (await File(_faviconPath).exists()) {
+            return staticHandler(
+              request,
+            );
+          } else {
+            return Response.notFound('favicon.ico not found');
+          }
+        }
+
+        if (await File(filePath).exists()) {
+          return staticHandler(request);
+        }
+
+        final uri = Uri.parse(
+          'http://$_webAppHost:$port/$_defualtWebDocument',
+        );
+
+        return staticHandler(Request('GET', uri));
+      }
 
       _webAppHostingServer = await shelf_io.serve(
         handler,
@@ -102,7 +128,7 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
       }
 
       final webAppHostingUri = Uri.parse(
-        'http://${_webAppHostingServer!.address.host}:${_webAppHostingServer!.port}/main?bridgeUrl=${state.bridgeServerHostingUri}',
+        'http://${_webAppHostingServer!.address.host}:${_webAppHostingServer!.port}?bridgeUrl=${state.bridgeServerHostingUri}',
       );
 
       emit(
@@ -158,8 +184,7 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
 
   Future<void> _startBridgeServer() async {
     try {
-      // final port = math.Random().nextInt(800) + 11000;
-      final port = 5505;
+      final port = math.Random().nextInt(800) + 11000;
       final availablePort = await _isPortAvailable(port);
 
       if (availablePort is! int) {
