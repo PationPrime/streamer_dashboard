@@ -141,6 +141,8 @@ class _FallingBallsRenderBox extends RenderBox with BallPhysics {
         min: _minBallRadius,
         max: _maxBallRadius,
       ),
+      imageUrl:
+          'https://static.vecteezy.com/system/resources/thumbnails/022/963/918/small_2x/ai-generative-cute-cat-isolated-on-solid-background-photo.jpg',
     );
 
     _balls.add(ball);
@@ -212,11 +214,51 @@ class _FallingBallsRenderBox extends RenderBox with BallPhysics {
       );
     }
 
-    final paint = Paint()..color = Colors.redAccent;
-
     for (final ball in balls) {
-      // shift the position of the ball by the offset received from parent
-      canvas.drawCircle(offset + ball.position, ball.radius, paint);
+      final center = offset + ball.position;
+
+      if (ball.image != null) {
+        // Сохраняем текущий слой и обрезаем область до круга
+        canvas.saveLayer(
+          Rect.fromCircle(
+            center: center,
+            radius: ball.radius,
+          ),
+          Paint(),
+        );
+
+        // Обрезаем область в форме круга
+        Path path = Path()
+          ..addOval(
+            Rect.fromCircle(
+              center: center,
+              radius: ball.radius,
+            ),
+          );
+        canvas.clipPath(path);
+
+        // Рисуем изображение внутри ограниченного круга
+        paintImage(
+          canvas: canvas,
+          rect: Rect.fromCircle(
+            center: center,
+            radius: ball.radius,
+          ),
+          image: ball.image!,
+          fit: BoxFit.cover,
+        );
+
+        // Восстанавливаем исходный слой
+        canvas.restore();
+      } else {
+        // Если изображение еще не загрузилось, рисуем просто цветной круг-заглушку
+        final paint = Paint()..color = Colors.grey;
+        canvas.drawCircle(
+          center,
+          ball.radius,
+          paint,
+        );
+      }
     }
   }
 

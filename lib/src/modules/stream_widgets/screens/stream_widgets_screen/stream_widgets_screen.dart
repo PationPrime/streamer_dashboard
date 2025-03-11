@@ -63,13 +63,17 @@ class _StreamWidgetsScreenState extends State<StreamWidgetsScreen> {
                               final url =
                                   '${streamWidgetsState.webAppHostingUri}/$widgetUrlPath';
 
-                              print(url);
+                              // print(url);
 
-                              await Clipboard.setData(
-                                ClipboardData(
-                                  text: url,
-                                ),
-                              );
+                              // await Clipboard.setData(
+                              //   ClipboardData(
+                              //     text: url,
+                              //   ),
+                              // );
+
+                              context
+                                  .read<StreamWidgetsController>()
+                                  .sendMessageToAllClients();
                             },
                           ),
                         ],

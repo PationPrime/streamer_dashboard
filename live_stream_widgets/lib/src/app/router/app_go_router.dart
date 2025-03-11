@@ -35,7 +35,23 @@ class AppGoRouter {
       GoRoute(
         name: NavigationPath.subsGlass,
         path: '/${NavigationPath.subsGlass}',
-        builder: (context, state) => const DefaultFallingBallsWidget(),
+        builder: (context, state) {
+          final queryParameters = state.uri.queryParameters;
+          final bridgeUrl = queryParameters['bridgeUrl'];
+
+          if (bridgeUrl == null) {
+            return PathParametersError(
+              pagePath: '/${NavigationPath.main}',
+              queryParameters: {
+                'bridgeUrl': 'String',
+              },
+            );
+          }
+
+          return DefaultFallingBallsWidget(
+            bridgeUrl: bridgeUrl,
+          );
+        },
       ),
     ],
   );

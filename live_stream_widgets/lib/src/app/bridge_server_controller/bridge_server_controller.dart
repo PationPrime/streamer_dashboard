@@ -2,18 +2,48 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:web_socket_channel/web_socket_channel.dart';
+import 'package:web_socket_channel/status.dart' as status;
 
 part 'bridge_server_state.dart';
 
 class BridgeServerController extends Cubit<BridgeServerState> {
   final FlutterSecureStorage _secureStorage;
 
+  WebSocketChannel? _wsChannel;
+
   BridgeServerController(
     this._secureStorage,
   ) : super(
           const BridgeServerInitialState(),
-        ) {
-    // _getBridgeUrlFromSecureStorage();
+        );
+
+  Future<void> _listenWSConnection() async {
+    if (state.bridgeServerUrl is! String) return;
+
+    try {
+      final wsUrl = Uri.parse(
+        state.bridgeServerUrl!,
+      );
+
+      _wsChannel = WebSocketChannel.connect(wsUrl);
+
+      await _wsChannel?.ready;
+
+      _wsChannel?.stream.listen((message) {
+        emit(
+          state.copyWith(
+            receivedMessage: '$message',
+          ),
+        );
+
+        // channel.sink.close(status.goingAway);
+      });
+    } catch (error, stackTrace) {
+      debugPrint(
+        'Failed to listen WS connection: $error\nstackTrace:$stackTrace',
+      );
+    }
   }
 
   Future<void> _getBridgeUrlFromSecureStorage() async {
@@ -31,6 +61,7 @@ class BridgeServerController extends Cubit<BridgeServerState> {
       if (bridgeUrl == null) {
         throw Exception('Cannot find bridge url inside local storage');
       }
+
       emit(
         state.copyWith(
           bridgeServerUrl: bridgeUrl,
@@ -60,16 +91,18 @@ class BridgeServerController extends Cubit<BridgeServerState> {
       if (url.startsWith('http://') ||
           url.startsWith('https://') ||
           url.startsWith('ws://')) {
-        await _secureStorage.write(
-          key: 'bridgeUrl',
-          value: url,
-        );
+        // await _secureStorage.write(
+        //   key: 'bridgeUrl',
+        //   value: url,
+        // );
 
         emit(
           state.copyWith(
             bridgeServerUrl: url,
           ),
         );
+
+        await _listenWSConnection();
       } else {
         emit(
           BridgeServerState(

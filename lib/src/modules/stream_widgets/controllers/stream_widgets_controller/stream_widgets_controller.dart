@@ -256,6 +256,14 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
     }
   }
 
+  void sendMessageToAllClients() {
+    for (final client in clients) {
+      client.sink.add(
+        'Hello, Maks!',
+      );
+    }
+  }
+
   Future<void> _init() async {
     if (state.isProcessing) return;
 
