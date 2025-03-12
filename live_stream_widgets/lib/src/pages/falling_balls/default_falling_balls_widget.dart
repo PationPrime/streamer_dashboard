@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:uuid/v4.dart';
 
 import '../../app/bridge_server_controller/bridge_server_controller.dart';
+import '../../app/models/stream_widgets_models/stream_widget_client_model/stream_widget_client_model.dart';
 import '../../assets_gen/assets.gen.dart';
 import 'falling_balls.dart';
 
@@ -23,8 +25,12 @@ class _DefaultFallingBallsWidgetState extends State<DefaultFallingBallsWidget> {
   void initState() {
     super.initState();
 
-    context.read<BridgeServerController>().setBridgeServerUri(
+    context.read<BridgeServerController>().setBridgeServerUriAndClientData(
           widget.bridgeUrl,
+          StreamWidgetClientModel(
+            id: UuidV4().generate(),
+            name: 'Subs Glass',
+          ),
         );
   }
 
@@ -45,22 +51,26 @@ class _DefaultFallingBallsWidgetState extends State<DefaultFallingBallsWidget> {
                         Flexible(
                           child: Stack(
                             children: [
-                              Positioned(
-                                left: 50,
-                                child: SizedBox(
-                                  height: 400,
-                                  width: 250,
-                                  child: FallingBalls(
-                                    bottomMargin: 45,
+                              Positioned.fill(
+                                child: Center(
+                                  child: SizedBox(
+                                    height: 400,
+                                    width: 250,
+                                    child: FallingBalls(
+                                      bottomMargin: 45,
+                                    ),
                                   ),
                                 ),
                               ),
-                              Positioned(
-                                top: 40,
-                                child: Image.asset(
-                                  Assets.images.plasticTransparentCup.path,
-                                  height: 400,
-                                  width: 350,
+                              Positioned.fill(
+                                top: 60,
+                                right: 5,
+                                child: Center(
+                                  child: Image.asset(
+                                    Assets.images.plasticTransparentCup.path,
+                                    height: 400,
+                                    width: 350,
+                                  ),
                                 ),
                               ),
                             ],

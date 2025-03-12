@@ -14,23 +14,7 @@ class AppGoRouter {
       GoRoute(
         name: NavigationPath.root,
         path: NavigationPath.root,
-        builder: (context, state) {
-          final queryParameters = state.uri.queryParameters;
-          final bridgeUrl = queryParameters['bridgeUrl'];
-
-          if (bridgeUrl == null) {
-            return PathParametersError(
-              pagePath: '/${NavigationPath.main}',
-              queryParameters: {
-                'bridgeUrl': 'String',
-              },
-            );
-          }
-
-          return Welcome(
-            bridgeUrl: bridgeUrl,
-          );
-        },
+        builder: (context, state) => Welcome(),
       ),
       GoRoute(
         name: NavigationPath.subsGlass,

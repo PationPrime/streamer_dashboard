@@ -1,0 +1,1 @@
+export 'stream_widget_client_model/stream_widget_client_model.dart';

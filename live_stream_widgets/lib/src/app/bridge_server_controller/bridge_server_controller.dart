@@ -1,9 +1,13 @@
+import 'dart:convert';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:live_stream_widgets/src/app/models/stream_widgets_models/stream_widget_client_model/stream_widget_client_model.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
-import 'package:web_socket_channel/status.dart' as status;
+
+import '../models/stream_widget_message_model/stream_widget_message_model.dart';
 
 part 'bridge_server_state.dart';
 
@@ -30,15 +34,27 @@ class BridgeServerController extends Cubit<BridgeServerState> {
 
       await _wsChannel?.ready;
 
-      _wsChannel?.stream.listen((message) {
-        emit(
+      if (state.clientModel is! StreamWidgetClientModel) {
+        debugPrint('Client model is null');
+
+        return;
+      }
+
+      final message = StreamWidgetMessageModel(
+        clientData: state.clientModel!,
+      );
+
+      _wsChannel?.sink.add(
+        message.toJson(),
+      );
+
+      _wsChannel?.stream.listen(
+        (message) => emit(
           state.copyWith(
             receivedMessage: '$message',
           ),
-        );
-
-        // channel.sink.close(status.goingAway);
-      });
+        ),
+      );
     } catch (error, stackTrace) {
       debugPrint(
         'Failed to listen WS connection: $error\nstackTrace:$stackTrace',
@@ -74,7 +90,10 @@ class BridgeServerController extends Cubit<BridgeServerState> {
     }
   }
 
-  Future<void> setBridgeServerUri(String url) async {
+  Future<void> setBridgeServerUriAndClientData(
+    String url,
+    StreamWidgetClientModel clientModel,
+  ) async {
     if (state.errorMessage is String) {
       emit(
         state.clearErrorMessage(),
@@ -99,6 +118,7 @@ class BridgeServerController extends Cubit<BridgeServerState> {
         emit(
           state.copyWith(
             bridgeServerUrl: url,
+            clientModel: clientModel,
           ),
         );
 

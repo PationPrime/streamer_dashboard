@@ -5,12 +5,14 @@ class BridgeServerState extends Equatable {
   final bool loading;
   final String? errorMessage;
   final String? receivedMessage;
+  final StreamWidgetClientModel? clientModel;
 
   const BridgeServerState({
     this.bridgeServerUrl,
     this.loading = false,
     this.errorMessage,
     this.receivedMessage,
+    this.clientModel,
   });
 
   @override
@@ -19,6 +21,7 @@ class BridgeServerState extends Equatable {
         loading,
         errorMessage,
         receivedMessage,
+        clientModel,
       ];
 
   BridgeServerState copyWith({
@@ -26,18 +29,21 @@ class BridgeServerState extends Equatable {
     bool? loading,
     String? errorMessage,
     String? receivedMessage,
+    StreamWidgetClientModel? clientModel,
   }) =>
       BridgeServerState(
         bridgeServerUrl: bridgeServerUrl ?? this.bridgeServerUrl,
         loading: loading ?? this.loading,
         errorMessage: errorMessage ?? this.errorMessage,
         receivedMessage: receivedMessage ?? this.receivedMessage,
+        clientModel: clientModel ?? this.clientModel,
       );
 
   BridgeServerState clearErrorMessage() => BridgeServerState(
         bridgeServerUrl: bridgeServerUrl,
         loading: loading,
         receivedMessage: receivedMessage,
+        clientModel: clientModel,
       );
 }
 

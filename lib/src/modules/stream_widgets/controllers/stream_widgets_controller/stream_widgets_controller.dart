@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math' as math;
 
 import 'dart:io';
@@ -12,7 +13,9 @@ import 'package:streamer_dashboard/src/app/constants/constants.dart';
 import 'package:streamer_dashboard/src/app/errors/app_error_handler/app_error_handler.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
+import '../../../../app/dto/stream_widgets_dto/stream_widget_client_response_dto/stream_widget_client_response_dto.dart';
 import '../../../../app/failure/failure.dart';
+import '../../../../app/models/models.dart';
 import '../../../../app/tools/tools.dart';
 
 part 'stream_widgets_state.dart';
@@ -20,7 +23,7 @@ part 'stream_widgets_state.dart';
 class StreamWidgetsController extends Cubit<StreamWidgetsState> {
   late final _appLogger = AppLogger(where: '$this');
 
-  final List<WebSocketChannel> clients = [];
+  final List<StreamWidgetClient> clients = [];
   static const _webAppRelativePath = 'live_stream_widgets\\build\\web';
   static const _defualtWebDocument = 'index.html';
   static const _faviconFile = 'favicon.ico';
@@ -173,11 +176,11 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
 
   void _broadcastBridgeServerMessage({
     required String message,
-    required WebSocketChannel sender,
+    required StreamWidgetClient sender,
   }) {
     for (final client in clients) {
       if (client != sender) {
-        client.sink.add(message);
+        client.channel?.sink.add(message);
       }
     }
   }
@@ -194,38 +197,77 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
       }
 
       final handler = webSocketHandler(
-        (WebSocketChannel webSocket) {
+        (WebSocketChannel webSocket, String? _) {
           _appLogger.logMessage(
             'New connection',
           );
 
-          // Add new client
-          clients.add(webSocket);
-
           webSocket.stream.listen(
             (message) {
-              _appLogger.logMessage(
-                'Message received: $message',
-              );
+              if (message is String) {
+                try {
+                  final jsonData = jsonDecode(message);
 
-              _broadcastBridgeServerMessage(
-                message: message,
-                sender: webSocket,
-              );
+                  final clientResponse = StreamWidgetClientResponseDto.fromJson(
+                    jsonData,
+                  );
+
+                  final client = clientResponse.clientData.copyWith(
+                    channel: webSocket,
+                  );
+
+                  _appLogger.logMessage(
+                    'Message received: $client',
+                  );
+
+                  // Finally, add new client
+                  clients.add(client);
+                } catch (error, stackTrace) {
+                  _appLogger.logError(
+                    'Failed to add client: $error',
+                    stackTrace: stackTrace,
+                    lexicalScope: 'webSocket.stream.listen->onData',
+                  );
+                }
+              }
             },
             onDone: () {
-              _appLogger.logMessage(
-                'Client disconnected',
-              );
+              try {
+                clients.removeWhere(
+                  (client) => client.channel == webSocket,
+                );
 
-              clients.remove(webSocket);
+                _appLogger.logMessage(
+                  'Client disconnected',
+                );
+              } catch (error, stackTrace) {
+                _appLogger.logError(
+                  'Failed to remove client: $error',
+                  stackTrace: stackTrace,
+                  lexicalScope: 'webSocket.stream.listen->onDone',
+                );
+              }
             },
             onError: (error) {
               _appLogger.logMessage(
                 'WebSocket error: $error',
               );
 
-              clients.remove(webSocket);
+              try {
+                clients.removeWhere(
+                  (client) => client.channel == webSocket,
+                );
+
+                _appLogger.logMessage(
+                  'Client removed',
+                );
+              } catch (error, stackTrace) {
+                _appLogger.logError(
+                  'Failed to remove client: $error',
+                  stackTrace: stackTrace,
+                  lexicalScope: 'webSocket.stream.listen->onError',
+                );
+              }
             },
           );
         },
@@ -257,11 +299,34 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
   }
 
   void sendMessageToAllClients() {
+    print('clients count: ${clients.length}');
+
     for (final client in clients) {
-      client.sink.add(
-        'Hello, Maks!',
-      );
+      print(client.id);
     }
+
+    // for (final client in clients) {
+    //   client.channel?.sink.add(
+    //     'Hello from the server!',
+    //   );
+    // }
+    if (clients.isEmpty) return;
+
+    sendMessageToClient(
+      clients.firstWhere(
+        // (client) => client.id == 'fb0e1259-f870-42c0-896d-84f42d3c9cca',
+        // (client) => client.id == '306a5322-e821-45ac-9229-9f360c0879fa',
+        (client) => client.id == '2c3878ee-6927-4ddc-846a-c35e2f4d1413',
+      ),
+    );
+  }
+
+  void sendMessageToClient(StreamWidgetClient client) {
+    print('clients count: ${clients.length}');
+
+    client.channel?.sink.add(
+      '${client.id}, Hello OBS!',
+    );
   }
 
   Future<void> _init() async {
