@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'dart:math' as math;
 
 import 'dart:io';
-
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:shelf/shelf.dart';
@@ -10,18 +9,21 @@ import 'package:shelf/shelf_io.dart' as shelf_io;
 import 'package:shelf_web_socket/shelf_web_socket.dart';
 import 'package:shelf_static/shelf_static.dart';
 import 'package:streamer_dashboard/src/app/constants/constants.dart';
+import 'package:streamer_dashboard/src/app/dto/dto.dart';
 import 'package:streamer_dashboard/src/app/errors/app_error_handler/app_error_handler.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../../../../app/dto/stream_widgets_dto/stream_widget_client_response_dto/stream_widget_client_response_dto.dart';
 import '../../../../app/failure/failure.dart';
 import '../../../../app/models/models.dart';
 import '../../../../app/tools/tools.dart';
+import '../subs_glass_widget_controller/subs_glass_widget_controller.dart';
 
 part 'stream_widgets_state.dart';
 
 class StreamWidgetsController extends Cubit<StreamWidgetsState> {
   late final _appLogger = AppLogger(where: '$this');
+
+  final SubsGlassWidgetController subsGlassWidgetController;
 
   final List<StreamWidgetClient> clients = [];
   static const _webAppRelativePath = 'live_stream_widgets\\build\\web';
@@ -35,11 +37,36 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
   HttpServer? _webAppHostingServer;
   int _connectionAttempts = 0;
 
-  StreamWidgetsController()
-      : super(
+  StreamWidgetsController({
+    required this.subsGlassWidgetController,
+  }) : super(
           const StreamWidgetsInitialState(),
         ) {
     _init();
+  }
+
+  void sendMessageToSubsGlassWidgetClinets(
+    SubsGlassMessageDto subsGlassMessageDto,
+  ) {
+    if (clients.isEmpty) return;
+
+    for (final client in clients) {
+      if (client.name == 'Subs Glass') {
+        client.channel?.sink.add(
+          subsGlassMessageDto.toJson(),
+        );
+      }
+    }
+  }
+
+  void _listenSubsGlassStateChanges() {
+    subsGlassWidgetController.stream.listen(
+      (state) => sendMessageToSubsGlassWidgetClinets(
+        SubsGlassMessageDto(
+          balls: state.subsGlassModels,
+        ),
+      ),
+    );
   }
 
   Future<int?> _isPortAvailable(int port) async {
@@ -298,32 +325,9 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
     }
   }
 
-  void sendMessageToAllClients() {
-    print('clients count: ${clients.length}');
-
-    for (final client in clients) {
-      print(client.id);
-    }
-
-    // for (final client in clients) {
-    //   client.channel?.sink.add(
-    //     'Hello from the server!',
-    //   );
-    // }
-    if (clients.isEmpty) return;
-
-    sendMessageToClient(
-      clients.firstWhere(
-        // (client) => client.id == 'fb0e1259-f870-42c0-896d-84f42d3c9cca',
-        // (client) => client.id == '306a5322-e821-45ac-9229-9f360c0879fa',
-        (client) => client.id == '2c3878ee-6927-4ddc-846a-c35e2f4d1413',
-      ),
-    );
-  }
+  void sendMessageToAllClients() {}
 
   void sendMessageToClient(StreamWidgetClient client) {
-    print('clients count: ${clients.length}');
-
     client.channel?.sink.add(
       '${client.id}, Hello OBS!',
     );
@@ -343,6 +347,11 @@ class StreamWidgetsController extends Cubit<StreamWidgetsState> {
       await _startWidgetsHosting(
         stopBeforeStart: false,
       );
+
+      /// Subs glass widget
+      await subsGlassWidgetController.setBallModels().whenComplete(
+            _listenSubsGlassStateChanges,
+          );
     } catch (error, stackTrace) {
       _appLogger.logError(
         'Failed to start bridge server: $error',

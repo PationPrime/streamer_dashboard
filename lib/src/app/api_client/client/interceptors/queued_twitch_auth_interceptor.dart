@@ -104,8 +104,10 @@ class QueuedTwitchAuthInterceptor extends QueuedInterceptor {
         responseData = data;
       }
 
-      final freshToken = TwitchTokenModel.fromJsonWithLastUpdateTime(
+      final freshToken =
+          TwitchTokenModel.fromJsonWithLastUpdateTimeAndAuthTokenCookie(
         responseData,
+        authTokenCookieValue: _twitchToken?.authTokenCookieValue,
       );
 
       return Right(freshToken);
@@ -142,6 +144,11 @@ class QueuedTwitchAuthInterceptor extends QueuedInterceptor {
         await _localStorage.setTwitchToken(token);
 
         _twitchToken = token;
+
+        _appLogger.logMessage(
+          'Token refreshed: new $_twitchToken',
+          sign: '🧠',
+        );
 
         for (final requestNeedRetry in _requestsNeedRetry) {
           final headers = requestNeedRetry.options.headers;

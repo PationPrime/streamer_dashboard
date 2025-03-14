@@ -6,6 +6,7 @@ class _FallingBallsLeafRenderObjectWidget extends LeafRenderObjectWidget {
   final double maxBallRadius;
   final bool showCollisionShape;
   final double bottomMargin;
+  final List<SubsGlassBallModel> subsGlassBallModels;
 
   const _FallingBallsLeafRenderObjectWidget({
     required this.controller,
@@ -13,6 +14,7 @@ class _FallingBallsLeafRenderObjectWidget extends LeafRenderObjectWidget {
     required this.maxBallRadius,
     required this.showCollisionShape,
     required this.bottomMargin,
+    required this.subsGlassBallModels,
   });
 
   @override
@@ -23,6 +25,7 @@ class _FallingBallsLeafRenderObjectWidget extends LeafRenderObjectWidget {
         maxBallRadius: maxBallRadius,
         showCollisionShape: showCollisionShape,
         bottomMargin: bottomMargin,
+        subsGlassBallModels: subsGlassBallModels,
       );
 
   @override
@@ -34,5 +37,6 @@ class _FallingBallsLeafRenderObjectWidget extends LeafRenderObjectWidget {
         ..minBallRadius = minBallRadius
         ..maxBallRadius = maxBallRadius
         ..showCollisionShape = showCollisionShape
-        ..bottomMargin = bottomMargin;
+        ..bottomMargin = bottomMargin
+        ..subsGlassBallModels = subsGlassBallModels;
 }

@@ -1,3 +1,4 @@
+import 'package:collection/collection.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
@@ -59,8 +60,7 @@ class AuthenticationController extends Cubit<AuthenticationState> {
   Future<void> forceCloseCEF() async {
     _repositoryInterface.cancelWebViewEventsSubscription();
 
-    await _repositoryInterface.externalWebviewWindowPlugin
-        .closeCEFWebViewWindow();
+    await _repositoryInterface.closeCEFWebViewWindow();
   }
 
   Future<void> loginTwitchOAuth2({
@@ -85,8 +85,19 @@ class AuthenticationController extends Cubit<AuthenticationState> {
               "code field does not exist or it's value is null",
             );
           } else {
-            await _repositoryInterface.externalWebviewWindowPlugin
-                .closeCEFWebViewWindow();
+            await _repositoryInterface.closeCEFWebViewWindow();
+
+            final cookies = await _repositoryInterface.getCookiesForUrl(
+              url: TwitchConstants.twitchTVUrl,
+            );
+
+            final authTokenCookieValue = cookies.cookies
+                .firstWhereOrNull((cookie) => cookie.name == 'auth-token')
+                ?.value;
+
+            _appLogger.logMessage(
+              '[<-[<-auth-token cookie value->]->]: $authTokenCookieValue',
+            );
 
             _repositoryInterface.cancelWebViewEventsSubscription();
 
@@ -95,6 +106,7 @@ class AuthenticationController extends Cubit<AuthenticationState> {
               authCode: queryParameters['code']!,
               onSuccessCallback: onSuccessCallback,
               onFailureCallback: onFailureCallback,
+              authTokenCookieValue: authTokenCookieValue,
             );
           }
         }
@@ -127,6 +139,7 @@ class AuthenticationController extends Cubit<AuthenticationState> {
     required String authCode,
     VoidCallback? onSuccessCallback,
     VoidCallback? onFailureCallback,
+    String? authTokenCookieValue,
   }) async {
     emit(
       state.copyWith(
@@ -168,7 +181,9 @@ class AuthenticationController extends Cubit<AuthenticationState> {
 
         try {
           await _localStorageInterface.setTwitchToken(
-            twitchTokenModel,
+            twitchTokenModel.copyWith(
+              authTokenCookieValue: authTokenCookieValue,
+            ),
           );
 
           emit(

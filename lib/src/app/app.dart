@@ -65,8 +65,14 @@ class StreamerDashboardApp extends StatelessWidget {
                 context.read<TwitchApiRepositoryInterface>(),
               ),
             ),
+            BlocProvider<SubsGlassWidgetController>(
+              create: (context) => SubsGlassWidgetController(),
+            ),
             BlocProvider<StreamWidgetsController>(
-              create: (context) => StreamWidgetsController(),
+              create: (context) => StreamWidgetsController(
+                subsGlassWidgetController:
+                    context.read<SubsGlassWidgetController>(),
+              ),
             ),
           ],
           child: GlobalScrollNotificationObserver(

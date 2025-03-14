@@ -15,6 +15,8 @@ abstract class LocalStorageInterface {
 
   Future<void> setTwitchToken(TwitchTokenModel token);
 
+  Future<void> setTwitchAuthTokenCookie(String authTokenCookieValue);
+
   Future<MainV1TokenModel> getToken();
 
   Future<TwitchTokenModel?> getTwitchToken();

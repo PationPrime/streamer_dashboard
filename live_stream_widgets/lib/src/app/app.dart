@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:live_stream_widgets/src/app/subs_glass_widget_controller/subs_glass_widget_controller.dart';
 
 import 'bridge_server_controller/bridge_server_controller.dart';
 import 'router/app_go_router.dart';
@@ -17,8 +18,13 @@ class _StreamWidgetsAppState extends State<StreamWidgetsApp> {
   Widget build(BuildContext context) => MultiBlocProvider(
         providers: [
           BlocProvider(
-            create: (_) => BridgeServerController(
+            create: (_) => SubsGlassWidgetController(),
+          ),
+          BlocProvider(
+            create: (context) => BridgeServerController(
               FlutterSecureStorage(),
+              subsGlassWidgetController:
+                  context.read<SubsGlassWidgetController>(),
             ),
           ),
         ],

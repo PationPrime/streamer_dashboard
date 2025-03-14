@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:equatable/equatable.dart';
 
-import '../stream_widgets_models/stream_widget_client_model/stream_widget_client_model.dart';
+import '../stream_widget_client_model/stream_widget_client_model.dart';
 
 class StreamWidgetMessageModel extends Equatable {
   final StreamWidgetClientModel clientData;

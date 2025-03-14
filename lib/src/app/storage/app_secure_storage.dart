@@ -40,8 +40,7 @@ class AppSecureStorage implements LocalStorageInterface {
   @override
   Future<void> setTwitchToken(TwitchTokenModel token) async {
     try {
-      final tokenDataMap = token.toMap();
-      final tokenDataJson = jsonEncode(tokenDataMap);
+      final tokenDataJson = token.toJson();
 
       await _secureStorage.write(
         key: 'twitch_token',
@@ -52,6 +51,35 @@ class AppSecureStorage implements LocalStorageInterface {
         'Error setting twitch token: $error',
         stackTrace: stackTrace,
         lexicalScope: 'setTwitchToken method',
+      );
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> setTwitchAuthTokenCookie(
+    String authTokenCookieValue,
+  ) async {
+    try {
+      final token = await getTwitchToken();
+
+      if (token is! TwitchTokenModel) {
+        throw Exception(
+          '[updateTwitchAuthTokenCookie] token is! TwitchTokenModel',
+        );
+      }
+
+      await setTwitchToken(
+        token.copyWith(
+          authTokenCookieValue: authTokenCookieValue,
+        ),
+      );
+    } catch (error, stackTrace) {
+      _appLogger.logError(
+        'Error setting twitch auth token cookie: $error',
+        stackTrace: stackTrace,
+        lexicalScope: 'setTwitchAuthTokenCookie method',
       );
 
       rethrow;

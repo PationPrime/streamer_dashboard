@@ -3,26 +3,28 @@ import 'package:flutter/material.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:streamer_dashboard/src/app/extensions/extensions.dart';
 
-class SimpleWebView extends StatefulWidget {
-  final String url;
-  final VoidCallback? setCookieCallback;
+import '../../../app/constants/constants.dart';
+import '../../../app/storage/storage.dart';
+import '../../../app/tools/tools.dart';
 
-  const SimpleWebView({
+class TwitchChatWebView extends StatefulWidget {
+  final String url;
+
+  const TwitchChatWebView({
     super.key,
     required this.url,
-    this.setCookieCallback,
   });
 
   @override
-  State<SimpleWebView> createState() => _SimpleWebViewState();
+  State<TwitchChatWebView> createState() => _TwitchChatWebViewState();
 }
 
-class _SimpleWebViewState extends State<SimpleWebView> {
-  bool _isLoading = true;
+class _TwitchChatWebViewState extends State<TwitchChatWebView> {
+  String? _errorMessage;
 
-  void _pageLoaded() => setState(
-        () => _isLoading = false,
-      );
+  late final _appLogger = AppLogger(where: '$this');
+
+  bool _isLoading = true;
 
   final GlobalKey _webViewKey = GlobalKey();
   final InAppWebViewSettings _settings = InAppWebViewSettings(
@@ -33,6 +35,10 @@ class _SimpleWebViewState extends State<SimpleWebView> {
 
   InAppWebViewController? _webViewController;
   PullToRefreshController? pullToRefreshController;
+
+  void _pageLoaded() => setState(
+        () => _isLoading = false,
+      );
 
   void _initWebView() {
     pullToRefreshController = kIsWeb ||
@@ -96,6 +102,57 @@ class _SimpleWebViewState extends State<SimpleWebView> {
     _pageLoaded();
   }
 
+  Future<void> _setTwitchCookie() async {
+    try {
+      final twitchToken = await AppSecureStorage.instance.getTwitchToken();
+
+      if (twitchToken?.authTokenCookieValue is! String) {
+        _appLogger.logError(
+          'authTokenCookieValue is! String',
+          lexicalScope: '_setTwitchCookie method',
+        );
+
+        throw Exception('authTokenCookieValue is! String');
+      }
+
+      final cookieManager = CookieManager();
+
+      final cookiesUrl = WebUri(
+        TwitchConstants.twitchTVUrl,
+      );
+
+      await cookieManager.deleteCookies(
+        url: cookiesUrl,
+        domain: TwitchConstants.cookieDomain,
+      );
+
+      await cookieManager.setCookie(
+        url: cookiesUrl,
+        name: TwitchConstants.authTokenCookieKey,
+        value: twitchToken!.authTokenCookieValue!,
+        domain: TwitchConstants.cookieDomain,
+        isSecure: true,
+        isHttpOnly: false,
+      );
+
+      _appLogger.logMessage(
+        'Cookie setted: auth-token=${twitchToken.accessToken}',
+        sign: '✅',
+      );
+    } catch (error, stackTrace) {
+      _appLogger.logError(
+        'set Twitch auth-token cookie error: $error',
+        stackTrace: stackTrace,
+      );
+
+      _errorMessage = 'Something went wrong!';
+
+      setState(
+        () => _isLoading = false,
+      );
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -105,11 +162,12 @@ class _SimpleWebViewState extends State<SimpleWebView> {
   @override
   void dispose() {
     _webViewController?.dispose();
+
     super.dispose();
   }
 
   void _onWebViewCreated(controller) async {
-    widget.setCookieCallback?.call();
+    await _setTwitchCookie();
     _webViewController = controller;
   }
 
@@ -118,53 +176,41 @@ class _SimpleWebViewState extends State<SimpleWebView> {
         body: Center(
           child: Stack(
             children: [
-              InAppWebView(
-                key: _webViewKey,
-                initialUrlRequest: URLRequest(
-                  url: WebUri(
-                    widget.url,
+              if (_errorMessage is! String)
+                InAppWebView(
+                  key: _webViewKey,
+                  initialUrlRequest: URLRequest(
+                    url: WebUri(
+                      widget.url,
+                    ),
+                  ),
+                  initialSettings: _settings,
+                  pullToRefreshController: pullToRefreshController,
+                  onWebViewCreated: _onWebViewCreated,
+                  onLoadStop: _onLoadStop,
+                  onReceivedError: (controller, request, error) {
+                    pullToRefreshController?.endRefreshing();
+                  },
+                  onProgressChanged: (controller, progress) {
+                    if (progress == 100) {
+                      pullToRefreshController?.endRefreshing();
+                    }
+                  },
+                  onUpdateVisitedHistory: (controller, url, isReload) {},
+                  onConsoleMessage: (controller, consoleMessage) {},
+                )
+              else
+                Positioned.fill(
+                  child: Container(
+                    color: context.color.background,
+                    child: Center(
+                      child: Text(
+                        _errorMessage!,
+                        style: context.text.headline3Bold,
+                      ),
+                    ),
                   ),
                 ),
-                initialSettings: _settings,
-                pullToRefreshController: pullToRefreshController,
-                onWebViewCreated: _onWebViewCreated,
-                onLoadStart: (controller, url) {},
-                shouldOverrideUrlLoading: (controller, navigationAction) async {
-                  final uri = navigationAction.request.url!;
-
-                  if (![
-                    "http",
-                    "https",
-                    "file",
-                    "chrome",
-                    "data",
-                    "javascript",
-                    "about"
-                  ].contains(uri.scheme)) {
-                    // if (await canLaunchUrl(uri)) {
-                    //   // Launch the App
-                    //   await launchUrl(
-                    //     uri,
-                    //   );
-                    //   // and cancel the request
-                    //   return NavigationActionPolicy.CANCEL;
-                    // }
-                  }
-
-                  return NavigationActionPolicy.ALLOW;
-                },
-                onLoadStop: _onLoadStop,
-                onReceivedError: (controller, request, error) {
-                  pullToRefreshController?.endRefreshing();
-                },
-                onProgressChanged: (controller, progress) {
-                  if (progress == 100) {
-                    pullToRefreshController?.endRefreshing();
-                  }
-                },
-                onUpdateVisitedHistory: (controller, url, isReload) {},
-                onConsoleMessage: (controller, consoleMessage) {},
-              ),
               if (_isLoading)
                 Positioned.fill(
                   child: Container(

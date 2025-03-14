@@ -1,10 +1,13 @@
 import 'dart:async';
 import 'dart:math';
+import 'dart:typed_data';
 import 'dart:ui' as ui;
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:live_stream_widgets/src/app/extensions/math_extensions.dart';
 import 'package:live_stream_widgets/src/app/extensions/offset_extensions.dart';
+import 'package:live_stream_widgets/src/app/models/models.dart';
 
 part 'ball.dart';
 part 'ball_physics.dart';
@@ -17,6 +20,7 @@ class FallingBalls extends StatefulWidget {
   final Duration controllerUpdateDuration;
   final bool showCollisionShape;
   final double bottomMargin;
+  final List<SubsGlassBallModel> subsGlassBallModels;
 
   const FallingBalls({
     super.key,
@@ -27,6 +31,7 @@ class FallingBalls extends StatefulWidget {
     ), // equals to 60 FPS
     this.showCollisionShape = false,
     this.bottomMargin = 100,
+    required this.subsGlassBallModels,
   }) : assert(
           minBallRadius <= maxBallRadius,
         );
@@ -65,5 +70,6 @@ class _FallingBallsState extends State<FallingBalls>
         maxBallRadius: widget.maxBallRadius,
         showCollisionShape: widget.showCollisionShape,
         bottomMargin: widget.bottomMargin,
+        subsGlassBallModels: widget.subsGlassBallModels,
       );
 }

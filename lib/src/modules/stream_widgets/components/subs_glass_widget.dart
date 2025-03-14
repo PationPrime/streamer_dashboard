@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:streamer_dashboard/src/modules/stream_widgets/components/stream_widget.dart';
 
 import '../../../app/widgets/widgets.dart';
 import '../../../assets_gen/assets.gen.dart';
+import '../controllers/controllers.dart';
 
 class SubsGlassWidget extends StatefulWidget {
   final Function(String)? onTap;
@@ -46,31 +48,34 @@ class _SubsGlassWidgetState extends State<SubsGlassWidget> {
   }
 
   @override
-  Widget build(BuildContext context) => StreamWidget(
-        onTap: _copyLink,
-        buttonTitle: _buttonTitle,
-        title: 'Subs glass',
-        widget: Stack(
-          children: [
-            Positioned(
-              left: 50,
-              child: SizedBox(
-                height: 400,
-                width: 250,
-                child: FallingBalls(
-                  bottomMargin: 45,
+  Widget build(BuildContext context) =>
+      BlocBuilder<SubsGlassWidgetController, SubsGlassWidgetState>(
+        builder: (context, state) => StreamWidget(
+          onTap: _copyLink,
+          buttonTitle: _buttonTitle,
+          title: 'Subs glass',
+          widget: Stack(
+            children: [
+              Positioned(
+                left: 50,
+                child: SizedBox(
+                  height: 400,
+                  width: 250,
+                  child: FallingBalls(
+                    bottomMargin: 45,
+                  ),
                 ),
               ),
-            ),
-            Positioned(
-              top: 40,
-              child: Image.asset(
-                Assets.images.plasticTransparentCup.path,
-                height: 400,
-                width: 350,
+              Positioned(
+                top: 40,
+                child: Image.asset(
+                  Assets.images.plasticTransparentCup.path,
+                  height: 400,
+                  width: 350,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       );
 }

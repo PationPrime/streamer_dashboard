@@ -81,7 +81,6 @@ class _FallingBallsRenderBox extends RenderBox with BallPhysics {
       }
 
       // Обрабатываем столкновение с трапецией
-
       _updateBallCollisionWithShape(
         ball: ball,
         size: size,
@@ -106,10 +105,6 @@ class _FallingBallsRenderBox extends RenderBox with BallPhysics {
     );
 
     _controller.repeat();
-
-    if (_size is Size) {
-      _spawnBall(_size!);
-    }
   }
 
   void _releaseListener() {
@@ -118,6 +113,24 @@ class _FallingBallsRenderBox extends RenderBox with BallPhysics {
     _controller.removeListener(
       _listener,
     );
+  }
+
+  int _ballIndex = 0;
+
+  List<SubsGlassBallModel> _subsGlassBallModels = [];
+
+  set subsGlassBallModels(List<SubsGlassBallModel> value) {
+    if (listEquals(_subsGlassBallModels, value)) return;
+
+    _subsGlassBallModels = value;
+
+    debugPrint(
+      '_subsGlassBallModels: $_subsGlassBallModels',
+    );
+
+    if (_size is Size) {
+      _spawnBall(_size!);
+    }
   }
 
   List<Ball> _balls = [];
@@ -130,22 +143,25 @@ class _FallingBallsRenderBox extends RenderBox with BallPhysics {
   }
 
   void _spawnBall(Size size) {
-    if (balls.length > 30) return;
+    if (_ballIndex == _subsGlassBallModels.length - 1) {
+      _ballIndex = 0;
+      return;
+    }
+
+    final subsGlassBallModel = _subsGlassBallModels[_ballIndex];
 
     final ball = Ball(
       position: _basePosition(
         maxWidth: size.width,
       ),
       velocity: _baseVelocity(),
-      radius: _circleRadius(
-        min: _minBallRadius,
-        max: _maxBallRadius,
-      ),
-      imageUrl:
-          'https://static.vecteezy.com/system/resources/thumbnails/022/963/918/small_2x/ai-generative-cute-cat-isolated-on-solid-background-photo.jpg',
+      radius: subsGlassBallModel.radius,
+      imageUrl: subsGlassBallModel.imageUrl,
     );
 
     _balls.add(ball);
+
+    _ballIndex++;
 
     Future.delayed(
       Duration(milliseconds: 500),
@@ -159,11 +175,13 @@ class _FallingBallsRenderBox extends RenderBox with BallPhysics {
     required double maxBallRadius,
     required bool showCollisionShape,
     required double bottomMargin,
+    required List<SubsGlassBallModel> subsGlassBallModels,
   })  : _controller = controller,
         _showCollisionShape = showCollisionShape,
         _minBallRadius = minBallRadius,
         _maxBallRadius = maxBallRadius,
-        _bottomMargin = bottomMargin;
+        _bottomMargin = bottomMargin,
+        _subsGlassBallModels = subsGlassBallModels;
 
   @override
   void performLayout() {
@@ -197,7 +215,7 @@ class _FallingBallsRenderBox extends RenderBox with BallPhysics {
 
     canvas.drawPath(
       trapezoidPath,
-      Paint()..color = Colors.white,
+      Paint()..color = Colors.greenAccent,
     );
   }
 
@@ -271,3 +289,9 @@ class _FallingBallsRenderBox extends RenderBox with BallPhysics {
     super.detach();
   }
 }
+
+   // context_settings.persist_session_cookies = true;
+    // std::string cache_path_std = "D:\\CEF_CACHE";
+        // cef_string_t cef_cache_path;
+        // cef_string_utf8_to_utf16(cache_path_std.c_str(), cache_path_std.length(), &cef_cache_path);
+        // context_settings.cache_path = cef_cache_path;

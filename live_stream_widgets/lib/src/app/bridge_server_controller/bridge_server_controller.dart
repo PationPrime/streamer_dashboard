@@ -4,23 +4,72 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:live_stream_widgets/src/app/models/stream_widgets_models/stream_widget_client_model/stream_widget_client_model.dart';
+import 'package:live_stream_widgets/src/app/dto/dto.dart';
 import 'package:web_socket_channel/web_socket_channel.dart';
 
-import '../models/stream_widget_message_model/stream_widget_message_model.dart';
+import '../models/models.dart';
+import '../subs_glass_widget_controller/subs_glass_widget_controller.dart';
 
 part 'bridge_server_state.dart';
 
 class BridgeServerController extends Cubit<BridgeServerState> {
   final FlutterSecureStorage _secureStorage;
+  final SubsGlassWidgetController subsGlassWidgetController;
 
   WebSocketChannel? _wsChannel;
 
   BridgeServerController(
-    this._secureStorage,
-  ) : super(
+    this._secureStorage, {
+    required this.subsGlassWidgetController,
+  }) : super(
           const BridgeServerInitialState(),
         );
+
+  void _parseSubsGlassWidgetMessage(
+    Map<String, dynamic> jsonData,
+  ) {
+    final response = SubsGlassBallsResponseDto.fromJson(
+      jsonData,
+    );
+
+    subsGlassWidgetController.setBallModels(
+      response.balls,
+    );
+  }
+
+  void _listenMessages() => _wsChannel?.stream.listen(
+        (message) {
+          emit(
+            state.copyWith(
+              receivedMessage: '$message',
+            ),
+          );
+
+          if (message is String) {
+            try {
+              final jsonData = jsonDecode(message) as Map<String, dynamic>;
+
+              if (jsonData.containsKey('balls')) {
+                _parseSubsGlassWidgetMessage(
+                  jsonData,
+                );
+              }
+
+              ///
+            } catch (error) {
+              debugPrint(
+                'parse message error: $error',
+              );
+            }
+          }
+        },
+        onDone: () => debugPrint(
+          'listen _wsChannel done',
+        ),
+        onError: (error) => debugPrint(
+          'listen _wsChannel error: $error',
+        ),
+      );
 
   Future<void> _listenWSConnection() async {
     if (state.bridgeServerUrl is! String) return;
@@ -48,13 +97,7 @@ class BridgeServerController extends Cubit<BridgeServerState> {
         message.toJson(),
       );
 
-      _wsChannel?.stream.listen(
-        (message) => emit(
-          state.copyWith(
-            receivedMessage: '$message',
-          ),
-        ),
-      );
+      _listenMessages();
     } catch (error, stackTrace) {
       debugPrint(
         'Failed to listen WS connection: $error\nstackTrace:$stackTrace',

@@ -2,8 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:streamer_dashboard/src/app/shared_controllers/authorization_controllers/base_authorization_controller/base_authorization_controller.dart';
 import 'package:streamer_dashboard/src/app/shared_controllers/shared_controllers.dart';
-
-import '../../../../app/widgets/widgets.dart';
+import 'package:streamer_dashboard/src/modules/modules.dart';
 
 class LiveStreamsScreen extends StatefulWidget {
   const LiveStreamsScreen({super.key});
@@ -27,10 +26,13 @@ class _LiveStreamsScreenState extends State<LiveStreamsScreen> {
                         : Flexible(
                             child: SizedBox(
                               height: 800,
-                              child: SimpleWebView(
-                                url:
-                                    "https://www.twitch.tv/popout/pationprime/chat",
-                              ),
+                              child: TwitchStreamScreen(
+                                  // url:
+                                  // "https://www.twitch.tv/popout/pationroute/chat",
+                                  // setCookieCallback: () async {
+                                  // await _setTwitchCookie();
+                                  // },
+                                  ),
                             ),
                           ),
                   ],

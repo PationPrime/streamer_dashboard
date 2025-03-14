@@ -72,8 +72,16 @@ class _StreamWidgetsScreenState extends State<StreamWidgetsScreen> {
                               // );
 
                               context
-                                  .read<StreamWidgetsController>()
-                                  .sendMessageToAllClients();
+                                  .read<SubsGlassWidgetController>()
+                                  .clearBallModels();
+
+                              await context
+                                  .read<SubsGlassWidgetController>()
+                                  .setBallModels();
+
+                              // context
+                              //     .read<StreamWidgetsController>()
+                              //     .sendMessageToAllClients();
                             },
                           ),
                         ],

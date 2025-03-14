@@ -10,28 +10,34 @@ part 'twitch_token_model.g.dart';
   fieldRename: FieldRename.snake,
 )
 class TwitchTokenModel extends BaseTokenModel {
+  final String? authTokenCookieValue;
+
   const TwitchTokenModel({
+    this.authTokenCookieValue,
     required super.accessToken,
-    required super.expiresIn,
     required super.refreshToken,
+    required super.expiresIn,
     required super.lastUpdateTime,
   });
 
   @override
   List<Object?> get props => [
+        authTokenCookieValue,
         accessToken,
-        expiresIn,
         refreshToken,
+        expiresIn,
         lastUpdateTime,
       ];
 
   TwitchTokenModel copyWith({
+    String? authTokenCookieValue,
     DateTime? lastUpdateTime,
   }) =>
       TwitchTokenModel(
+        authTokenCookieValue: authTokenCookieValue ?? this.authTokenCookieValue,
         accessToken: accessToken,
-        expiresIn: expiresIn,
         refreshToken: refreshToken,
+        expiresIn: expiresIn,
         lastUpdateTime: lastUpdateTime ?? super.lastUpdateTime,
       );
 
@@ -40,13 +46,15 @@ class TwitchTokenModel extends BaseTokenModel {
   ) =>
       _$TwitchTokenModelFromJson(json);
 
-  factory TwitchTokenModel.fromJsonWithLastUpdateTime(
-    Map<String, dynamic> json,
-  ) {
+  factory TwitchTokenModel.fromJsonWithLastUpdateTimeAndAuthTokenCookie(
+    Map<String, dynamic> json, {
+    String? authTokenCookieValue,
+  }) {
     final model = TwitchTokenModel.fromJson(json);
 
     return model.copyWith(
       lastUpdateTime: DateTime.now(),
+      authTokenCookieValue: authTokenCookieValue,
     );
   }
 

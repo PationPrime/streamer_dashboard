@@ -51,7 +51,7 @@ final class AuthenticationRepository
       final oauthUrl = '${apiClient.twitchAuthClient.options.baseUrl}authorize';
 
       final twitchOAuth2Uri = Uri.parse(
-        '$oauthUrl?client_id=${twitchLoginDto.clientId}&redirect_uri=${twitchLoginDto.redirectUri}&response_type=code&scope=user:read:email',
+        '$oauthUrl?client_id=${twitchLoginDto.clientId}&redirect_uri=${twitchLoginDto.redirectUri}&response_type=code&scope=user:read:email%20user:read:chat%20user:write:chat%20chat:read%20chat:read%20chat:edit',
       );
 
       await externalWebviewWindowPlugin.openCEFWebViewWindow(
@@ -82,7 +82,8 @@ final class AuthenticationRepository
 
       final data = response.data;
 
-      final twitchTokenModel = TwitchTokenModel.fromJsonWithLastUpdateTime(
+      final twitchTokenModel =
+          TwitchTokenModel.fromJsonWithLastUpdateTimeAndAuthTokenCookie(
         data,
       );
 
@@ -94,6 +95,28 @@ final class AuthenticationRepository
           stackTrace: stackTrace,
         ),
       );
+    }
+  }
+
+  @override
+  Future<void> closeCEFWebViewWindow() async {
+    try {
+      await externalWebviewWindowPlugin.closeCEFWebViewWindow();
+    } catch (_) {
+      rethrow;
+    }
+  }
+
+  @override
+  Future<Cookies> getCookiesForUrl({required String url}) async {
+    try {
+      final cookies = await externalWebviewWindowPlugin.getCookiesForUrl(
+        url: url,
+      );
+
+      return cookies;
+    } catch (_) {
+      rethrow;
     }
   }
 }
