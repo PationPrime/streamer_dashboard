@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-
-import 'app_theme_colors.dart';
-import 'app_theme_text_styles.dart';
+import 'package:streamer_dashboard/src/app/design_system/design_system.dart';
+import 'package:streamer_dashboard/src/app/design_system/theme/app_text_styles.dart';
 
 abstract base class AppThemeData {
   /// Application text selection theme data
@@ -17,6 +16,17 @@ abstract base class AppThemeData {
     scaffoldBackgroundColor: AppThemeColors.light.background,
     useMaterial3: true,
     textSelectionTheme: textSelectionTheme,
+    dialogTheme: DialogTheme(
+      backgroundColor: AppThemeColors.light.background,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      titleTextStyle: AppThemeTextStyles.lightThemeTextStyles.headline4Bold,
+      contentTextStyle: AppThemeTextStyles.lightThemeTextStyles.headline4Medium,
+    ),
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: AppThemeColors.light.mainBlack,
+    ),
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: AppThemeTextStyles.lightThemeTextStyles.hint,
       errorStyle: AppThemeTextStyles.lightThemeTextStyles.headline6Regular,
@@ -63,6 +73,17 @@ abstract base class AppThemeData {
     scaffoldBackgroundColor: AppThemeColors.dark.background,
     useMaterial3: true,
     textSelectionTheme: textSelectionTheme,
+    progressIndicatorTheme: ProgressIndicatorThemeData(
+      color: AppThemeColors.light.mainWhite,
+    ),
+    dialogTheme: DialogTheme(
+      backgroundColor: AppThemeColors.dark.background,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16),
+      ),
+      titleTextStyle: AppThemeTextStyles.darkThemeTextStyles.headline4Bold,
+      contentTextStyle: AppThemeTextStyles.darkThemeTextStyles.headline4Medium,
+    ),
     inputDecorationTheme: InputDecorationTheme(
       hintStyle: AppThemeTextStyles.darkThemeTextStyles.hint,
       errorStyle: AppThemeTextStyles.darkThemeTextStyles.headline6Regular,

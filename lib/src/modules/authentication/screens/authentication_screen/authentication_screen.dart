@@ -35,7 +35,7 @@ class _AuthenticationScreenState extends State<AuthenticationScreen> {
 
         // ignore: use_build_context_synchronously
         await context
-            .read<TwitchStreamerProfileController>()
+            .read<TwitchStreamerAccountController>()
             .getStreamerProfile();
       },
     );

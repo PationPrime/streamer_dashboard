@@ -34,6 +34,13 @@ config\:test:
 config\:prod:
 	flutter pub run environment_config:generate --config=prod_environment_config.yaml
 
+gen\:locale:
+	flutter pub get
+	flutter pub run easy_localization:generate -S assets/lang -O lib/src/app/lang/ -o codegen_loader.g.dart
+	flutter pub get
+	flutter pub run easy_localization:generate -S assets/lang  -f keys -O lib/src/app/lang/ -o locale_keys.g.dart
+	flutter pub get
+
 config\:all\:dev:
 	make config:dev
 	make config:test

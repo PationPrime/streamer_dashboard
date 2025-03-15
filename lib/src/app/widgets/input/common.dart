@@ -5,7 +5,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:streamer_dashboard/src/app/extensions/extensions.dart';
 
+enum InputBorderStyle {
+  underlined,
+  rounded,
+}
+
+extension InputBorderStyleState on InputBorderStyle {
+  bool get isUnderlined => this == InputBorderStyle.underlined;
+  bool get isRounded => this == InputBorderStyle.rounded;
+}
+
 class CommonInput extends StatefulWidget {
+  final double height;
   final bool? enabled;
   final TextEditingController? controller;
   final bool? obscureText;
@@ -35,9 +46,11 @@ class CommonInput extends StatefulWidget {
   final FocusNode? focusNode;
   final Widget? prefixIcon;
   final EdgeInsetsGeometry? labelPadding;
+  final InputBorderStyle inputBorderStyle;
 
   const CommonInput({
     super.key,
+    this.height = 40,
     this.controller,
     this.obscureText,
     this.obscuringCharacter,
@@ -67,6 +80,7 @@ class CommonInput extends StatefulWidget {
     this.focusNode,
     this.prefixIcon,
     this.labelPadding,
+    this.inputBorderStyle = InputBorderStyle.rounded,
   });
 
   @override
@@ -121,7 +135,7 @@ class _CommonInputState extends State<CommonInput> {
         Stack(
           children: [
             Container(
-              height: 56,
+              height: widget.height,
               decoration: BoxDecoration(
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(5),
@@ -152,11 +166,9 @@ class _CommonInputState extends State<CommonInput> {
                   autocorrect: false,
                   cursorHeight: kIsWeb
                       ? 15
-                      : Platform.isMacOS
-                          ? 20
-                          : Platform.isIOS
-                              ? 15
-                              : null,
+                      : Platform.isIOS
+                          ? 15
+                          : 25,
                   initialValue: widget.initialText,
                   inputFormatters: widget.textFormatters,
                   obscureText: widget.obscureText ?? false,
@@ -169,17 +181,16 @@ class _CommonInputState extends State<CommonInput> {
                   textAlignVertical: TextAlignVertical.center,
                   style: context.text.headline3Regular.copyWith(
                     fontSize: widget.obscureText is bool && widget.obscureText!
-                        ? 50
+                        ? 30
                         : null,
                   ),
                   decoration: InputDecoration(
+                    suffixIcon: widget.suffix,
                     prefixIcon: widget.prefixIcon,
                     hintText: widget.hintText,
                     contentPadding: const EdgeInsets.only(
                       left: 10,
                       right: 10,
-                      bottom: 10,
-                      top: 10,
                     ),
                     label: widget.label is String
                         ? Padding(
@@ -189,38 +200,50 @@ class _CommonInputState extends State<CommonInput> {
                             ),
                           )
                         : null,
-                    focusedBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: widget.showError
-                            ? context.color.alert
-                            : context.color.active,
-                        width: 2,
-                      ),
-                    ),
-                    enabledBorder: UnderlineInputBorder(
-                      borderSide: BorderSide(
-                        color: widget.showError
-                            ? context.color.alert
-                            : !_focusNode.hasFocus
-                                ? context.color.border
-                                : context.color.active,
-                        width: _focusNode.hasFocus ? 2 : 1,
-                      ),
-                    ),
+                    focusedBorder: widget.inputBorderStyle.isRounded
+                        ? OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: widget.showError
+                                  ? context.color.alert
+                                  : context.color.active,
+                              width: 2,
+                            ),
+                          )
+                        : UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: widget.showError
+                                  ? context.color.alert
+                                  : context.color.active,
+                              width: 2,
+                            ),
+                          ),
+                    enabledBorder: widget.inputBorderStyle.isRounded
+                        ? OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(12),
+                            borderSide: BorderSide(
+                              color: widget.showError
+                                  ? context.color.alert
+                                  : !_focusNode.hasFocus
+                                      ? context.color.border
+                                      : context.color.active,
+                              width: _focusNode.hasFocus ? 2 : 1,
+                            ),
+                          )
+                        : UnderlineInputBorder(
+                            borderSide: BorderSide(
+                              color: widget.showError
+                                  ? context.color.alert
+                                  : !_focusNode.hasFocus
+                                      ? context.color.border
+                                      : context.color.active,
+                              width: _focusNode.hasFocus ? 2 : 1,
+                            ),
+                          ),
                   ),
                 ),
               ),
             ),
-            if (widget.suffix is Widget)
-              Positioned(
-                right: 11,
-                top: 0.0,
-                bottom: 0.0,
-                child: Container(
-                  color: context.color.transparent,
-                  child: widget.suffix,
-                ),
-              )
           ],
         ),
         if (widget.showError && _generateErrorText().isNotEmpty)

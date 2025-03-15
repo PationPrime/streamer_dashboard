@@ -16,13 +16,16 @@ class RoundedButton extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => GestureDetector(
-        onTap: onTap,
-        child: CircleAvatar(
-          backgroundColor: backgroundColor ?? context.color.border,
-          radius: radius,
-          child: Center(
-            child: icon ?? const Icon(Icons.close),
+  Widget build(BuildContext context) => MouseRegion(
+        cursor: SystemMouseCursors.click,
+        child: GestureDetector(
+          onTap: onTap,
+          child: CircleAvatar(
+            backgroundColor: backgroundColor ?? context.color.border,
+            radius: radius,
+            child: Center(
+              child: icon ?? const Icon(Icons.close),
+            ),
           ),
         ),
       );

@@ -67,4 +67,9 @@ class MockLocalStorage implements LocalStorageInterface {
   Future<void> setTwitchAuthTokenCookie(String authTokenCookieValue) {
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> removeDonationAlertsWidgetWevbViewUrl() {
+    throw UnimplementedError();
+  }
 }

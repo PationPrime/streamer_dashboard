@@ -1,0 +1,54 @@
+{
+  "common": {
+    "input_dialog": {
+      "buttons": {
+        "close": {
+          "title": "Close"
+        },
+        "submit": {
+          "title": "Submit"
+        },
+        "save": {
+          "title": "Save"
+        }
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Dashboard"
+  },
+  "donations": {
+    "title": "Donations",
+    "donation_alerts": {
+      "title": "Donation Alerts",
+      "buttons": {
+        "add": "Add",
+        "remove": "Remove"
+      },
+      "add_dialog": {
+        "last_messages": {
+          "title": "Last messages widget",
+          "insert_link": "Insert link"
+        }
+      }
+    }
+  },
+  "streams": {
+    "title": "Streams"
+  },
+  "authentication": {
+    "title": "Authentication"
+  },
+  "accounts": {
+    "title": "Accounts"
+  },
+  "chatbot": {
+    "title": "Chatbot"
+  },
+  "stream_widgets": {
+    "title": "Stream Widgets"
+  },
+  "settings": {
+    "title": "Settings"
+  }
+}

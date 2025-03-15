@@ -6,10 +6,10 @@ import 'package:streamer_dashboard/src/app/widgets/widgets.dart';
 
 import '../../../../app/models/models.dart';
 
-class TwitchStreamerProfileScreen extends StatelessWidget {
+class TwitchStreamerAccountScreen extends StatelessWidget {
   final TwitchUserModel profileModel;
 
-  const TwitchStreamerProfileScreen({
+  const TwitchStreamerAccountScreen({
     super.key,
     required this.profileModel,
   });

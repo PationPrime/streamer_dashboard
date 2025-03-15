@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:go_router/go_router.dart';
@@ -11,6 +12,7 @@ import 'api_client/client/concrete_client.dart';
 import 'app_window_manager/app_window_manager.dart';
 import 'design_system/design_system.dart';
 import 'global_scroll_notification_observer/global_scroll_notification_observer.dart';
+import 'localization/localization.dart';
 import 'repositories/repositories.dart';
 
 class StreamerDashboardApp extends StatelessWidget {
@@ -47,11 +49,13 @@ class StreamerDashboardApp extends StatelessWidget {
               create: (context) => AppThemeController(),
             ),
             BlocProvider<DonationsController>(
-              create: (context) => DonationsController(),
+              create: (context) => DonationsController(
+                appSecureStorage,
+              ),
             ),
             BlocProvider<TwitchAuthorizationController>(
               create: (context) => TwitchAuthorizationController(
-                localStorageInterface: appSecureStorage,
+                localStorage: appSecureStorage,
               ),
             ),
             BlocProvider<AuthenticationController>(
@@ -60,8 +64,8 @@ class StreamerDashboardApp extends StatelessWidget {
                 appSecureStorage,
               ),
             ),
-            BlocProvider<TwitchStreamerProfileController>(
-              create: (context) => TwitchStreamerProfileController(
+            BlocProvider<TwitchStreamerAccountController>(
+              create: (context) => TwitchStreamerAccountController(
                 context.read<TwitchApiRepositoryInterface>(),
               ),
             ),
@@ -106,36 +110,37 @@ class _StreamerDashboardAppView extends StatefulWidget {
 
 class _StreamerDashboardAppViewState extends State<_StreamerDashboardAppView> {
   @override
-  Widget build(BuildContext context) => MaterialApp.router(
-        builder: (context, child) => ScrollConfiguration(
-          behavior: const _AppScrollBehavior(),
-          child: MediaQuery(
-            data: MediaQuery.of(context).copyWith(
-              textScaler: const TextScaler.linear(
-                1.0,
+  Widget build(BuildContext context) => AppLocalization(
+        builder: (BuildContext context) => MaterialApp.router(
+          builder: (context, child) => ScrollConfiguration(
+            behavior: const _AppScrollBehavior(),
+            child: MediaQuery(
+              data: MediaQuery.of(context).copyWith(
+                textScaler: const TextScaler.linear(
+                  1.0,
+                ),
               ),
-            ),
-            child: AppWindowManager(
-              child: ClipRRect(
-                borderRadius: Platform.isWindows
-                    ? BorderRadius.circular(8.0)
-                    : Platform.isLinux
-                        ? BorderRadius.circular(6.0)
-                        : BorderRadius.circular(8.0),
-                child: child ?? const SizedBox.shrink(),
+              child: AppWindowManager(
+                child: ClipRRect(
+                  borderRadius: Platform.isWindows
+                      ? BorderRadius.circular(8.0)
+                      : Platform.isLinux
+                          ? BorderRadius.circular(6.0)
+                          : BorderRadius.circular(8.0),
+                  child: child ?? const SizedBox.shrink(),
+                ),
               ),
             ),
           ),
+          locale: context.locale,
+          supportedLocales: context.supportedLocales,
+          localizationsDelegates: context.localizationDelegates,
+          debugShowCheckedModeBanner: false,
+          theme: AppTheme.of(context),
+          darkTheme: AppThemeData.darkTheme,
+          title: 'Streamer Dashboard',
+          routerConfig: widget.router,
         ),
-
-        // locale: context.locale,
-        // supportedLocales: context.supportedLocales,
-        // localizationsDelegates: context.localizationDelegates,
-        debugShowCheckedModeBanner: false,
-        theme: AppTheme.of(context),
-        darkTheme: AppThemeData.darkTheme,
-        title: 'Streamer Dashboard',
-        routerConfig: widget.router,
       );
 }
 

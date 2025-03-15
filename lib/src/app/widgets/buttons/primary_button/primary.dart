@@ -29,6 +29,7 @@ class PrimaryButton extends StatelessWidget {
   final bool? fontWeight500;
   final Color? loadingIndicatorColor;
   final bool forceCancelSelectionOnMove;
+  final Alignment contentAlignment;
 
   const PrimaryButton({
     super.key,
@@ -54,6 +55,7 @@ class PrimaryButton extends StatelessWidget {
     this.fontWeight500,
     this.loadingIndicatorColor,
     this.forceCancelSelectionOnMove = true,
+    this.contentAlignment = Alignment.center,
   });
 
   static const _kDuration = Duration(milliseconds: 100);
@@ -71,7 +73,9 @@ class PrimaryButton extends StatelessWidget {
             color: enabled
                 ? buttonColor ?? context.color.cancel
                 : context.color.disabled,
-            borderRadius: BorderRadius.circular(borderRadius),
+            borderRadius: BorderRadius.circular(
+              borderRadius,
+            ),
             border: borderColor is! Color
                 ? null
                 : Border.all(
@@ -80,37 +84,34 @@ class PrimaryButton extends StatelessWidget {
                   ),
           ),
           child: loading
-              ? Center(
-                  child: Padding(
-                    padding: padding,
-                    child: Center(
-                      child: SizedBox(
-                        height: 20,
-                        width: 20,
-                        child: CircularProgressIndicator(),
-                        //  AppAnimatedLoader.cubic(
-                        //   scale: 7,
-                        // ),
+              ? Padding(
+                  padding: padding,
+                  child: Center(
+                    child: SizedBox(
+                      height: 20,
+                      width: 20,
+                      child: CircularProgressIndicator(
+                        strokeCap: StrokeCap.round,
                       ),
                     ),
                   ),
                 )
-              : customContent ??
-                  Center(
-                    child: Padding(
-                      padding: padding,
-                      child: title is! String
-                          ? const SizedBox()
-                          : _PrimaryButtonTitle(
-                              fontWeight500: fontWeight500,
-                              title: title,
-                              titleStyle: titleStyle,
-                              icon: icon,
-                              titleColor: titleColor,
-                              counter: counter,
-                            ),
-                    ),
-                  ),
+              : Center(
+                  child: customContent ??
+                      Padding(
+                        padding: padding,
+                        child: title is! String
+                            ? const SizedBox()
+                            : _PrimaryButtonTitle(
+                                fontWeight500: fontWeight500,
+                                title: title,
+                                titleStyle: titleStyle,
+                                icon: icon,
+                                titleColor: titleColor,
+                                counter: counter,
+                              ),
+                      ),
+                ),
         ),
       );
 }

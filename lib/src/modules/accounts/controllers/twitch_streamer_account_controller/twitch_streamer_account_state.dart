@@ -1,11 +1,11 @@
-part of 'twitch_streamer_profile_controller.dart';
+part of 'twitch_streamer_account_controller.dart';
 
-class TwitchStreamerProfileState extends Equatable {
+class TwitchStreamerAccountState extends Equatable {
   final bool loading;
   final Failure? failure;
   final TwitchUserModel? profileModel;
 
-  const TwitchStreamerProfileState({
+  const TwitchStreamerAccountState({
     this.loading = false,
     this.failure,
     this.profileModel,
@@ -18,24 +18,24 @@ class TwitchStreamerProfileState extends Equatable {
         profileModel,
       ];
 
-  TwitchStreamerProfileState copyWith({
+  TwitchStreamerAccountState copyWith({
     bool? loading,
     Failure? failure,
     TwitchUserModel? profileModel,
   }) =>
-      TwitchStreamerProfileState(
+      TwitchStreamerAccountState(
         loading: loading ?? this.loading,
         failure: failure ?? this.failure,
         profileModel: profileModel ?? this.profileModel,
       );
 
-  TwitchStreamerProfileState clearFailure() => TwitchStreamerProfileState(
+  TwitchStreamerAccountState clearFailure() => TwitchStreamerAccountState(
         loading: loading,
         profileModel: profileModel,
       );
 }
 
 final class TwitchStreamerProfileInitialState
-    extends TwitchStreamerProfileState {
+    extends TwitchStreamerAccountState {
   const TwitchStreamerProfileInitialState();
 }

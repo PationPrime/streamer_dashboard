@@ -32,7 +32,7 @@ class _RootWrapperRouteState extends State<RootWrapperRoute> {
       case 3:
         context.pushNamed(NavigationPath.authentication);
       case 4:
-        context.pushNamed(NavigationPath.profiles);
+        context.pushNamed(NavigationPath.accounts);
       case 5:
       case 6:
         context.pushNamed(NavigationPath.streamWidgets);

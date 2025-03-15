@@ -6,27 +6,27 @@ import 'package:streamer_dashboard/src/app/tools/tools.dart';
 
 import '../../../../app/failure/failure.dart';
 
-part 'twitch_streamer_profile_state.dart';
+part 'twitch_streamer_account_state.dart';
 
-class TwitchStreamerProfileController
-    extends Cubit<TwitchStreamerProfileState> {
+class TwitchStreamerAccountController
+    extends Cubit<TwitchStreamerAccountState> {
   late final _appLogger = AppLogger(where: '$this');
 
   final TwitchApiRepositoryInterface _twitchApiRepositoryInterface;
 
-  TwitchStreamerProfileController(
+  TwitchStreamerAccountController(
     this._twitchApiRepositoryInterface,
   ) : super(
           const TwitchStreamerProfileInitialState(),
-        ) {
-    getStreamerProfile();
-  }
+        );
 
   void clearProfileState() => emit(
-        const TwitchStreamerProfileState(),
+        const TwitchStreamerAccountState(),
       );
 
   Future<void> getStreamerProfile() async {
+    _appLogger.logMessage('Get Twitch Profile');
+
     emit(
       state.copyWith(
         loading: true,

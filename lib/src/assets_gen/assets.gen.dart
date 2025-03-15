@@ -65,6 +65,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/icon_close.svg
   SvgGenImage get iconClose => const SvgGenImage('assets/icons/icon_close.svg');
 
+  /// File path: assets/icons/icon_hide_password.svg
+  SvgGenImage get iconHidePassword =>
+      const SvgGenImage('assets/icons/icon_hide_password.svg');
+
   /// File path: assets/icons/icon_refresh copy.svg
   SvgGenImage get iconRefreshCopy =>
       const SvgGenImage('assets/icons/icon_refresh copy.svg');
@@ -83,6 +87,10 @@ class $AssetsIconsGen {
 
   /// File path: assets/icons/icon_send.svg
   SvgGenImage get iconSend => const SvgGenImage('assets/icons/icon_send.svg');
+
+  /// File path: assets/icons/icon_show_password.svg
+  SvgGenImage get iconShowPassword =>
+      const SvgGenImage('assets/icons/icon_show_password.svg');
 
   /// File path: assets/icons/icon_square.svg
   SvgGenImage get iconSquare =>
@@ -117,11 +125,13 @@ class $AssetsIconsGen {
         iconArrowForward,
         iconArrowForwardWhite,
         iconClose,
+        iconHidePassword,
         iconRefreshCopy,
         iconRefresh,
         iconRestart,
         iconSearch,
         iconSend,
+        iconShowPassword,
         iconSquare,
         iconTool,
         iconTwitch,

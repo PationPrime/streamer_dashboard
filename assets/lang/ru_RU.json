@@ -1,0 +1,54 @@
+{
+  "common": {
+    "input_dialog": {
+      "buttons": {
+        "close": {
+          "title": "Закрыть"
+        },
+        "submit": {
+          "title": "Подвердить"
+        },
+        "save": {
+          "title": "Сохранить"
+        }
+      }
+    }
+  },
+  "dashboard": {
+    "title": "Дашборд"
+  },
+  "donations": {
+    "title": "Донаты",
+    "donation_alerts": {
+      "title": "Donation Alerts",
+      "buttons": {
+        "add": "Добавить",
+        "remove": "Убрать"
+      },
+      "add_dialog": {
+        "last_messages": {
+          "title": "Виджет последних сообщений",
+          "insert_link": "Вставьте ссылку"
+        }
+      }
+    }
+  },
+  "streams": {
+    "title": "Стримы"
+  },
+  "authentication": {
+    "title": "Аутентификация"
+  },
+  "accounts": {
+    "title": "Аккаунты"
+  },
+  "chatbot": {
+    "title": "Чатбот"
+  },
+  "stream_widgets": {
+    "title": "Виджеты"
+  },
+  "settings": {
+    "title": "Настройки"
+  }
+}

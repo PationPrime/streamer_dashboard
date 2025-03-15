@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../../app/widgets/widgets.dart';
+import 'package:streamer_dashboard/src/modules/donations/screens/donation_alerts_screen/donation_alerts_screen.dart';
 
 class DonationsScreen extends StatefulWidget {
   const DonationsScreen({super.key});
@@ -11,9 +10,7 @@ class DonationsScreen extends StatefulWidget {
 
 class _DonationsScreenState extends State<DonationsScreen> {
   @override
-  Widget build(BuildContext context) => const Scaffold(
-        body: SimpleWebView(
-          url: '',
-        ),
+  Widget build(BuildContext context) => Scaffold(
+        body: DonationAlertsScreen(),
       );
 }

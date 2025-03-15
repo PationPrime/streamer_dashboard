@@ -170,4 +170,21 @@ class AppSecureStorage implements LocalStorageInterface {
       rethrow;
     }
   }
+
+  @override
+  Future<void> removeDonationAlertsWidgetWevbViewUrl() async {
+    try {
+      await _secureStorage.delete(
+        key: 'donation_alerts_widget_webview_url',
+      );
+    } catch (error, stackTrace) {
+      _appLogger.logError(
+        'Error removing donation alerts widget webview url: $error',
+        stackTrace: stackTrace,
+        lexicalScope: 'removeDonationAlertsWidgetWevbViewUrl method',
+      );
+
+      rethrow;
+    }
+  }
 }

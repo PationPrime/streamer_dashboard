@@ -12,7 +12,7 @@ class TwitchAuthorizationController extends BaseAuthorizationController {
   late final _appLogger = AppLogger(where: '$this');
 
   TwitchAuthorizationController({
-    required super.localStorageInterface,
+    required super.localStorage,
   }) {
     chechAuthorizationState();
   }
@@ -20,10 +20,11 @@ class TwitchAuthorizationController extends BaseAuthorizationController {
   @override
   Future<void> chechAuthorizationState() async {
     try {
-      final twitchTokenModel = await localStorageInterface.getTwitchToken();
+      final twitchTokenModel = await localStorage.getTwitchToken();
 
       _appLogger.logMessage(
         'twitchTokenModel: $twitchTokenModel',
+        lexicalScope: 'chechAuthorizationState method',
       );
 
       if (twitchTokenModel is! TwitchTokenModel ||
@@ -57,7 +58,7 @@ class TwitchAuthorizationController extends BaseAuthorizationController {
 
   @override
   FutureOr<void> signOut() async {
-    await localStorageInterface.deleteTwitchToken();
+    await localStorage.deleteTwitchToken();
     emit(Unauthorized());
   }
 }

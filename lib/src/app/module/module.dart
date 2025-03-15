@@ -1,5 +1,7 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/window.dart';
@@ -11,6 +13,7 @@ import 'package:window_manager/window_manager.dart';
 
 import '../api_client/client/concrete_client.dart';
 import '../app_sytem_tray/app_sytem_tray.dart';
+import '../config/environment/environment.dart';
 import '../repositories/repositories.dart';
 import '../storage/storage.dart';
 
@@ -34,10 +37,13 @@ abstract final class AppModule {
     await runZonedGuarded(
       () async {
         await _configureDependencies();
-        await _initLocalStorage();
         await _initLocalization();
 
-        await AppSystemTray.init();
+        if (!kIsWeb && Platform.isWindows ||
+            Platform.isLinux ||
+            Platform.isMacOS) {
+          await AppSystemTray.init();
+        }
 
         runApp(
           StreamerDashboardApp(
@@ -69,16 +75,18 @@ abstract final class AppModule {
   static Future<void> _configureDependencies() async {
     WidgetsFlutterBinding.ensureInitialized();
 
-    await windowManager.ensureInitialized();
-    Window.initialize();
-    Window.setEffect(effect: WindowEffect.transparent);
-    windowManager.waitUntilReadyToShow().then((_) async {
-      await windowManager.setAsFrameless();
-      windowManager.show();
-    });
+    if (!kIsWeb && Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
+      await windowManager.ensureInitialized();
+      Window.initialize();
+      Window.setEffect(effect: WindowEffect.transparent);
+      windowManager.waitUntilReadyToShow().then((_) async {
+        await windowManager.setAsFrameless();
+        windowManager.show();
+      });
+    }
   }
 
-  static Future<void> _initLocalStorage() async {}
-
-  static Future<void> _initLocalization() async {}
+  static Future<void> _initLocalization() async {
+    await EasyLocalization.ensureInitialized();
+  }
 }

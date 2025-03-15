@@ -5,7 +5,7 @@ class NavigationPath {
   static const settings = 'settings';
   static const donations = 'donations';
   static const liveStreams = 'live-streams';
-  static const profiles = 'profiles';
+  static const accounts = 'accounts';
   static const streamWidgets = 'stream-widgets';
   static const authentication = 'authentication';
   static const loginTwitch = 'login-twitch';

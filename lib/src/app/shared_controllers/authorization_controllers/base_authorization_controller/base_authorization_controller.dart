@@ -10,10 +10,10 @@ part 'base_authorization_state.dart';
 
 abstract class BaseAuthorizationController
     extends Cubit<BaseAuthorizationState> {
-  final LocalStorageInterface localStorageInterface;
+  final LocalStorageInterface localStorage;
 
   BaseAuthorizationController({
-    required this.localStorageInterface,
+    required this.localStorage,
   }) : super(
           BaseAuthorizationInitialState(),
         );

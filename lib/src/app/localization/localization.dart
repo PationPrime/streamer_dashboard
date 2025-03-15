@@ -6,6 +6,8 @@ import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
+import '../lang/codegen_loader.g.dart';
+
 class AppLocalization extends StatefulWidget {
   static const Locale _EN = Locale('en', 'US');
   static const Locale _RU = Locale('ru', 'RU');
@@ -49,7 +51,7 @@ class _AppLocalizationState extends State<AppLocalization> {
       supportedLocales: supportedLocales,
       path: 'assets/lang/',
       fallbackLocale: fallbackLocale,
-      // assetLoader: const CodegenLoader(),
+      assetLoader: const CodegenLoader(),
       saveLocale: true,
       child: Builder(builder: widget.builder),
     );

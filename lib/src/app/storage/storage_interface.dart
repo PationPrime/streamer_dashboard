@@ -27,5 +27,7 @@ abstract class LocalStorageInterface {
     String widgetWebViewUrl,
   );
 
+  Future<void> removeDonationAlertsWidgetWevbViewUrl();
+
   Future<String?> getDonationAlertsWidgetWevbViewUrl();
 }
