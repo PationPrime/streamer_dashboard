@@ -14,6 +14,16 @@
       }
     }
   },
+  "navigation_bar": {
+    "dashboard": "Dashboard",
+    "donations": "Donations",
+    "streams": "Streams",
+    "authentication": "Authentication",
+    "accounts": "Accounts",
+    "chatbot": "Chatbot",
+    "stream_widgets": "Stream Widgets",
+    "settings": "Settings"
+  },
   "dashboard": {
     "title": "Dashboard"
   },
@@ -24,7 +34,7 @@
       "buttons": {
         "add": "Add",
         "remove": "Remove",
-        "edit":"Edit"
+        "edit": "Edit"
       },
       "add_dialog": {
         "last_messages": {

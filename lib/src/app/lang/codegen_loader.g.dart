@@ -30,6 +30,16 @@ class CodegenLoader extends AssetLoader{
       }
     }
   },
+  "navigation_bar": {
+    "dashboard": "Dashboard",
+    "donations": "Donations",
+    "streams": "Streams",
+    "authentication": "Authentication",
+    "accounts": "Accounts",
+    "chatbot": "Chatbot",
+    "stream_widgets": "Stream Widgets",
+    "settings": "Settings"
+  },
   "dashboard": {
     "title": "Dashboard"
   },
@@ -84,6 +94,16 @@ static const Map<String,dynamic> _ru_RU = {
         }
       }
     }
+  },
+  "navigation_bar": {
+    "dashboard": "Дашборд",
+    "donations": "Донаты",
+    "streams": "Стримы",
+    "authentication": "Аутентификация",
+    "accounts": "Аккаунты",
+    "chatbot": "Чатбот",
+    "stream_widgets": "Виджеты",
+    "settings": "Настройки"
   },
   "dashboard": {
     "title": "Дашборд"

@@ -12,6 +12,15 @@ abstract class  LocaleKeys {
   static const common_input_dialog_buttons = 'common.input_dialog.buttons';
   static const common_input_dialog = 'common.input_dialog';
   static const common = 'common';
+  static const navigation_bar_dashboard = 'navigation_bar.dashboard';
+  static const navigation_bar_donations = 'navigation_bar.donations';
+  static const navigation_bar_streams = 'navigation_bar.streams';
+  static const navigation_bar_authentication = 'navigation_bar.authentication';
+  static const navigation_bar_accounts = 'navigation_bar.accounts';
+  static const navigation_bar_chatbot = 'navigation_bar.chatbot';
+  static const navigation_bar_stream_widgets = 'navigation_bar.stream_widgets';
+  static const navigation_bar_settings = 'navigation_bar.settings';
+  static const navigation_bar = 'navigation_bar';
   static const dashboard_title = 'dashboard.title';
   static const dashboard = 'dashboard';
   static const donations_title = 'donations.title';

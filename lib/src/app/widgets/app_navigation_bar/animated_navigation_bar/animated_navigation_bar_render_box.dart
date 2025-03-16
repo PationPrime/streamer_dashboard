@@ -7,6 +7,13 @@ class AnimatedNavigationBarRenderBox extends RenderBox
             AnimatedNavigationBarParentData> {
   late final _appLogger = AppLogger(where: '$this');
 
+  late Axis _barAxis;
+  Axis get barAxis => _barAxis;
+  set barAxis(Axis value) {
+    if (value == _barAxis) return;
+    _barAxis = value;
+  }
+
   ///
   int _selectedIndex = 0;
   Function(int)? onItemSelected;
@@ -35,7 +42,9 @@ class AnimatedNavigationBarRenderBox extends RenderBox
   AnimatedNavigationBarRenderBox({
     this.onItemSelected,
     required Animation<double> highlightAnimation,
-  }) : _highlightAnimation = highlightAnimation {
+    required Axis barAxis,
+  })  : _highlightAnimation = highlightAnimation,
+        _barAxis = barAxis {
     _addListener();
   }
 
@@ -63,10 +72,13 @@ class AnimatedNavigationBarRenderBox extends RenderBox
 
     RenderBox? child = firstChild;
     double dx = 0;
+    double dy = 0;
 
     while (child != null) {
       child.layout(
-        BoxConstraints.tightFor(width: childWidth),
+        BoxConstraints.tightFor(
+          width: barAxis == Axis.horizontal ? childWidth : maxWidth,
+        ),
         parentUsesSize: true,
       );
 
@@ -74,13 +86,20 @@ class AnimatedNavigationBarRenderBox extends RenderBox
 
       final childParentData =
           child.parentData as AnimatedNavigationBarParentData;
-      childParentData.offset = Offset(dx, 0);
-      dx += childWidth;
+      childParentData.offset = Offset(dx, dy);
+
+      if (barAxis == Axis.horizontal) {
+        dx += childWidth;
+      } else {
+        dy += height;
+      }
 
       child = childAfter(child);
     }
 
-    size = Size(maxWidth, height);
+    size = barAxis == Axis.horizontal
+        ? Size(maxWidth, height)
+        : constraints.biggest;
 
     if (firstChild != null) {
       final selectedChild = _getChildAtIndex(_selectedIndex);
@@ -90,9 +109,9 @@ class AnimatedNavigationBarRenderBox extends RenderBox
             selectedChild.parentData as AnimatedNavigationBarParentData;
         _selectedRect = Rect.fromLTWH(
           childParentData.offset.dx,
-          0,
-          selectedChild.size.width,
-          selectedChild.size.height,
+          childParentData.offset.dy,
+          barAxis == Axis.horizontal ? 0 : selectedChild.size.width,
+          barAxis == Axis.horizontal ? selectedChild.size.height : 0,
         );
       }
     }
@@ -100,7 +119,9 @@ class AnimatedNavigationBarRenderBox extends RenderBox
 
   Rect? _selectedRect;
   double dxPosition = 0;
+  double dyPosition = 0;
   double _highlightWidth = 0;
+  double _highlighHeight = 0;
 
   void _animationChangingListener() {
     markNeedsPaint();
@@ -134,32 +155,94 @@ class AnimatedNavigationBarRenderBox extends RenderBox
   void paint(PaintingContext context, Offset offset) {
     RenderBox? selectedChild = _getChildAtIndex(_selectedIndex);
     if (selectedChild == null) return;
+    double dxDifference = 0.0;
+    double dyDifference = 0.0;
 
     final selectedRectDx = _selectedRect?.bottomLeft.dx ?? 0;
-    final selectedWidth = selectedChild.size.width;
+    final selectedRectDy = _selectedRect?.topLeft.dy ?? 0;
 
-    double dxDifference = selectedRectDx - dxPosition;
-    dxPosition += dxDifference * _highlightAnimation.value;
+    final selectedWidth = selectedChild.size.width;
+    final selectedHeight = selectedChild.size.height;
+
+    if (barAxis == Axis.horizontal) {
+      dxDifference = selectedRectDx - dxPosition;
+      dxPosition += dxDifference * _highlightAnimation.value;
+    } else {
+      dyDifference = selectedRectDy - dyPosition;
+      dyPosition += dyDifference * _highlightAnimation.value;
+    }
 
     double widthDifference = selectedWidth - _highlightWidth;
     _highlightWidth += widthDifference * _highlightAnimation.value;
 
+    double heightDifference = selectedHeight - _highlighHeight;
+    _highlighHeight += heightDifference * _highlightAnimation.value;
+
     context.canvas.drawRect(
       Rect.fromLTWH(
         dxPosition,
-        offset.dy,
+        offset.dy + dyPosition,
         _highlightWidth,
-        selectedChild.size.height,
+        _highlighHeight,
       ),
       highlightPaint,
     );
 
     if (_highlightAnimation.value == 1) {
       dxDifference = 0.0;
+      dyDifference = 0.0;
       widthDifference = 0.0;
     }
 
     defaultPaint(context, offset);
+  }
+
+  bool _findPointer(
+    Offset localPosition, {
+    bool select = true,
+  }) {
+    RenderBox? child = firstChild;
+    int index = 0;
+
+    while (child != null) {
+      final childParentData =
+          child.parentData as AnimatedNavigationBarParentData;
+
+      final childRect = Rect.fromLTWH(
+        childParentData.offset.dx,
+        childParentData.offset.dy,
+        child.size.width,
+        child.size.height,
+      );
+
+      if (childRect.contains(localPosition)) {
+        if (select) {
+          _selectedRect = childRect;
+          onItemSelected?.call(index);
+        }
+
+        return true;
+      }
+
+      child = childAfter(child);
+      index++;
+    }
+
+    return false;
+  }
+
+  void _changePointerStyle(bool contains) {
+    if (contains) {
+      SystemChannels.mouseCursor.invokeMethod<void>(
+        'activateSystemCursor',
+        {'kind': 'click'}, // Используем курсор для клика
+      );
+    } else {
+      SystemChannels.mouseCursor.invokeMethod<void>(
+        'activateSystemCursor',
+        {'kind': 'basic'}, // Стандартный курсор
+      );
+    }
   }
 
   @override
@@ -170,30 +253,14 @@ class AnimatedNavigationBarRenderBox extends RenderBox
     assert(debugHandleEvent(event, entry));
 
     if (event is PointerDownEvent) {
-      RenderBox? child = firstChild;
-      int index = 0;
+      _findPointer(event.localPosition);
+    } else if (event is PointerHoverEvent) {
+      final contains = _findPointer(
+        event.localPosition,
+        select: false,
+      );
 
-      final tapLocalPosition = event.localPosition;
-
-      while (child != null) {
-        final childParentData =
-            child.parentData as AnimatedNavigationBarParentData;
-
-        final childRect = Rect.fromLTWH(
-          childParentData.offset.dx,
-          childParentData.offset.dy,
-          child.size.width,
-          child.size.height,
-        );
-
-        if (childRect.contains(tapLocalPosition)) {
-          _selectedRect = childRect;
-          onItemSelected?.call(index);
-        }
-
-        child = childAfter(child);
-        index++;
-      }
+      _changePointerStyle(contains);
     }
   }
 

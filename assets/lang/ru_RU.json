@@ -14,6 +14,16 @@
       }
     }
   },
+  "navigation_bar": {
+    "dashboard": "Дашборд",
+    "donations": "Донаты",
+    "streams": "Стримы",
+    "authentication": "Аутентификация",
+    "accounts": "Аккаунты",
+    "chatbot": "Чатбот",
+    "stream_widgets": "Виджеты",
+    "settings": "Настройки"
+  },
   "dashboard": {
     "title": "Дашборд"
   },

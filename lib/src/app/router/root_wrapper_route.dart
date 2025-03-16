@@ -1,15 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:streamer_dashboard/src/app/extensions/extensions.dart';
 import 'package:streamer_dashboard/src/app/widgets/widgets.dart';
 
-import '../../assets_gen/assets.gen.dart';
-import '../widgets/app_navigation_bar/app_navigation_bar_item.dart';
-import '../widgets/app_navigation_bar/navigation_bar_icons/finalize_icon.dart';
 import 'navigation_path.dart';
 
 class RootWrapperRoute extends StatefulWidget {
-  final Widget child;
+  final StatefulNavigationShell child;
 
   const RootWrapperRoute({
     super.key,
@@ -20,277 +16,49 @@ class RootWrapperRoute extends StatefulWidget {
   State<RootWrapperRoute> createState() => _RootWrapperRouteState();
 }
 
-class _RootWrapperRouteState extends State<RootWrapperRoute>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Tween<double> _highlightTween;
-  late Animation<double> _highlightAnimation;
-
-  void _initAnimation() {
-    _animationController = AnimationController(
-      duration: Duration(milliseconds: 500),
-      vsync: this,
-    );
-
-    _highlightTween = Tween<double>(begin: 0, end: 1);
-
-    _highlightAnimation = _highlightTween.animate(
-      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
-    );
-
-    _animationController.forward(
-      from: 0.0,
-    );
-  }
-
-  void _disposeAnimation() {
-    _animationController.dispose();
-  }
-
+class _RootWrapperRouteState extends State<RootWrapperRoute> {
   void _navigateToPage(int activePageIndex) {
     switch (activePageIndex) {
       case 0:
-        context.pushNamed(NavigationPath.root);
+        widget.child.goBranch(0);
       case 1:
-        context.pushNamed(NavigationPath.donations);
+        widget.child.goBranch(1);
       case 2:
-        context.pushNamed(NavigationPath.liveStreams);
+        widget.child.goBranch(2);
       case 3:
-        context.pushNamed(NavigationPath.authentication);
+        widget.child.goBranch(3);
       case 4:
-        context.pushNamed(NavigationPath.accounts);
+        widget.child.goBranch(4);
       case 5:
+        widget.child.goBranch(5);
       case 6:
-        context.pushNamed(NavigationPath.streamWidgets);
+        widget.child.goBranch(6);
       case 7:
-        context.pushNamed(NavigationPath.settings);
+        widget.child.goBranch(7);
 
       default:
         context.pushNamed(NavigationPath.root);
     }
   }
 
-  int _selectedIndex = 0;
-
-  void _select(int index) {
-    _startAnimation();
-
-    setState(
-      () {
-        _selectedIndex = index;
-      },
-    );
-  }
-
   @override
-  void initState() {
-    super.initState();
-
-    _initAnimation();
-  }
-
-  @override
-  void dispose() {
-    _disposeAnimation();
-    super.dispose();
-  }
-
-  void _startAnimation() {
-    _animationController.forward(
-      from: 0.0,
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isPortrait = false;
-    // MediaQuery.of(context).orientation == Orientation.portrait;
-
-    return Scaffold(
-      body: Column(
-        children: [
-          const AppWindowTitleBar(),
-
-          ///
-          Expanded(
-            child: Row(
-              children: [
-                AppNavigationBar(
-                  boxShadow: isPortrait ? null : [],
-                  portraitMargin: EdgeInsets.only(),
-                  landscapeMargin: EdgeInsets.only(),
-                  landscapeBorderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(20),
+  Widget build(BuildContext context) => Scaffold(
+        body: Column(
+          children: [
+            const AppWindowTitleBar(),
+            Expanded(
+              child: Row(
+                children: [
+                  AnimatedNavigationBar(
+                    onItemSelected: _navigateToPage,
                   ),
-                  contentPadding: isPortrait
-                      ? const EdgeInsets.symmetric(
-                          horizontal: 20,
-                        )
-                      : const EdgeInsets.symmetric(
-                          vertical: 20,
-                          horizontal: 10,
-                        ),
-                  border: isPortrait
-                      ? null
-                      : Border(
-                          right: BorderSide(
-                            width: 0.5,
-                            color: context.color.lightBorder,
-                          ),
-                        ),
-                  onActiveIndexChanged: _navigateToPage,
-                  items: [
-                    AppNavigationBarItem(
-                      activeIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        color: context.color.primary,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Dashboard',
-                      ),
-                      inActiveIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        isActive: false,
-                        color: context.color.mainWhite,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Dashboard',
-                        labelColor: context.color.mainWhite,
-                      ),
-                    ),
-                    AppNavigationBarItem(
-                      activeIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        color: context.color.primary,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Donations',
-                      ),
-                      inActiveIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        isActive: false,
-                        color: context.color.mainWhite,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Donations',
-                        labelColor: context.color.mainWhite,
-                      ),
-                    ),
-                    AppNavigationBarItem(
-                      activeIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        color: context.color.primary,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Streams',
-                      ),
-                      inActiveIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        isActive: false,
-                        color: context.color.mainWhite,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Streams',
-                        labelColor: context.color.mainWhite,
-                      ),
-                    ),
-                    AppNavigationBarItem(
-                      activeIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        color: context.color.primary,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Authentication',
-                      ),
-                      inActiveIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        isActive: false,
-                        color: context.color.mainWhite,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Authentication',
-                        labelColor: context.color.mainWhite,
-                      ),
-                    ),
-                    AppNavigationBarItem(
-                      activeIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        color: context.color.primary,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Profiles',
-                      ),
-                      inActiveIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        isActive: false,
-                        color: context.color.mainWhite,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Profiles',
-                        labelColor: context.color.mainWhite,
-                      ),
-                    ),
-                    AppNavigationBarItem(
-                      activeIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        color: context.color.primary,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Chatbot',
-                      ),
-                      inActiveIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        isActive: false,
-                        color: context.color.mainWhite,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Chatbot',
-                        labelColor: context.color.mainWhite,
-                      ),
-                    ),
-                    AppNavigationBarItem(
-                      activeIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        color: context.color.primary,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Stream Widgets',
-                      ),
-                      inActiveIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        isActive: false,
-                        color: context.color.mainWhite,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Stream Widgets',
-                        labelColor: context.color.mainWhite,
-                      ),
-                    ),
-                    AppNavigationBarItem(
-                      activeIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        color: context.color.primary,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Settings',
-                      ),
-                      inActiveIcon: FinalizeIcon(
-                        expanded: !isPortrait,
-                        isActive: false,
-                        color: context.color.mainWhite,
-                        assetPath: Assets.appLogo.appLogoPng.path,
-                        label: 'Settings',
-                        labelColor: context.color.mainWhite,
-                      ),
-                    ),
-                  ],
-                ),
-                Expanded(child: widget.child),
-              ],
+                  Expanded(
+                    child: widget.child,
+                  ),
+                ],
+              ),
             ),
-          ),
-
-          // Container(
-          //   color: Colors.blueGrey.shade900,
-          //   child: AnimatedNavigationBarWidget(
-          //     // controller: _animationController,
-          //     highlightAnimation: _highlightAnimation,
-          //     selectedIndex: _selectedIndex,
-          //     onItemSelected: _select,
-          //     children: [
-          //       Icon(Icons.home, color: Colors.white, size: 30),
-          //       Icon(Icons.search, color: Colors.white, size: 30),
-          //       Icon(Icons.person, color: Colors.white, size: 30),
-          //     ],
-          //   ),
-          // ),
-        ],
-      ),
-    );
-  }
+          ],
+        ),
+      );
 }
