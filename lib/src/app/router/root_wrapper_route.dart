@@ -275,20 +275,20 @@ class _RootWrapperRouteState extends State<RootWrapperRoute>
             ),
           ),
 
-          Container(
-            color: Colors.blueGrey.shade900,
-            child: AnimatedNavigationBarWidget(
-              // controller: _animationController,
-              highlightAnimation: _highlightAnimation,
-              selectedIndex: _selectedIndex,
-              onItemSelected: _select,
-              children: [
-                Icon(Icons.home, color: Colors.white, size: 30),
-                Icon(Icons.search, color: Colors.white, size: 30),
-                Icon(Icons.person, color: Colors.white, size: 30),
-              ],
-            ),
-          ),
+          // Container(
+          //   color: Colors.blueGrey.shade900,
+          //   child: AnimatedNavigationBarWidget(
+          //     // controller: _animationController,
+          //     highlightAnimation: _highlightAnimation,
+          //     selectedIndex: _selectedIndex,
+          //     onItemSelected: _select,
+          //     children: [
+          //       Icon(Icons.home, color: Colors.white, size: 30),
+          //       Icon(Icons.search, color: Colors.white, size: 30),
+          //       Icon(Icons.person, color: Colors.white, size: 30),
+          //     ],
+          //   ),
+          // ),
         ],
       ),
     );

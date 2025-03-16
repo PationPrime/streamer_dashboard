@@ -39,7 +39,8 @@ class CodegenLoader extends AssetLoader{
       "title": "Donation Alerts",
       "buttons": {
         "add": "Add",
-        "remove": "Remove"
+        "remove": "Remove",
+        "edit": "Edit"
       },
       "add_dialog": {
         "last_messages": {
@@ -93,7 +94,8 @@ static const Map<String,dynamic> _ru_RU = {
       "title": "Donation Alerts",
       "buttons": {
         "add": "Добавить",
-        "remove": "Убрать"
+        "remove": "Убрать",
+        "edit": "Изменить"
       },
       "add_dialog": {
         "last_messages": {

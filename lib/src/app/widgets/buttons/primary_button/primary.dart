@@ -71,7 +71,7 @@ class PrimaryButton extends StatelessWidget {
           duration: _kDuration,
           decoration: BoxDecoration(
             color: enabled
-                ? buttonColor ?? context.color.cancel
+                ? buttonColor ?? context.color.active
                 : context.color.disabled,
             borderRadius: BorderRadius.circular(
               borderRadius,

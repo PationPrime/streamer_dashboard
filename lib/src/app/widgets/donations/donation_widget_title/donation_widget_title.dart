@@ -4,19 +4,22 @@ import 'package:streamer_dashboard/src/app/widgets/buttons/buttons.dart';
 
 class DonationWidgetTitle extends StatelessWidget {
   final String title;
-  final String buttonTitle;
-  final VoidCallback? onPressed;
+  final String leftButtonTitle;
+  final String rigthButtonTitle;
+  final VoidCallback? onLeftPressed;
+  final VoidCallback? onRightPressed;
 
   const DonationWidgetTitle({
     super.key,
     required this.title,
-    required this.buttonTitle,
-    this.onPressed,
+    required this.leftButtonTitle,
+    required this.rigthButtonTitle,
+    this.onLeftPressed,
+    this.onRightPressed,
   });
 
   @override
   Widget build(BuildContext context) => Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           Text(
             title,
@@ -25,15 +28,30 @@ class DonationWidgetTitle extends StatelessWidget {
           const SizedBox(
             width: 10,
           ),
+          const Spacer(),
           PrimaryButton(
-            onTap: onPressed,
+            onTap: onLeftPressed,
             height: 35,
-            title: buttonTitle,
+            title: leftButtonTitle,
+            buttonColor: context.color.active,
             expanded: false,
             padding: EdgeInsets.symmetric(
               horizontal: 20,
             ),
-          )
+          ),
+          const SizedBox(
+            width: 10,
+          ),
+          PrimaryButton(
+            onTap: onRightPressed,
+            height: 35,
+            title: rigthButtonTitle,
+            buttonColor: context.color.cancel,
+            expanded: false,
+            padding: EdgeInsets.symmetric(
+              horizontal: 20,
+            ),
+          ),
         ],
       );
 }

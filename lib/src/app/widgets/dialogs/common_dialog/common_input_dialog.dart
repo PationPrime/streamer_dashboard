@@ -60,6 +60,8 @@ class _CommonDialogState extends State<CommonDialog> {
 
   bool get _showClearButton => _controller.value.text.isNotEmpty;
 
+  bool get _saveEnabled => _controller.value.text.isNotEmpty;
+
   void _onClearButtonPressed() {
     _controller.clear();
   }
@@ -171,15 +173,19 @@ class _CommonDialogState extends State<CommonDialog> {
             ),
           ),
           TextButton(
-            onPressed: () {
-              widget.onSubmit?.call();
-              Navigator.of(context).pop(_controller.text);
-            },
+            onPressed: !_saveEnabled
+                ? null
+                : () {
+                    widget.onSubmit?.call();
+                    Navigator.of(context).pop(_controller.text);
+                  },
             child: Text(
               widget.saveButtonText ??
                   LocaleKeys.common_input_dialog_buttons_save_title.tr(),
               style: context.text.headline4Medium.copyWith(
-                color: context.color.active,
+                color: _saveEnabled
+                    ? context.color.active
+                    : context.color.disabled,
               ),
             ),
           ),

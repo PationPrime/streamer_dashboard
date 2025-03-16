@@ -23,7 +23,8 @@
       "title": "Donation Alerts",
       "buttons": {
         "add": "Add",
-        "remove": "Remove"
+        "remove": "Remove",
+        "edit":"Edit"
       },
       "add_dialog": {
         "last_messages": {

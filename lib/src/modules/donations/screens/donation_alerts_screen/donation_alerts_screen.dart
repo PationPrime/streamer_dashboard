@@ -11,6 +11,27 @@ import '../../controllers/controllers.dart';
 class DonationAlertsScreen extends StatelessWidget {
   const DonationAlertsScreen({super.key});
 
+  Future<void> _addOrEditLink(
+    BuildContext context, {
+    String? initialLink,
+  }) async {
+    final textResponse = await CommonDialog.show(
+      context: context,
+      title: LocaleKeys.donations_donation_alerts_add_dialog_last_messages_title
+          .tr(),
+      description: LocaleKeys
+          .donations_donation_alerts_add_dialog_last_messages_insert_link
+          .tr(),
+      initialText: initialLink,
+    );
+
+    if (textResponse is String && context.mounted) {
+      context.read<DonationsController>().addDonationAlerts(
+            textResponse,
+          );
+    }
+  }
+
   @override
   Widget build(BuildContext context) =>
       BlocBuilder<DonationsController, DonationsState>(
@@ -39,23 +60,9 @@ class DonationAlertsScreen extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                         horizontal: 20,
                       ),
-                      onTap: () async {
-                        final textResponse = await CommonDialog.show(
-                          context: context,
-                          title: LocaleKeys
-                              .donations_donation_alerts_add_dialog_last_messages_title
-                              .tr(),
-                          description: LocaleKeys
-                              .donations_donation_alerts_add_dialog_last_messages_insert_link
-                              .tr(),
-                        );
-
-                        if (textResponse is String && context.mounted) {
-                          context.read<DonationsController>().addDonationAlerts(
-                                textResponse,
-                              );
-                        }
-                      },
+                      onTap: () async => _addOrEditLink(
+                        context,
+                      ),
                     ),
                   ],
                 )
@@ -68,10 +75,18 @@ class DonationAlertsScreen extends StatelessWidget {
                         title: LocaleKeys
                             .donations_donation_alerts_add_dialog_last_messages_title
                             .tr(),
-                        buttonTitle: LocaleKeys
+                        leftButtonTitle: LocaleKeys
+                            .donations_donation_alerts_buttons_edit
+                            .tr(),
+                        onLeftPressed: () async => _addOrEditLink(
+                          context,
+                          initialLink: donationsController
+                              .donationAlertsModel?.widgetWebViewUrl,
+                        ),
+                        rigthButtonTitle: LocaleKeys
                             .donations_donation_alerts_buttons_remove
                             .tr(),
-                        onPressed: () {
+                        onRightPressed: () {
                           context
                               .read<DonationsController>()
                               .removeDonationAlertsLink();

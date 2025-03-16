@@ -18,6 +18,7 @@ abstract class  LocaleKeys {
   static const donations_donation_alerts_title = 'donations.donation_alerts.title';
   static const donations_donation_alerts_buttons_add = 'donations.donation_alerts.buttons.add';
   static const donations_donation_alerts_buttons_remove = 'donations.donation_alerts.buttons.remove';
+  static const donations_donation_alerts_buttons_edit = 'donations.donation_alerts.buttons.edit';
   static const donations_donation_alerts_buttons = 'donations.donation_alerts.buttons';
   static const donations_donation_alerts_add_dialog_last_messages_title = 'donations.donation_alerts.add_dialog.last_messages.title';
   static const donations_donation_alerts_add_dialog_last_messages_insert_link = 'donations.donation_alerts.add_dialog.last_messages.insert_link';
