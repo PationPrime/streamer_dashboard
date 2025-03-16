@@ -20,7 +20,33 @@ class RootWrapperRoute extends StatefulWidget {
   State<RootWrapperRoute> createState() => _RootWrapperRouteState();
 }
 
-class _RootWrapperRouteState extends State<RootWrapperRoute> {
+class _RootWrapperRouteState extends State<RootWrapperRoute>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+  late Tween<double> _highlightTween;
+  late Animation<double> _highlightAnimation;
+
+  void _initAnimation() {
+    _animationController = AnimationController(
+      duration: Duration(milliseconds: 500),
+      vsync: this,
+    );
+
+    _highlightTween = Tween<double>(begin: 0, end: 1);
+
+    _highlightAnimation = _highlightTween.animate(
+      CurvedAnimation(parent: _animationController, curve: Curves.easeInOut),
+    );
+
+    _animationController.forward(
+      from: 0.0,
+    );
+  }
+
+  void _disposeAnimation() {
+    _animationController.dispose();
+  }
+
   void _navigateToPage(int activePageIndex) {
     switch (activePageIndex) {
       case 0:
@@ -42,6 +68,37 @@ class _RootWrapperRouteState extends State<RootWrapperRoute> {
       default:
         context.pushNamed(NavigationPath.root);
     }
+  }
+
+  int _selectedIndex = 0;
+
+  void _select(int index) {
+    _startAnimation();
+
+    setState(
+      () {
+        _selectedIndex = index;
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    _initAnimation();
+  }
+
+  @override
+  void dispose() {
+    _disposeAnimation();
+    super.dispose();
+  }
+
+  void _startAnimation() {
+    _animationController.forward(
+      from: 0.0,
+    );
   }
 
   @override
@@ -214,6 +271,21 @@ class _RootWrapperRouteState extends State<RootWrapperRoute> {
                   ],
                 ),
                 Expanded(child: widget.child),
+              ],
+            ),
+          ),
+
+          Container(
+            color: Colors.blueGrey.shade900,
+            child: AnimatedNavigationBarWidget(
+              // controller: _animationController,
+              highlightAnimation: _highlightAnimation,
+              selectedIndex: _selectedIndex,
+              onItemSelected: _select,
+              children: [
+                Icon(Icons.home, color: Colors.white, size: 30),
+                Icon(Icons.search, color: Colors.white, size: 30),
+                Icon(Icons.person, color: Colors.white, size: 30),
               ],
             ),
           ),
