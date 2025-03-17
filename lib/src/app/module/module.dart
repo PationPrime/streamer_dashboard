@@ -14,7 +14,6 @@ import 'package:window_manager/window_manager.dart';
 
 import '../api_client/client/concrete_client.dart';
 import '../app_sytem_tray/app_sytem_tray.dart';
-import '../config/environment/environment.dart';
 import '../repositories/repositories.dart';
 import '../storage/storage.dart';
 
@@ -46,20 +45,13 @@ abstract final class AppModule {
           await AppSystemTray.init();
         }
 
-        final themeTypeName = await _appSecureLocalStorage.getThemeType();
-
-        final appThemeType = switch (themeTypeName) {
-          'AppDarkTheme' => AppDarkTheme(),
-          _ => AppLightTheme(),
-        };
-
         runApp(
           StreamerDashboardApp(
             router: _router,
             apiClient: _apiClient,
             repositories: _repositories,
             appSecureStorage: _appSecureLocalStorage,
-            appThemeType: appThemeType,
+            appThemeType: await _getAppTheme(),
           ),
         );
       },
@@ -93,6 +85,15 @@ abstract final class AppModule {
         windowManager.show();
       });
     }
+  }
+
+  static Future<AppThemeType> _getAppTheme() async {
+    final themeTypeName = await _appSecureLocalStorage.getThemeType();
+
+    return switch (themeTypeName) {
+      'AppDarkTheme' => AppDarkTheme(),
+      _ => AppLightTheme(),
+    };
   }
 
   static Future<void> _initLocalization() async {

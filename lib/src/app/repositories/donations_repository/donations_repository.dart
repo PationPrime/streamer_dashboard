@@ -12,7 +12,7 @@ final class DonationsRepository implements DonationsRepositoryInterface {
     try {
       final data = await JsonTool.readJsonFileFromAsset(
         Assets.additionalData.donations,
-        jsonRootKey: DonationKeysConstants.donationAlertsWidgetWebViewUrl,
+        jsonRootKey: DonationConstants.donationAlertsWidgetWebViewUrl,
       );
 
       return Right(data);

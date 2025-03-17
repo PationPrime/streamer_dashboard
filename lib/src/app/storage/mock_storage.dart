@@ -84,4 +84,10 @@ class MockLocalStorage implements LocalStorageInterface {
     // TODO: implement setThemeType
     throw UnimplementedError();
   }
+
+  @override
+  Future<void> deleteAllStorageValues() {
+    // TODO: implement deleteAllStorageValues
+    throw UnimplementedError();
+  }
 }

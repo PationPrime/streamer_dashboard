@@ -1,3 +1,4 @@
+import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'donation_alerts_model.g.dart';
@@ -5,7 +6,7 @@ part 'donation_alerts_model.g.dart';
 @JsonSerializable(
   createToJson: false,
 )
-class DonationAlertsModel {
+class DonationAlertsModel extends Equatable {
   @JsonKey(name: 'donation_alerts_widget_webview_url')
   final String widgetWebViewUrl;
 
@@ -17,4 +18,7 @@ class DonationAlertsModel {
     Map<String, dynamic> json,
   ) =>
       _$DonationAlertsModelFromJson(json);
+
+  @override
+  List<Object?> get props => [widgetWebViewUrl];
 }

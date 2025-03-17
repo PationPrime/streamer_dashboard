@@ -57,6 +57,10 @@ class CodegenLoader extends AssetLoader{
           "title": "Last messages widget",
           "insert_link": "Insert link"
         }
+      },
+      "errors": {
+        "invalid_last_messages_widget_link": "Invald last messages widget link",
+        "invalid_link": "Invalid link. Link must be from official DonationAlerts website"
       }
     }
   },
@@ -127,6 +131,10 @@ static const Map<String,dynamic> _ru_RU = {
           "title": "Виджет последних сообщений",
           "insert_link": "Вставьте ссылку"
         }
+      },
+      "errors": {
+        "invalid_last_messages_widget_link": "Неверная ссылка на виджет последних сообщений",
+        "invalid_link": "Неверная ссылка. Ссылка должна быть предоставлена официальным сайтом DonationAlerts"
       }
     }
   },

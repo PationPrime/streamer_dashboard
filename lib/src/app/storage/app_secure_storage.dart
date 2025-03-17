@@ -222,4 +222,19 @@ class AppSecureStorage implements LocalStorageInterface {
       rethrow;
     }
   }
+
+  @override
+  Future<void> deleteAllStorageValues() async {
+    try {
+      return await _secureStorage.deleteAll();
+    } catch (error, stackTrace) {
+      _appLogger.logError(
+        'Failed to delete all storage values: $error',
+        stackTrace: stackTrace,
+        lexicalScope: 'deleteAllStorageValues method',
+      );
+
+      rethrow;
+    }
+  }
 }

@@ -149,7 +149,6 @@ class _StreamerDashboardAppViewState extends State<_StreamerDashboardAppView> {
       );
 }
 
-/// Конфигурация скролла
 class _AppScrollBehavior extends ScrollBehavior {
   const _AppScrollBehavior();
 

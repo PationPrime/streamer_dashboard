@@ -34,4 +34,6 @@ abstract class LocalStorageInterface {
   Future<void> setThemeType(String themeType);
 
   Future<String?> getThemeType();
+
+  Future<void> deleteAllStorageValues();
 }

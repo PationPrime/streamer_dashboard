@@ -96,10 +96,7 @@ class DonationAlertsScreen extends StatelessWidget {
                         height: 10,
                       ),
                       Flexible(
-                        child: SimpleWebView(
-                          url: donationsController
-                              .donationAlertsModel!.widgetWebViewUrl,
-                        ),
+                        child: DonationAlertsLastMessagesWidget(),
                       ),
                     ],
                   ),

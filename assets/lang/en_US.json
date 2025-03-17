@@ -41,6 +41,10 @@
           "title": "Last messages widget",
           "insert_link": "Insert link"
         }
+      },
+      "errors": {
+        "invalid_last_messages_widget_link": "Invald last messages widget link",
+        "invalid_link": "Invalid link. Link must be from official DonationAlerts website"
       }
     }
   },
