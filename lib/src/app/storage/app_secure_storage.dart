@@ -43,7 +43,7 @@ class AppSecureStorage implements LocalStorageInterface {
       final tokenDataJson = token.toJson();
 
       await _secureStorage.write(
-        key: 'twitch_token',
+        key: AppSecureStorageKeys.twitchToken,
         value: tokenDataJson,
       );
     } catch (error, stackTrace) {
@@ -90,7 +90,7 @@ class AppSecureStorage implements LocalStorageInterface {
   Future<TwitchTokenModel?> getTwitchToken() async {
     try {
       final tokenDataJson = await _secureStorage.read(
-        key: 'twitch_token',
+        key: AppSecureStorageKeys.twitchToken,
       );
 
       if (tokenDataJson is! String) {
@@ -120,7 +120,9 @@ class AppSecureStorage implements LocalStorageInterface {
   @override
   Future<void> deleteTwitchToken() async {
     try {
-      await _secureStorage.delete(key: 'twitch_token');
+      await _secureStorage.delete(
+        key: AppSecureStorageKeys.twitchToken,
+      );
     } catch (error, stacTrace) {
       _appLogger.logError(
         'Error deleting twitch token: $error',
@@ -135,11 +137,9 @@ class AppSecureStorage implements LocalStorageInterface {
   @override
   Future<String?> getDonationAlertsWidgetWevbViewUrl() async {
     try {
-      final url = await _secureStorage.read(
-        key: 'donation_alerts_widget_webview_url',
+      return await _secureStorage.read(
+        key: AppSecureStorageKeys.donationAlertsLastMessagesWidget,
       );
-
-      return url;
     } catch (error, stackTrace) {
       _appLogger.logError(
         'Error getting donation alerts widget webview url: $error ',
@@ -157,7 +157,7 @@ class AppSecureStorage implements LocalStorageInterface {
   ) async {
     try {
       await _secureStorage.write(
-        key: 'donation_alerts_widget_webview_url',
+        key: AppSecureStorageKeys.donationAlertsLastMessagesWidget,
         value: widgetWebViewUrl,
       );
     } catch (error, stackTrace) {
@@ -175,13 +175,48 @@ class AppSecureStorage implements LocalStorageInterface {
   Future<void> removeDonationAlertsWidgetWevbViewUrl() async {
     try {
       await _secureStorage.delete(
-        key: 'donation_alerts_widget_webview_url',
+        key: AppSecureStorageKeys.donationAlertsLastMessagesWidget,
       );
     } catch (error, stackTrace) {
       _appLogger.logError(
         'Error removing donation alerts widget webview url: $error',
         stackTrace: stackTrace,
         lexicalScope: 'removeDonationAlertsWidgetWevbViewUrl method',
+      );
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<void> setThemeType(String themeType) async {
+    try {
+      await _secureStorage.write(
+        key: AppSecureStorageKeys.appTheme,
+        value: themeType,
+      );
+    } catch (error, stackTrace) {
+      _appLogger.logError(
+        'Error setting app theme type: $error',
+        stackTrace: stackTrace,
+        lexicalScope: 'setThemeType method',
+      );
+
+      rethrow;
+    }
+  }
+
+  @override
+  Future<String?> getThemeType() async {
+    try {
+      return await _secureStorage.read(
+        key: AppSecureStorageKeys.appTheme,
+      );
+    } catch (error, stackTrace) {
+      _appLogger.logError(
+        'Error setting app theme type: $error',
+        stackTrace: stackTrace,
+        lexicalScope: 'setThemeType method',
       );
 
       rethrow;

@@ -30,4 +30,8 @@ abstract class LocalStorageInterface {
   Future<void> removeDonationAlertsWidgetWevbViewUrl();
 
   Future<String?> getDonationAlertsWidgetWevbViewUrl();
+
+  Future<void> setThemeType(String themeType);
+
+  Future<String?> getThemeType();
 }

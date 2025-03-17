@@ -72,4 +72,16 @@ class MockLocalStorage implements LocalStorageInterface {
   Future<void> removeDonationAlertsWidgetWevbViewUrl() {
     throw UnimplementedError();
   }
+
+  @override
+  Future<String?> getThemeType() {
+    // TODO: implement getThemeType
+    throw UnimplementedError();
+  }
+
+  @override
+  Future<void> setThemeType(String themeType) {
+    // TODO: implement setThemeType
+    throw UnimplementedError();
+  }
 }

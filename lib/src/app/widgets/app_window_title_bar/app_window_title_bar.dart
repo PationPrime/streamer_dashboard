@@ -67,8 +67,8 @@ class _AppWindowTitleBarState extends State<AppWindowTitleBar> {
             color: context.color.background,
             border: Border(
               bottom: BorderSide(
-                color: context.color.border,
-                width: 0.2,
+                color: context.color.lightBorder,
+                width: 0.5,
               ),
             ),
           ),

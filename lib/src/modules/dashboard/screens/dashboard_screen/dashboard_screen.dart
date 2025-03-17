@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import '../../../../app/widgets/widgets.dart';
+import 'package:streamer_dashboard/src/app/extensions/app_theme_extension.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -12,15 +11,11 @@ class DashboardScreen extends StatefulWidget {
 class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) => Scaffold(
-        body: Row(
-          children: [
-            Flexible(
-              child: SimpleWebView(
-                url:
-                    "https://www.donationalerts.com/widget/lastdonations?alert_type=1,4,6,13,15,11,19,18,17,16,14,32,12&limit=25&token=MzxsVc0dOQRsHf6RGWvW",
-              ),
-            ),
-          ],
+        body: Center(
+          child: Text(
+            'Dashboard',
+            style: context.text.headline2Medium,
+          ),
         ),
       );
 }

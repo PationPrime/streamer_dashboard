@@ -76,7 +76,12 @@ class CodegenLoader extends AssetLoader{
     "title": "Stream Widgets"
   },
   "settings": {
-    "title": "Settings"
+    "title": "Settings",
+    "theme": {
+      "title": "App theme",
+      "dark": "Dark",
+      "light": "Light"
+    }
   }
 };
 static const Map<String,dynamic> _ru_RU = {
@@ -141,7 +146,12 @@ static const Map<String,dynamic> _ru_RU = {
     "title": "Виджеты"
   },
   "settings": {
-    "title": "Настройки"
+    "title": "Настройки",
+    "theme": {
+      "title": "Тема",
+      "dark": "Тёмная",
+      "light": "Светлая"
+    }
   }
 };
 static const Map<String, Map<String,dynamic>> mapLocales = {"en_US": _en_US, "ru_RU": _ru_RU};

@@ -61,7 +61,7 @@ class AppNavigationBar extends StatefulWidget {
     ),
     this.boxShadow,
     this.border,
-    this.buttonVerticalButtonBottomPadding = 20,
+    this.buttonVerticalButtonBottomPadding = 10,
     this.logo,
     this.additionalItems,
     this.additionalButtonVerticalBottomPadding = 10,

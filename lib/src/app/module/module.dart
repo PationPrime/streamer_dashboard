@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_acrylic/window.dart';
 import 'package:flutter_acrylic/window_effect.dart';
 import 'package:streamer_dashboard/src/app/app.dart';
+import 'package:streamer_dashboard/src/app/design_system/design_system.dart';
 import 'package:streamer_dashboard/src/app/router/app_router_provider.dart';
 import 'package:streamer_dashboard/src/app/tools/app_logger.dart';
 import 'package:window_manager/window_manager.dart';
@@ -45,12 +46,20 @@ abstract final class AppModule {
           await AppSystemTray.init();
         }
 
+        final themeTypeName = await _appSecureLocalStorage.getThemeType();
+
+        final appThemeType = switch (themeTypeName) {
+          'AppDarkTheme' => AppDarkTheme(),
+          _ => AppLightTheme(),
+        };
+
         runApp(
           StreamerDashboardApp(
             router: _router,
             apiClient: _apiClient,
             repositories: _repositories,
             appSecureStorage: _appSecureLocalStorage,
+            appThemeType: appThemeType,
           ),
         );
       },

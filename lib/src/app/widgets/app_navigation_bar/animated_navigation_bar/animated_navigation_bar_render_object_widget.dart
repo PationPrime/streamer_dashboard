@@ -6,6 +6,7 @@ class AnimatedNavigationBarRenderObjectWidget
   final ValueChanged<int> onItemSelected;
   final Animation<double> highlightAnimation;
   final Axis barAxis;
+  final AnimatedNavigationBarSelectionStyle selectionStyle;
 
   const AnimatedNavigationBarRenderObjectWidget({
     super.key,
@@ -14,15 +15,18 @@ class AnimatedNavigationBarRenderObjectWidget
     required super.children,
     required this.highlightAnimation,
     this.barAxis = Axis.vertical,
+    required this.selectionStyle,
   });
 
   @override
   RenderObject createRenderObject(BuildContext context) =>
       AnimatedNavigationBarRenderBox(
+        selectedIndex: selectedIndex,
         onItemSelected: onItemSelected,
         highlightAnimation: highlightAnimation,
         barAxis: barAxis,
-      )..selectedIndex = selectedIndex;
+        selectionStyle: selectionStyle,
+      );
 
   @override
   void updateRenderObject(
@@ -33,5 +37,6 @@ class AnimatedNavigationBarRenderObjectWidget
         ..selectedIndex = selectedIndex
         ..onItemSelected = onItemSelected
         ..highlightAnimation = highlightAnimation
-        ..barAxis = barAxis;
+        ..barAxis = barAxis
+        ..selectionStyle = selectionStyle;
 }

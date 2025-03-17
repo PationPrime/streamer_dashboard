@@ -46,6 +46,10 @@ abstract class  LocaleKeys {
   static const stream_widgets_title = 'stream_widgets.title';
   static const stream_widgets = 'stream_widgets';
   static const settings_title = 'settings.title';
+  static const settings_theme_title = 'settings.theme.title';
+  static const settings_theme_dark = 'settings.theme.dark';
+  static const settings_theme_light = 'settings.theme.light';
+  static const settings_theme = 'settings.theme';
   static const settings = 'settings';
 
 }

@@ -22,31 +22,38 @@ class BaseNavigationBarIcon extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) => Center(
-        child: isActive
-            ? !expanded
-                ? CollapsedNavigationBarIcon(
-                    icon: icon,
-                    label: label,
-                    labelColor: labelColor ?? context.color.primary,
-                  )
-                : ExpandedNavigationBarIcon(
-                    icon: icon,
-                    label: label,
-                    labelColor: labelColor ?? context.color.primary,
-                  )
-            : !expanded
-                ? CollapsedNavigationBarIcon(
-                    backgroundColor: context.color.transparent,
-                    icon: icon,
-                    label: label,
-                    labelColor: labelColor ?? context.color.primary,
-                  )
-                : ExpandedNavigationBarIcon(
-                    backgroundColor: context.color.transparent,
-                    icon: icon,
-                    label: label,
-                    labelColor: labelColor ?? context.color.primary,
+  Widget build(BuildContext context) => isActive
+      ? !expanded
+          ? CollapsedNavigationBarIcon(
+              icon: icon,
+              label: label,
+              labelColor: labelColor ?? context.color.primary,
+            )
+          : ExpandedNavigationBarIcon(
+              icon: icon,
+              label: label,
+              labelColor: labelColor ?? context.color.primary,
+              shadow: [
+                BoxShadow(
+                  color: context.color.mainBlack.withAlpha(
+                    20,
                   ),
-      );
+                  spreadRadius: 7,
+                  blurRadius: 10,
+                ),
+              ],
+            )
+      : !expanded
+          ? CollapsedNavigationBarIcon(
+              backgroundColor: context.color.transparent,
+              icon: icon,
+              label: label,
+              labelColor: labelColor ?? context.color.primary,
+            )
+          : ExpandedNavigationBarIcon(
+              backgroundColor: context.color.transparent,
+              icon: icon,
+              label: label,
+              labelColor: labelColor ?? context.color.primary,
+            );
 }

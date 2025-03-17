@@ -60,6 +60,11 @@
     "title": "Stream Widgets"
   },
   "settings": {
-    "title": "Settings"
+    "title": "Settings",
+    "theme": {
+      "title": "App theme",
+      "dark": "Dark",
+      "light": "Light"
+    }
   }
 }

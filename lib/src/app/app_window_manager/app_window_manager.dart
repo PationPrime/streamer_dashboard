@@ -260,7 +260,7 @@ class _AppWindowManagerState extends State<AppWindowManager> {
     super.initState();
     windowManager.setSize(
       const Size(
-        900,
+        1200,
         800,
       ),
     );

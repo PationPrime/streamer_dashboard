@@ -15,8 +15,9 @@ class AppThemeConfig extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final themeData =
-        type.isDark ? AppThemeData.darkTheme : AppThemeData.lightTheme;
+    bool isDark = type.isDark;
+
+    final themeData = isDark ? AppThemeData.darkTheme : AppThemeData.lightTheme;
 
     return AppTheme(
       themeData: themeData,

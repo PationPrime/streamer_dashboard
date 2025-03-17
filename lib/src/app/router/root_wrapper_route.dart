@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:streamer_dashboard/src/app/widgets/widgets.dart';
 
+import '../widgets/app_navigation_bar/app_default_navigation_bar.dart';
 import 'navigation_path.dart';
 
 class RootWrapperRoute extends StatefulWidget {
@@ -48,9 +49,10 @@ class _RootWrapperRouteState extends State<RootWrapperRoute> {
             const AppWindowTitleBar(),
             Expanded(
               child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AnimatedNavigationBar(
-                    onItemSelected: _navigateToPage,
+                  AppDefaultNavigationBar(
+                    onActiveIndexChanged: _navigateToPage,
                   ),
                   Expanded(
                     child: widget.child,

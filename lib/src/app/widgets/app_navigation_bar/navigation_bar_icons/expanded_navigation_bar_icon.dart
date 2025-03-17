@@ -12,22 +12,24 @@ class ExpandedNavigationBarIcon extends StatelessWidget {
   final EdgeInsets margin;
   final String? label;
   final Color? labelColor;
+  final List<BoxShadow> shadow;
 
   const ExpandedNavigationBarIcon({
     super.key,
     required this.icon,
     this.size = 70,
     this.borderRadius = const BorderRadius.only(
-      topRight: Radius.circular(20),
-      topLeft: Radius.circular(20),
-      bottomLeft: Radius.circular(20),
-      bottomRight: Radius.circular(20),
+      topRight: Radius.circular(10),
+      topLeft: Radius.circular(10),
+      bottomLeft: Radius.circular(10),
+      bottomRight: Radius.circular(10),
     ),
     this.backgroundColor,
     this.iconColor,
     this.margin = EdgeInsets.zero,
     this.label,
     this.labelColor,
+    this.shadow = const [],
   });
 
   @override
@@ -45,5 +47,6 @@ class ExpandedNavigationBarIcon extends StatelessWidget {
         contentAlignment: Alignment.centerLeft,
         label: label,
         labelColor: labelColor,
+        shadow: shadow,
       );
 }

@@ -16,33 +16,19 @@ class TwitchLiveStreamController extends Cubit<TwitchLiveStreamState> {
 
   final TwitchStreamerAccountController twitchStreamerProfileController;
 
-  // late final StreamSubscription _twitchStreamerProfileStateSubscription;
-
   TwitchLiveStreamController({
     required this.twitchStreamerProfileController,
   }) : super(
           const TwitchLiveStreamInitialState(),
         ) {
     _init();
-
-    // _twitchStreamerProfileStateSubscription =
-    //     twitchStreamerProfileController.stream.listen(
-    //   (state) {
-    //     print(state);
-    //     _reinit();
-    //   },
-    // );
   }
 
-  void _reinit() {
-    emit(
-      state.clearFailure(),
-    );
+  Future<void> _init() async {
+    await twitchStreamerProfileController.getStreamerProfile();
 
-    _init();
-  }
+    if (isClosed) return;
 
-  void _init() {
     emit(
       state.copyWith(
         loading: true,
@@ -79,11 +65,5 @@ class TwitchLiveStreamController extends Cubit<TwitchLiveStreamState> {
         chatUrl: chatUrl,
       ),
     );
-  }
-
-  @override
-  Future<void> close() {
-    // _twitchStreamerProfileStateSubscription.cancel();
-    return super.close();
   }
 }

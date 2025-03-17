@@ -10,6 +10,7 @@ class BouncyButtonWrapper extends StatefulWidget {
   final VoidCallback? onSecondaryTap;
   final Duration? animationDuration;
   final double scaleFactor;
+  final bool showOnHoverEffect;
 
   const BouncyButtonWrapper({
     super.key,
@@ -19,6 +20,7 @@ class BouncyButtonWrapper extends StatefulWidget {
     this.forceCancelSelectionOnMove = true,
     this.animationDuration,
     this.scaleFactor = 0.98,
+    this.showOnHoverEffect = false,
   });
 
   @override

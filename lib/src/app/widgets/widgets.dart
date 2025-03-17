@@ -8,3 +8,4 @@ export 'donations/donations.dart';
 export 'falling_balls/falling_balls.dart';
 export 'input/input.dart';
 export 'simple_webview/simple_webview.dart';
+export 'switch_row/switch_row.dart';

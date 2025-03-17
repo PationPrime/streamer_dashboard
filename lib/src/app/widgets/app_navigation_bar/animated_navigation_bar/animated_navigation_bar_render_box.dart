@@ -7,16 +7,27 @@ class AnimatedNavigationBarRenderBox extends RenderBox
             AnimatedNavigationBarParentData> {
   late final _appLogger = AppLogger(where: '$this');
 
+  ///
+  int _selectedIndex = 0;
+  Function(int)? onItemSelected;
+
+  late AnimatedNavigationBarSelectionStyle _selectionStyle;
+  AnimatedNavigationBarSelectionStyle get selectionStyle => _selectionStyle;
+
+  set selectionStyle(AnimatedNavigationBarSelectionStyle value) {
+    if (_selectionStyle == value) return;
+    _selectionStyle = value;
+    markNeedsPaint();
+  }
+
   late Axis _barAxis;
   Axis get barAxis => _barAxis;
+
   set barAxis(Axis value) {
     if (value == _barAxis) return;
     _barAxis = value;
   }
 
-  ///
-  int _selectedIndex = 0;
-  Function(int)? onItemSelected;
   late Animation<double> _highlightAnimation;
   Animation<double> get highlightAnimation => _highlightAnimation;
 
@@ -40,11 +51,15 @@ class AnimatedNavigationBarRenderBox extends RenderBox
   }
 
   AnimatedNavigationBarRenderBox({
+    required int selectedIndex,
     this.onItemSelected,
     required Animation<double> highlightAnimation,
     required Axis barAxis,
-  })  : _highlightAnimation = highlightAnimation,
-        _barAxis = barAxis {
+    required AnimatedNavigationBarSelectionStyle selectionStyle,
+  })  : _selectedIndex = selectedIndex,
+        _highlightAnimation = highlightAnimation,
+        _barAxis = barAxis,
+        _selectionStyle = selectionStyle {
     _addListener();
   }
 
@@ -66,9 +81,8 @@ class AnimatedNavigationBarRenderBox extends RenderBox
 
   @override
   void performLayout() {
-    double maxWidth = constraints.maxWidth;
-    double childWidth = maxWidth / childCount;
-    double height = 0;
+    double totalHeight = 0;
+    double totalWidth = 0;
 
     RenderBox? child = firstChild;
     double dx = 0;
@@ -77,44 +91,36 @@ class AnimatedNavigationBarRenderBox extends RenderBox
     while (child != null) {
       child.layout(
         BoxConstraints.tightFor(
-          width: barAxis == Axis.horizontal ? childWidth : maxWidth,
+          width: barAxis == Axis.horizontal ? null : constraints.maxWidth,
         ),
         parentUsesSize: true,
       );
 
-      height = max(height, child.size.height);
-
       final childParentData =
           child.parentData as AnimatedNavigationBarParentData;
+
       childParentData.offset = Offset(dx, dy);
 
       if (barAxis == Axis.horizontal) {
-        dx += childWidth;
+        dx += child.size.width;
+        totalWidth += child.size.width;
       } else {
-        dy += height;
+        dy += child.size.height;
+        totalHeight += child.size.height;
       }
 
       child = childAfter(child);
     }
 
     size = barAxis == Axis.horizontal
-        ? Size(maxWidth, height)
-        : constraints.biggest;
-
-    if (firstChild != null) {
-      final selectedChild = _getChildAtIndex(_selectedIndex);
-
-      if (selectedChild != null) {
-        final childParentData =
-            selectedChild.parentData as AnimatedNavigationBarParentData;
-        _selectedRect = Rect.fromLTWH(
-          childParentData.offset.dx,
-          childParentData.offset.dy,
-          barAxis == Axis.horizontal ? 0 : selectedChild.size.width,
-          barAxis == Axis.horizontal ? selectedChild.size.height : 0,
-        );
-      }
-    }
+        ? Size(
+            totalWidth,
+            constraints.maxHeight,
+          )
+        : Size(
+            constraints.maxWidth,
+            totalHeight,
+          );
   }
 
   Rect? _selectedRect;
@@ -146,10 +152,7 @@ class AnimatedNavigationBarRenderBox extends RenderBox
     super.detach();
   }
 
-  final highlightPaint = Paint()
-    ..color = Colors.redAccent.withOpacity(
-      0.3,
-    );
+  Paint get highlightPaint => Paint()..color = selectionStyle.color;
 
   @override
   void paint(PaintingContext context, Offset offset) {
@@ -178,12 +181,18 @@ class AnimatedNavigationBarRenderBox extends RenderBox
     double heightDifference = selectedHeight - _highlighHeight;
     _highlighHeight += heightDifference * _highlightAnimation.value;
 
-    context.canvas.drawRect(
-      Rect.fromLTWH(
-        dxPosition,
-        offset.dy + dyPosition,
-        _highlightWidth,
-        _highlighHeight,
+    context.canvas.drawRRect(
+      RRect.fromRectAndCorners(
+        Rect.fromLTWH(
+          dxPosition,
+          offset.dy + dyPosition,
+          _highlightWidth,
+          _highlighHeight,
+        ),
+        topLeft: selectionStyle.borderRadius.topLeft,
+        topRight: selectionStyle.borderRadius.topRight,
+        bottomLeft: selectionStyle.borderRadius.bottomLeft,
+        bottomRight: selectionStyle.borderRadius.bottomRight,
       ),
       highlightPaint,
     );
