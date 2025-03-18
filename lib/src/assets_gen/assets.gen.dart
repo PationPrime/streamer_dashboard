@@ -42,13 +42,9 @@ class $AssetsAppLogoGen {
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
-  /// File path: assets/icons/close_cross.svg
-  SvgGenImage get closeCross =>
-      const SvgGenImage('assets/icons/close_cross.svg');
-
-  /// File path: assets/icons/close_cross_white.svg
-  SvgGenImage get closeCrossWhite =>
-      const SvgGenImage('assets/icons/close_cross_white.svg');
+  /// File path: assets/icons/icon_activity_monitoring.svg
+  SvgGenImage get iconActivityMonitoring =>
+      const SvgGenImage('assets/icons/icon_activity_monitoring.svg');
 
   /// File path: assets/icons/icon_arrow_back.svg
   SvgGenImage get iconArrowBack =>
@@ -62,12 +58,46 @@ class $AssetsIconsGen {
   SvgGenImage get iconArrowForwardWhite =>
       const SvgGenImage('assets/icons/icon_arrow_forward_white.svg');
 
+  /// File path: assets/icons/icon_chat.svg
+  SvgGenImage get iconChat => const SvgGenImage('assets/icons/icon_chat.svg');
+
   /// File path: assets/icons/icon_close.svg
   SvgGenImage get iconClose => const SvgGenImage('assets/icons/icon_close.svg');
+
+  /// File path: assets/icons/icon_close_cross.svg
+  SvgGenImage get iconCloseCross =>
+      const SvgGenImage('assets/icons/icon_close_cross.svg');
+
+  /// File path: assets/icons/icon_close_cross_white.svg
+  SvgGenImage get iconCloseCrossWhite =>
+      const SvgGenImage('assets/icons/icon_close_cross_white.svg');
+
+  /// File path: assets/icons/icon_coins_hand.svg
+  SvgGenImage get iconCoinsHand =>
+      const SvgGenImage('assets/icons/icon_coins_hand.svg');
+
+  /// File path: assets/icons/icon_heart_hand.svg
+  SvgGenImage get iconHeartHand =>
+      const SvgGenImage('assets/icons/icon_heart_hand.svg');
+
+  /// File path: assets/icons/icon_heart_hand_white.svg
+  SvgGenImage get iconHeartHandWhite =>
+      const SvgGenImage('assets/icons/icon_heart_hand_white.svg');
 
   /// File path: assets/icons/icon_hide_password.svg
   SvgGenImage get iconHidePassword =>
       const SvgGenImage('assets/icons/icon_hide_password.svg');
+
+  /// File path: assets/icons/icon_minus.svg
+  SvgGenImage get iconMinus => const SvgGenImage('assets/icons/icon_minus.svg');
+
+  /// File path: assets/icons/icon_minus_white.svg
+  SvgGenImage get iconMinusWhite =>
+      const SvgGenImage('assets/icons/icon_minus_white.svg');
+
+  /// File path: assets/icons/icon_overlays.svg
+  SvgGenImage get iconOverlays =>
+      const SvgGenImage('assets/icons/icon_overlays.svg');
 
   /// File path: assets/icons/icon_refresh copy.svg
   SvgGenImage get iconRefreshCopy =>
@@ -88,6 +118,10 @@ class $AssetsIconsGen {
   /// File path: assets/icons/icon_send.svg
   SvgGenImage get iconSend => const SvgGenImage('assets/icons/icon_send.svg');
 
+  /// File path: assets/icons/icon_settings.svg
+  SvgGenImage get iconSettings =>
+      const SvgGenImage('assets/icons/icon_settings.svg');
+
   /// File path: assets/icons/icon_show_password.svg
   SvgGenImage get iconShowPassword =>
       const SvgGenImage('assets/icons/icon_show_password.svg');
@@ -99,6 +133,12 @@ class $AssetsIconsGen {
   /// File path: assets/icons/icon_tool.svg
   SvgGenImage get iconTool => const SvgGenImage('assets/icons/icon_tool.svg');
 
+  /// File path: assets/icons/icon_trash.svg
+  SvgGenImage get iconTrash => const SvgGenImage('assets/icons/icon_trash.svg');
+
+  /// File path: assets/icons/icon_tv.svg
+  SvgGenImage get iconTv => const SvgGenImage('assets/icons/icon_tv.svg');
+
   /// File path: assets/icons/icon_twitch.svg
   SvgGenImage get iconTwitch =>
       const SvgGenImage('assets/icons/icon_twitch.svg');
@@ -106,39 +146,45 @@ class $AssetsIconsGen {
   /// File path: assets/icons/icon_user.svg
   SvgGenImage get iconUser => const SvgGenImage('assets/icons/icon_user.svg');
 
+  /// File path: assets/icons/icon_users.svg
+  SvgGenImage get iconUsers => const SvgGenImage('assets/icons/icon_users.svg');
+
   /// File path: assets/icons/icon_youtube.svg
   SvgGenImage get iconYoutube =>
       const SvgGenImage('assets/icons/icon_youtube.svg');
 
-  /// File path: assets/icons/minus.svg
-  SvgGenImage get minus => const SvgGenImage('assets/icons/minus.svg');
-
-  /// File path: assets/icons/minus_white.svg
-  SvgGenImage get minusWhite =>
-      const SvgGenImage('assets/icons/minus_white.svg');
-
   /// List of all assets
   List<SvgGenImage> get values => [
-        closeCross,
-        closeCrossWhite,
+        iconActivityMonitoring,
         iconArrowBack,
         iconArrowForward,
         iconArrowForwardWhite,
+        iconChat,
         iconClose,
+        iconCloseCross,
+        iconCloseCrossWhite,
+        iconCoinsHand,
+        iconHeartHand,
+        iconHeartHandWhite,
         iconHidePassword,
+        iconMinus,
+        iconMinusWhite,
+        iconOverlays,
         iconRefreshCopy,
         iconRefresh,
         iconRestart,
         iconSearch,
         iconSend,
+        iconSettings,
         iconShowPassword,
         iconSquare,
         iconTool,
+        iconTrash,
+        iconTv,
         iconTwitch,
         iconUser,
-        iconYoutube,
-        minus,
-        minusWhite
+        iconUsers,
+        iconYoutube
       ];
 }
 

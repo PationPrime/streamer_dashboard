@@ -144,7 +144,7 @@ class _CommonDialogState extends State<CommonDialog> {
                         ? RoundedButton(
                             backgroundColor: context.color.transparent,
                             onTap: _onClearButtonPressed,
-                            icon: Assets.icons.closeCross.svg(
+                            icon: Assets.icons.iconCloseCross.svg(
                               color: context.color.primary,
                             ),
                           )

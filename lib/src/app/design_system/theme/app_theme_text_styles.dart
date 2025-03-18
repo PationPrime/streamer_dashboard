@@ -342,192 +342,192 @@ class AppThemeTextStyles extends ThemeExtension<AppThemeTextStyles> {
 
     ///
     input: AppTextStyles.montserratMedium.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
     ),
 
     ///
     body: AppTextStyles.montserratSemiBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 18,
     ),
 
     ///
     headline1Regular: AppTextStyles.montserratRegular.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 32,
     ),
 
     ///
     headline2Regular: AppTextStyles.montserratRegular.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 28,
     ),
 
     ///
     headline3Regular: AppTextStyles.montserratRegular.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 24,
     ),
 
     ///
     headline4Regular: AppTextStyles.montserratRegular.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 20,
     ),
 
     ///
     headline5Regular: AppTextStyles.montserratRegular.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 16,
     ),
 
     ///
     headline6Regular: AppTextStyles.montserratRegular.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 12,
     ),
 
     ///
     headline1Medium: AppTextStyles.montserratMedium.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 32,
     ),
 
     ///
     headline2Medium: AppTextStyles.montserratMedium.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 28,
     ),
 
     ///
     headline3Medium: AppTextStyles.montserratMedium.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 24,
     ),
 
     ///
     headline4Medium: AppTextStyles.montserratMedium.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 20,
     ),
 
     ///
     headline5Medium: AppTextStyles.montserratMedium.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 16,
     ),
 
     ///
     headline6Medium: AppTextStyles.montserratMedium.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 12,
     ),
 
     ///
     headline1SemiBold: AppTextStyles.montserratSemiBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 32,
     ),
 
     ///
     headline2SemiBold: AppTextStyles.montserratSemiBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 28,
     ),
 
     ///
     headline3SemiBold: AppTextStyles.montserratSemiBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 24,
     ),
 
     ///
     headline4SemiBold: AppTextStyles.montserratSemiBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 20,
     ),
 
     ///
     headline5SemiBold: AppTextStyles.montserratSemiBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 16,
     ),
 
     ///
     headline6SemiBold: AppTextStyles.montserratSemiBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 12,
     ),
 
     ///
     headline1Bold: AppTextStyles.montserratBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 32,
     ),
 
     ///
     headline2Bold: AppTextStyles.montserratBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 28,
     ),
 
     ///
     headline3Bold: AppTextStyles.montserratBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 24,
     ),
 
     ///
     headline4Bold: AppTextStyles.montserratBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 20,
     ),
 
     ///
     headline5Bold: AppTextStyles.montserratBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 16,
     ),
 
     ///
     headline6Bold: AppTextStyles.montserratBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 12,
     ),
 
     ///
     headline1ExtraBold: AppTextStyles.montserratExtraBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 32,
     ),
 
     ///
     headline2ExtraBold: AppTextStyles.montserratExtraBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 28,
     ),
 
     ///
     headline3ExtraBold: AppTextStyles.montserratExtraBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 24,
     ),
 
     ///
     headline4ExtraBold: AppTextStyles.montserratExtraBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 20,
     ),
 
     ///
     headline5ExtraBold: AppTextStyles.montserratExtraBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 16,
     ),
 
     ///
     headline6ExtraBold: AppTextStyles.montserratExtraBold.copyWith(
-      color: AppColors.black2E2E2E,
+      color: AppColors.black,
       fontSize: 12,
     ),
   );

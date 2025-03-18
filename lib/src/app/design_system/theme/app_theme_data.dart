@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:streamer_dashboard/src/app/design_system/design_system.dart';
-import 'package:streamer_dashboard/src/app/design_system/theme/app_text_styles.dart';
 
 abstract base class AppThemeData {
   /// Application text selection theme data

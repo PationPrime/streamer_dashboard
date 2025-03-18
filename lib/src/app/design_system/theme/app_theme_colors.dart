@@ -4,6 +4,7 @@ import 'app_colors.dart';
 
 class AppThemeColors extends ThemeExtension<AppThemeColors> {
   final Color background;
+  final Color navigationBar;
   final Color primary;
   final Color secondary;
   final Color active;
@@ -27,6 +28,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
 
   const AppThemeColors({
     required this.background,
+    required this.navigationBar,
     required this.primary,
     required this.secondary,
     required this.active,
@@ -52,6 +54,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   @override
   AppThemeColors copyWith({
     Color? background,
+    Color? navigationBar,
     Color? primary,
     Color? secondary,
     Color? active,
@@ -75,6 +78,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   }) =>
       AppThemeColors(
         background: background ?? this.background,
+        navigationBar: navigationBar ?? this.navigationBar,
         primary: primary ?? this.primary,
         secondary: secondary ?? this.secondary,
         active: active ?? this.active,
@@ -110,6 +114,11 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
       background: Color.lerp(
         background,
         other.background,
+        t,
+      )!,
+      navigationBar: Color.lerp(
+        navigationBar,
+        other.navigationBar,
         t,
       )!,
       primary: Color.lerp(
@@ -216,8 +225,9 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   }
 
   static const light = AppThemeColors(
-    background: AppColors.white,
-    primary: AppColors.grey555555,
+    background: AppColors.white255223225237,
+    primary: AppColors.black,
+    navigationBar: AppColors.white,
     secondary: AppColors.white,
     active: AppColors.mint3FB8AF,
     activeDeep: AppColors.mint268A82,
@@ -240,7 +250,8 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   );
 
   static const dark = AppThemeColors(
-    background: AppColors.black2E2E2E,
+    navigationBar: AppColors.black262626,
+    background: AppColors.black255525252,
     primary: AppColors.white,
     secondary: AppColors.grey3F3F3F,
     active: AppColors.mint3FB8AF,

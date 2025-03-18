@@ -15,9 +15,11 @@ class FinalizeIcon extends BaseNavigationBarIcon {
     super.labelColor,
   }) : super(
           label: expanded ? label : null,
-          icon: SvgPicture.asset(
-            assetPath,
-            color: color,
+          icon: Center(
+            child: SvgPicture.asset(
+              assetPath,
+              color: color,
+            ),
           ),
         );
 }

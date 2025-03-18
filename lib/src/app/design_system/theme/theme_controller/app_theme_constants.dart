@@ -5,5 +5,6 @@ abstract final class AppThemeControllerConstants {
   static const _darkThemeType = AppDarkTheme();
   // ignore: unused_field
   static const _osThemeType = AppOSTheme();
+  // ignore: unused_field
   static const _unknownThemeType = UnknownTheme();
 }

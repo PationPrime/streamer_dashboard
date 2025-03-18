@@ -48,16 +48,16 @@ class AppNavigationBar extends StatefulWidget {
       20,
     ),
     this.portraitBorderRadius = const BorderRadius.only(
-      topLeft: Radius.circular(30),
-      topRight: Radius.circular(30),
-      bottomLeft: Radius.circular(30),
-      bottomRight: Radius.circular(30),
-    ),
-    this.landscapeBorderRadius = const BorderRadius.only(
       topLeft: Radius.circular(14),
       topRight: Radius.circular(14),
       bottomLeft: Radius.circular(14),
       bottomRight: Radius.circular(14),
+    ),
+    this.landscapeBorderRadius = const BorderRadius.only(
+      topLeft: Radius.circular(10),
+      topRight: Radius.circular(10),
+      bottomLeft: Radius.circular(10),
+      bottomRight: Radius.circular(10),
     ),
     this.boxShadow,
     this.border,
@@ -112,7 +112,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
   Widget build(BuildContext context) {
     final deviceType = DeviceSizeData.deviceType;
 
-    final isPortrait = false;
+    final isPortrait = true;
     // MediaQuery.of(context).orientation == Orientation.portrait;
 
     return Align(
@@ -131,7 +131,7 @@ class _AppNavigationBarState extends State<AppNavigationBar> {
                 // widget.portraitHeight,
                 null,
             decoration: BoxDecoration(
-              color: widget.backgroundColor ?? context.color.background,
+              color: widget.backgroundColor ?? context.color.navigationBar,
               border: widget.border,
               borderRadius: isPortrait
                   ? widget.portraitBorderRadius

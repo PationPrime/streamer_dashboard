@@ -8,7 +8,7 @@ class _AppWindowButtons extends StatelessWidget {
         children: [
           IconButton(
             onPressed: windowManager.minimize,
-            icon: Assets.icons.minus.svg(
+            icon: Assets.icons.iconMinus.svg(
               colorFilter: ColorFilter.mode(
                 context.color.primary,
                 BlendMode.srcIn,
@@ -39,7 +39,7 @@ class _AppWindowButtons extends StatelessWidget {
           IconButton(
             onPressed: windowManager.hide,
             icon: Center(
-              child: Assets.icons.closeCross.svg(
+              child: Assets.icons.iconCloseCross.svg(
                 colorFilter: ColorFilter.mode(
                   context.color.primary,
                   BlendMode.srcIn,

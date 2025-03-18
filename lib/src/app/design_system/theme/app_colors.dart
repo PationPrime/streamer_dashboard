@@ -8,6 +8,12 @@ abstract base class AppColors {
   static const black = Colors.black;
   static const black2E2E2E = Color(0xFF2E2E2E);
   static const black262626 = Color(0xFF262626);
+  static const black255525252 = Color.fromARGB(
+    255,
+    52,
+    52,
+    52,
+  );
 
   // grey
   static const grey3F3F3F = Color(0xFF3F3F3F);
@@ -18,6 +24,13 @@ abstract base class AppColors {
 
   // white
   static const white = Colors.white;
+  static const whiteFAFBFF = Color(0xFFFAFBFF);
+  static const white255223225237 = Color.fromARGB(
+    255,
+    223,
+    225,
+    237,
+  );
 
   // mint
   static const mint3FB8AF = Color(0xFF3FB8AF);
@@ -33,7 +46,12 @@ abstract base class AppColors {
   //
   static const defaultInput = Color(0xFFFAFAFA);
 
-  static const orange = Color.fromARGB(241, 223, 95, 4);
+  static const orange = Color.fromARGB(
+    241,
+    223,
+    95,
+    4,
+  );
 
   static const oceanTeal = Color(0xFF0D3B4B);
 }

@@ -55,6 +55,7 @@ class NavigationBarIcon extends StatelessWidget {
                 label!,
                 style: context.text.headline5Medium.copyWith(
                   color: labelColor ?? context.color.primary,
+                  fontWeight: FontWeight.w600,
                 ),
               )
           ],
