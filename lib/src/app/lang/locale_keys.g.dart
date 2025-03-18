@@ -43,6 +43,8 @@ abstract class  LocaleKeys {
   static const authentication_title = 'authentication.title';
   static const authentication = 'authentication';
   static const accounts_title = 'accounts.title';
+  static const accounts_buttons_log_out = 'accounts.buttons.log_out';
+  static const accounts_buttons = 'accounts.buttons';
   static const accounts = 'accounts';
   static const chatbot_title = 'chatbot.title';
   static const chatbot = 'chatbot';

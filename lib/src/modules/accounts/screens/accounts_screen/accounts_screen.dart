@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:streamer_dashboard/src/app/extensions/extensions.dart';
-import 'package:streamer_dashboard/src/app/models/models.dart';
+
 import 'package:streamer_dashboard/src/modules/modules.dart';
 
 import '../../../../app/shared_controllers/authorization_controllers/base_authorization_controller/base_authorization_controller.dart';
@@ -25,13 +25,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
 
   @override
   Widget build(BuildContext context) =>
-      BlocConsumer<TwitchAuthorizationController, BaseAuthorizationState>(
-        listenWhen: (previous, current) => previous != current,
-        listener: (context, twitchAuthorizationState) {
-          if (twitchAuthorizationState is Unauthorized) {
-            context.read<TwitchStreamerAccountController>().clearProfileState();
-          }
-        },
+      BlocBuilder<TwitchAuthorizationController, BaseAuthorizationState>(
         builder: (context, twitchAuthorizationState) => Scaffold(
           body: twitchAuthorizationState is! Authorized
               ? Center(
@@ -40,35 +34,38 @@ class _AccountsScreenState extends State<AccountsScreen> {
                     style: context.text.headline3Bold,
                   ),
                 )
-              : BlocBuilder<TwitchStreamerAccountController,
-                  TwitchStreamerAccountState>(
-                  builder: (context, twitchStreamerProfileState) =>
-                      SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      children: [
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                            maxWidth: 400,
-                          ),
-                          child: twitchStreamerProfileState.loading
-                              ? SizedBox(
-                                  height: 100,
-                                  width: 100,
-                                  child: Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
-                                )
-                              : twitchStreamerProfileState.profileModel
-                                      is! TwitchUserModel
-                                  ? const SizedBox()
-                                  : TwitchStreamerAccountScreen(
-                                      profileModel: twitchStreamerProfileState
-                                          .profileModel!,
-                                    ),
-                        ),
-                      ],
-                    ),
+              : SingleChildScrollView(
+                  padding: EdgeInsets.only(
+                    top: 5,
+                    right: 10,
+                    bottom: 10,
+                  ),
+                  child: Column(
+                    children: [
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TwitchStreamerAccountScreen(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TwitchStreamerAccountScreen(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TwitchStreamerAccountScreen(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TwitchStreamerAccountScreen(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      TwitchStreamerAccountScreen(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
                   ),
                 ),
         ),

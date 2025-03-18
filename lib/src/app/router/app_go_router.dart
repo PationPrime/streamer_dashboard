@@ -86,7 +86,7 @@ class _AppGoRouter {
                 name: NavigationPath.chatBot,
                 path: "/${NavigationPath.chatBot}",
                 pageBuilder: (context, state) => FadeInPage(
-                  child: const StreamWidgetsScreen(),
+                  child: const TwitchChatbotScreen(),
                 ),
               ),
             ],

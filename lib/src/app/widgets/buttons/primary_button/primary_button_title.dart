@@ -39,7 +39,7 @@ class _PrimaryButtonTitle extends StatelessWidget {
               text: title!,
               style: context.text.headline5Medium.copyWith(
                 height: 0,
-                color: titleColor ?? context.color.primary,
+                color: titleColor ?? context.color.buttonTitle,
               ),
             ),
             if (counter != null)

@@ -25,6 +25,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
   final Color mainWhite;
   final Color mainBlack;
   final Color mapOcean;
+  final Color buttonTitle;
 
   const AppThemeColors({
     required this.background,
@@ -49,6 +50,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     required this.mainWhite,
     required this.mainBlack,
     required this.mapOcean,
+    required this.buttonTitle,
   });
 
   @override
@@ -75,6 +77,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     Color? mainWhite,
     Color? mainBlack,
     Color? mapOcean,
+    Color? buttonTitle,
   }) =>
       AppThemeColors(
         background: background ?? this.background,
@@ -99,6 +102,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
         mainWhite: mainWhite ?? this.mainWhite,
         mainBlack: mainBlack ?? this.mainBlack,
         mapOcean: mapOcean ?? this.mapOcean,
+        buttonTitle: buttonTitle ?? this.buttonTitle,
       );
 
   @override
@@ -221,6 +225,11 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
         other.mapOcean,
         t,
       )!,
+      buttonTitle: Color.lerp(
+        buttonTitle,
+        other.buttonTitle,
+        t,
+      )!,
     );
   }
 
@@ -247,6 +256,7 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     mainWhite: AppColors.white,
     mainBlack: AppColors.black,
     mapOcean: AppColors.oceanTeal,
+    buttonTitle: AppColors.white,
   );
 
   static const dark = AppThemeColors(
@@ -272,5 +282,6 @@ class AppThemeColors extends ThemeExtension<AppThemeColors> {
     mainWhite: AppColors.white,
     mainBlack: AppColors.black,
     mapOcean: AppColors.oceanTeal,
+    buttonTitle: AppColors.white,
   );
 }

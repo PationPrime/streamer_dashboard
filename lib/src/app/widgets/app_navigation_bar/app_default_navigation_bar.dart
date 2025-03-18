@@ -20,7 +20,7 @@ class AppDefaultNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.fromLTRB(8, 5, 8, 8),
+        padding: const EdgeInsets.fromLTRB(8, 15, 8, 8),
         child: AppNavigationBar(
           boxShadow: horizontal ? null : [],
           portraitMargin: EdgeInsets.only(),

@@ -55,7 +55,10 @@
     "title": "Authentication"
   },
   "accounts": {
-    "title": "Accounts"
+    "title": "Accounts",
+    "buttons": {
+      "log_out": "Log out"
+    }
   },
   "chatbot": {
     "title": "Chatbot"

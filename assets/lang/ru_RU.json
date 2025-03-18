@@ -55,7 +55,10 @@
     "title": "Аутентификация"
   },
   "accounts": {
-    "title": "Аккаунты"
+    "title": "Аккаунты",
+    "buttons": {
+      "log_out": "Выйти"
+    }
   },
   "chatbot": {
     "title": "Чатбот"

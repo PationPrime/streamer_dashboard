@@ -71,7 +71,10 @@ class CodegenLoader extends AssetLoader{
     "title": "Authentication"
   },
   "accounts": {
-    "title": "Accounts"
+    "title": "Accounts",
+    "buttons": {
+      "log_out": "Log out"
+    }
   },
   "chatbot": {
     "title": "Chatbot"
@@ -145,7 +148,10 @@ static const Map<String,dynamic> _ru_RU = {
     "title": "Аутентификация"
   },
   "accounts": {
-    "title": "Аккаунты"
+    "title": "Аккаунты",
+    "buttons": {
+      "log_out": "Выйти"
+    }
   },
   "chatbot": {
     "title": "Чатбот"

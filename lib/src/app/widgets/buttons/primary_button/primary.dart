@@ -43,7 +43,7 @@ class PrimaryButton extends StatelessWidget {
     this.padding = const EdgeInsets.symmetric(vertical: 17),
     this.margin,
     this.width,
-    this.borderRadius = 30.0,
+    this.borderRadius = 20.0,
     this.enabled = true,
     this.onTap,
     this.icon,

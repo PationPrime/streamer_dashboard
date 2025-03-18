@@ -37,6 +37,32 @@ class SwitchRow extends StatelessWidget {
           Switch(
             value: value,
             onChanged: onChanged,
+            activeColor: context.color.activeDeep,
+            activeTrackColor: context.color.active,
+            inactiveTrackColor: context.color.background,
+            inactiveThumbColor: context.color.lightBorder.withAlpha(
+              125,
+            ),
+            trackOutlineWidth: WidgetStateProperty.resolveWith<double?>(
+              (states) {
+                if (!states.contains(WidgetState.selected)) {
+                  return 1;
+                }
+
+                return null;
+              },
+            ),
+            trackOutlineColor: WidgetStateProperty.resolveWith<Color?>(
+              (states) {
+                if (!states.contains(WidgetState.selected)) {
+                  return context.color.lightBorder.withAlpha(
+                    50,
+                  );
+                }
+
+                return null;
+              },
+            ),
           ),
         ],
       );
