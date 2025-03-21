@@ -165,6 +165,22 @@ class AppDefaultNavigationBar extends StatelessWidget {
                 label: LocaleKeys.navigation_bar_settings.tr(),
                 labelColor: context.color.primary,
               ),
+            ),
+            AppNavigationBarItem(
+              activeIcon: FinalizeIcon(
+                expanded: !horizontal,
+                color: context.color.primary,
+                assetPath: Assets.icons.iconTool.path,
+                label: 'Test page',
+              ),
+              inActiveIcon: FinalizeIcon(
+                expanded: !horizontal,
+                isActive: false,
+                color: context.color.primary,
+                assetPath: Assets.icons.iconTool.path,
+                label: 'Test page',
+                labelColor: context.color.primary,
+              ),
             )
           ],
         ),

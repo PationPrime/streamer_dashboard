@@ -36,6 +36,8 @@ class _RootWrapperRouteState extends State<RootWrapperRoute> {
         widget.child.goBranch(6);
       case 7:
         widget.child.goBranch(7);
+      case 8:
+        widget.child.goBranch(8);
 
       default:
         context.pushNamed(NavigationPath.root);

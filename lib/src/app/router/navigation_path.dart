@@ -11,4 +11,5 @@ class NavigationPath {
   static const authentication = 'authentication';
   static const loginTwitch = 'login-twitch';
   static const loginYoutube = 'login-youtube';
+  static const testPage = 'test-page';
 }

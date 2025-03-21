@@ -9,6 +9,7 @@ class _AppGoRouter {
   static final chatbotPageNavKey = GlobalKey<NavigatorState>();
   static final streamWidgetsPageNavKey = GlobalKey<NavigatorState>();
   static final settingsPageNavKey = GlobalKey<NavigatorState>();
+  static final testPageNavKey = GlobalKey<NavigatorState>();
 
   static final router = GoRouter(
     navigatorKey: NavigatorKeyProvider.instance,
@@ -111,6 +112,18 @@ class _AppGoRouter {
                 path: "/${NavigationPath.settings}",
                 pageBuilder: (context, state) => FadeInPage(
                   child: const SettingsScreen(),
+                ),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            navigatorKey: testPageNavKey,
+            routes: [
+              GoRoute(
+                name: NavigationPath.testPage,
+                path: "/${NavigationPath.testPage}",
+                pageBuilder: (context, state) => FadeInPage(
+                  child: const TestPage(),
                 ),
               ),
             ],

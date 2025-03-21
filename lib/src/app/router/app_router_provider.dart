@@ -4,6 +4,7 @@ import 'package:streamer_dashboard/src/app/router/navigation_path.dart';
 import 'package:streamer_dashboard/src/app/router/root_wrapper_route.dart';
 
 import '../../modules/modules.dart';
+import '../../modules/test_page.dart';
 import 'navigator_key_provider.dart';
 import 'page_types/page_types.dart';
 
