@@ -1,37 +1,13 @@
-import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-
-class CustomSliverList extends SliverMultiBoxAdaptorWidget {
-  final int? selectedIndex;
-  final Animation<double> highlightAnimation;
-
-  const CustomSliverList({
-    super.key,
-    required super.delegate,
-    required this.highlightAnimation,
-    this.selectedIndex,
-  });
-
-  @override
-  RenderSliverMultiBoxAdaptor createRenderObject(BuildContext context) {
-    return RenderCustomSliverList(
-      childManager: context as SliverMultiBoxAdaptorElement,
-      selectedIndex: selectedIndex,
-      highlightAnimation: highlightAnimation,
-    );
-  }
-
-  @override
-  void updateRenderObject(
-    BuildContext context,
-    RenderCustomSliverList renderObject,
-  ) =>
-      renderObject
-        ..selectedIndex = selectedIndex
-        ..highlightAnimation = highlightAnimation;
-}
+part of 'custom_animated_sliver.dart';
 
 class RenderCustomSliverList extends RenderSliverMultiBoxAdaptor {
+  Paint get highlightPaint => Paint()..color = selectionStyle.color;
+
+  Rect? _selectedRect;
+  double dxPosition = 0;
+  double dyPosition = 0;
+  double _highlighHeight = 0;
+
   int? _selectedIndex;
   int? get selectedIndex => _selectedIndex;
   set selectedIndex(int? value) {
@@ -49,6 +25,22 @@ class RenderCustomSliverList extends RenderSliverMultiBoxAdaptor {
     markNeedsPaint();
   }
 
+  late AnimatedNavigationBarSelectionStyle _selectionStyle;
+  AnimatedNavigationBarSelectionStyle get selectionStyle => _selectionStyle;
+  set selectionStyle(AnimatedNavigationBarSelectionStyle value) {
+    if (_selectionStyle == value) return;
+    _selectionStyle = value;
+    markNeedsPaint();
+  }
+
+  late double _separatorHeight;
+  double get separatorHeight => _separatorHeight;
+  set separatorHeight(double value) {
+    if (_separatorHeight == value) return;
+    _separatorHeight = value;
+    markNeedsLayout();
+  }
+
   void _animationChangingListener() {
     markNeedsPaint();
   }
@@ -64,11 +56,15 @@ class RenderCustomSliverList extends RenderSliverMultiBoxAdaptor {
   }
 
   RenderCustomSliverList({
-    int? selectedIndex,
+    required int selectedIndex,
     required super.childManager,
     required Animation<double> highlightAnimation,
+    required AnimatedNavigationBarSelectionStyle selectionStyle,
+    required double separatorHeight,
   })  : _selectedIndex = selectedIndex,
-        _highlightAnimation = highlightAnimation {
+        _highlightAnimation = highlightAnimation,
+        _selectionStyle = selectionStyle,
+        _separatorHeight = separatorHeight {
     _addListener();
   }
 
@@ -87,6 +83,7 @@ class RenderCustomSliverList extends RenderSliverMultiBoxAdaptor {
     childManager.setDidUnderflow(false);
 
     collectGarbage(0, childCount);
+
     if (!addInitialChild()) {
       geometry = SliverGeometry.zero;
       childManager.didFinishLayout();
@@ -94,14 +91,12 @@ class RenderCustomSliverList extends RenderSliverMultiBoxAdaptor {
     }
 
     RenderBox? child = firstChild;
-    int index = indexOf(child!);
-
     double childMainAxisPosition = 0;
     double paintExtent = 0;
     double maxScrollExtent = 0;
 
     while (child != null) {
-      final SliverMultiBoxAdaptorParentData childParentData =
+      final childParentData =
           child.parentData as SliverMultiBoxAdaptorParentData;
 
       child.layout(
@@ -109,14 +104,13 @@ class RenderCustomSliverList extends RenderSliverMultiBoxAdaptor {
         parentUsesSize: true,
       );
 
-      final double childExtent = child.size.height;
+      final childExtent = child.size.height + _separatorHeight;
       childParentData.layoutOffset = childMainAxisPosition;
 
       childMainAxisPosition += childExtent;
       paintExtent += childExtent;
       maxScrollExtent += childExtent;
 
-      index++;
       child = childAfter(child) ??
           insertAndLayoutChild(
             constraints.asBoxConstraints(),
@@ -126,18 +120,16 @@ class RenderCustomSliverList extends RenderSliverMultiBoxAdaptor {
 
     geometry = SliverGeometry(
       scrollExtent: maxScrollExtent,
-      paintExtent: paintExtent.clamp(0.0, constraints.remainingPaintExtent),
+      paintExtent: paintExtent.clamp(
+        0.0,
+        constraints.remainingPaintExtent,
+      ),
       maxPaintExtent: maxScrollExtent,
       hasVisualOverflow: maxScrollExtent > constraints.remainingPaintExtent,
     );
 
     childManager.didFinishLayout();
   }
-
-  Rect? _selectedRect;
-  double dxPosition = 0;
-  double dyPosition = 0;
-  double _highlighHeight = 0;
 
   RenderBox? _getChildAtIndex(int index) {
     RenderBox? child = firstChild;
@@ -152,12 +144,8 @@ class RenderCustomSliverList extends RenderSliverMultiBoxAdaptor {
     return null;
   }
 
-  Paint get highlightPaint => Paint()..color = Colors.white.withAlpha(150);
-
   @override
   void paint(PaintingContext context, Offset offset) {
-    super.paint(context, offset);
-
     if (selectedIndex == null || _selectedIndex == null) return;
 
     RenderBox? selectedChild = _getChildAtIndex(
@@ -198,18 +186,34 @@ class RenderCustomSliverList extends RenderSliverMultiBoxAdaptor {
 
     final selectionDy = offset.dy + dyPosition - constraints.scrollOffset;
 
+    final selectionRect = Rect.fromLTWH(
+      dxPosition,
+      selectionDy,
+      size.width,
+      size.height,
+    );
+
+    final RRect shadowRRect = RRect.fromRectAndRadius(
+      selectionRect.inflate(4),
+      Radius.circular(8),
+    );
+
+    final shadowPaint = Paint()
+      ..color = Colors.black.withAlpha(30)
+      ..maskFilter = const MaskFilter.blur(
+        BlurStyle.normal,
+        8,
+      );
+
+    context.canvas.drawRRect(shadowRRect, shadowPaint);
+
     context.canvas.drawRRect(
       RRect.fromRectAndCorners(
-        Rect.fromLTWH(
-          dxPosition,
-          selectionDy,
-          size.width,
-          size.height,
-        ),
-        topLeft: Radius.circular(12),
-        topRight: Radius.circular(12),
-        bottomLeft: Radius.circular(12),
-        bottomRight: Radius.circular(12),
+        selectionRect,
+        topLeft: selectionStyle.borderRadius.topLeft,
+        topRight: selectionStyle.borderRadius.topRight,
+        bottomLeft: selectionStyle.borderRadius.bottomLeft,
+        bottomRight: selectionStyle.borderRadius.bottomRight,
       ),
       highlightPaint,
     );
@@ -218,5 +222,8 @@ class RenderCustomSliverList extends RenderSliverMultiBoxAdaptor {
       dyDifference = 0.0;
       _selectedRect = null;
     }
+
+    /// Draw child on top of selection
+    super.paint(context, offset);
   }
 }

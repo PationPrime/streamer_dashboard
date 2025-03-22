@@ -8,3 +8,4 @@ export 'donations/donations.dart';
 export 'falling_balls/falling_balls.dart';
 export 'input/input.dart';
 export 'switch_row/switch_row.dart';
+export 'app_navigation_bar/animated_navigation_bar/animated_sliver_navigation_bar/animated_sliver_navigation_bar.dart';

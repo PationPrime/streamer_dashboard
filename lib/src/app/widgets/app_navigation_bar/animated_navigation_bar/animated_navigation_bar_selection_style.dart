@@ -6,14 +6,21 @@ class AnimatedNavigationBarSelectionStyle extends Equatable {
   final Duration animationDuration;
 
   const AnimatedNavigationBarSelectionStyle({
-    this.color = const Color.fromARGB(77, 168, 157, 157),
+    this.color = Colors.white,
     this.borderRadius = const BorderRadius.all(
-      Radius.circular(20),
+      Radius.circular(12),
     ),
     this.animationDuration = const Duration(
       milliseconds: 300,
     ),
   });
+
+  AnimatedNavigationBarSelectionStyle copyWith({
+    Color? color,
+  }) =>
+      AnimatedNavigationBarSelectionStyle(
+        color: color ?? this.color,
+      );
 
   @override
   List<Object?> get props => [

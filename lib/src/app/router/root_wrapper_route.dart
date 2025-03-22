@@ -53,8 +53,11 @@ class _RootWrapperRouteState extends State<RootWrapperRoute> {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  AppDefaultNavigationBar(
-                    onActiveIndexChanged: _navigateToPage,
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: AnimatedSliverNavigationBar(
+                      onSelected: _navigateToPage,
+                    ),
                   ),
                   Expanded(
                     child: widget.child,
