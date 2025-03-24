@@ -29,11 +29,11 @@ abstract class  LocaleKeys {
   static const donations_donation_alerts_buttons_remove = 'donations.donation_alerts.buttons.remove';
   static const donations_donation_alerts_buttons_edit = 'donations.donation_alerts.buttons.edit';
   static const donations_donation_alerts_buttons = 'donations.donation_alerts.buttons';
-  static const donations_donation_alerts_add_dialog_last_messages_title = 'donations.donation_alerts.add_dialog.last_messages.title';
-  static const donations_donation_alerts_add_dialog_last_messages_insert_link = 'donations.donation_alerts.add_dialog.last_messages.insert_link';
-  static const donations_donation_alerts_add_dialog_last_messages = 'donations.donation_alerts.add_dialog.last_messages';
+  static const donations_donation_alerts_add_dialog_last_alerts_title = 'donations.donation_alerts.add_dialog.last_alerts.title';
+  static const donations_donation_alerts_add_dialog_last_alerts_insert_link = 'donations.donation_alerts.add_dialog.last_alerts.insert_link';
+  static const donations_donation_alerts_add_dialog_last_alerts = 'donations.donation_alerts.add_dialog.last_alerts';
   static const donations_donation_alerts_add_dialog = 'donations.donation_alerts.add_dialog';
-  static const donations_donation_alerts_errors_invalid_last_messages_widget_link = 'donations.donation_alerts.errors.invalid_last_messages_widget_link';
+  static const donations_donation_alerts_errors_invalid_last_alerts_widget_link = 'donations.donation_alerts.errors.invalid_last_alerts_widget_link';
   static const donations_donation_alerts_errors_invalid_link = 'donations.donation_alerts.errors.invalid_link';
   static const donations_donation_alerts_errors = 'donations.donation_alerts.errors';
   static const donations_donation_alerts = 'donations.donation_alerts';

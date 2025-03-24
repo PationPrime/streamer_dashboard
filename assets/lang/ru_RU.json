@@ -37,13 +37,13 @@
         "edit": "Изменить"
       },
       "add_dialog": {
-        "last_messages": {
+        "last_alerts": {
           "title": "Виджет последних сообщений",
           "insert_link": "Вставьте ссылку"
         }
       },
       "errors": {
-        "invalid_last_messages_widget_link": "Неверная ссылка на виджет последних сообщений",
+        "invalid_last_alerts_widget_link": "Неверная ссылка на виджет последних сообщений",
         "invalid_link": "Неверная ссылка. Ссылка должна быть предоставлена официальным сайтом DonationAlerts"
       }
     }

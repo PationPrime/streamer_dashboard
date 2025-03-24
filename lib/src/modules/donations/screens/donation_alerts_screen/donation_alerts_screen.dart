@@ -17,10 +17,10 @@ class DonationAlertsScreen extends StatelessWidget {
   }) async {
     final textResponse = await CommonDialog.show(
       context: context,
-      title: LocaleKeys.donations_donation_alerts_add_dialog_last_messages_title
+      title: LocaleKeys.donations_donation_alerts_add_dialog_last_alerts_title
           .tr(),
       description: LocaleKeys
-          .donations_donation_alerts_add_dialog_last_messages_insert_link
+          .donations_donation_alerts_add_dialog_last_alerts_insert_link
           .tr(),
       initialText: initialLink,
     );
@@ -73,7 +73,7 @@ class DonationAlertsScreen extends StatelessWidget {
                     children: [
                       DonationWidgetTitle(
                         title: LocaleKeys
-                            .donations_donation_alerts_add_dialog_last_messages_title
+                            .donations_donation_alerts_add_dialog_last_alerts_title
                             .tr(),
                         leftButtonTitle: LocaleKeys
                             .donations_donation_alerts_buttons_edit

@@ -114,7 +114,7 @@ class _DonationAlertsLastMessagesWidgetState
       } else if (!pathSegments.contains('widget') ||
           !pathSegments.contains('lastdonations')) {
         _errorMessage = LocaleKeys
-            .donations_donation_alerts_errors_invalid_last_messages_widget_link
+            .donations_donation_alerts_errors_invalid_last_alerts_widget_link
             .tr();
         return;
       }

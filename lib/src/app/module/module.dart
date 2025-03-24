@@ -78,6 +78,7 @@ abstract final class AppModule {
 
     if (!kIsWeb && Platform.isLinux || Platform.isWindows || Platform.isMacOS) {
       await windowManager.ensureInitialized();
+      // windowManager.setPreventClose(true);
       Window.initialize();
       Window.setEffect(effect: WindowEffect.transparent);
       windowManager.waitUntilReadyToShow().then((_) async {

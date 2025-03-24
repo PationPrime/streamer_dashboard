@@ -42,7 +42,7 @@ class _AnimatedSliverNavigationBarState
 
   void _initAnimation() {
     _animationController = AnimationController(
-      duration: const Duration(milliseconds: 400),
+      duration: const Duration(milliseconds: 700),
       vsync: this,
     );
 
