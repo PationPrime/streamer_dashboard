@@ -45,14 +45,14 @@ class AuthenticationController extends Cubit<AuthenticationState> {
       _twitchLoginDto = TwitchLoginDto.fromAdditionalData(
         data,
       );
-
-      emit(
-        const AuthenticationState(),
-      );
     } catch (error, stackTrace) {
       _appLogger.logError(
         'Error loading Twitch auth data: $error',
         stackTrace: stackTrace,
+      );
+    } finally {
+      emit(
+        const AuthenticationState(),
       );
     }
   }

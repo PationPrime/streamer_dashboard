@@ -39,6 +39,16 @@ class $AssetsAppLogoGen {
   List<dynamic> get values => [appLogoIco, appLogoPng];
 }
 
+class $AssetsBuildGen {
+  const $AssetsBuildGen();
+
+  /// File path: assets/build/cache.dill.track.dill
+  String get cacheDillTrack => 'assets/build/cache.dill.track.dill';
+
+  /// List of all assets
+  List<String> get values => [cacheDillTrack];
+}
+
 class $AssetsIconsGen {
   const $AssetsIconsGen();
 
@@ -204,6 +214,7 @@ class Assets {
 
   static const $AdditionalDataGen additionalData = $AdditionalDataGen();
   static const $AssetsAppLogoGen appLogo = $AssetsAppLogoGen();
+  static const $AssetsBuildGen build = $AssetsBuildGen();
   static const $AssetsIconsGen icons = $AssetsIconsGen();
   static const $AssetsImagesGen images = $AssetsImagesGen();
 }

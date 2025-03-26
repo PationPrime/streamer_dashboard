@@ -43,6 +43,7 @@ dependencies:
   live_stream_widgets:
     path: live_stream_widgets/
   encrypt: ^5.0.3
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:

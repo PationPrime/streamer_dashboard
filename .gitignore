@@ -33,6 +33,7 @@ additional_data/
 .pub-cache/
 .pub/
 /build/
+.env
 
 # Symbolication related
 app.*.symbols

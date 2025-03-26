@@ -125,6 +125,15 @@ class _AppGoRouter {
                 pageBuilder: (context, state) => FadeInPage(
                   child: const TestPage(),
                 ),
+                routes: [
+                  GoRoute(
+                    name: NavigationPath.logs,
+                    path: "/${NavigationPath.logs}",
+                    pageBuilder: (context, state) => FadeInPage(
+                      child: const TestLogsScreen(),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

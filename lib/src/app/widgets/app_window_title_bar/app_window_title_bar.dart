@@ -19,14 +19,7 @@ class _AppWindowTitleBarState extends State<AppWindowTitleBar> {
   double dragStartY = 0;
 
   Future<void> _updateWindowPosition(Offset offsetPosition) async {
-    final initialWindowPosition = await windowManager.getPosition();
-
-    await windowManager.setPosition(
-      Offset(
-        initialWindowPosition.dx + offsetPosition.dx,
-        initialWindowPosition.dy + offsetPosition.dy,
-      ),
-    );
+    await windowManager.startDragging();
   }
 
   void _maximizeMinimizeWindow() async {
@@ -41,24 +34,16 @@ class _AppWindowTitleBarState extends State<AppWindowTitleBar> {
 
   @override
   Widget build(BuildContext context) => GestureDetector(
-        onPanStart: (detail) async {
+        onPanStart: (detail) {
           dragStartX = detail.globalPosition.dx;
           dragStartY = detail.globalPosition.dy;
         },
-        onPanUpdate: (detail) async {
-          final isMaximized = await windowManager.isMaximized();
-
-          if (isMaximized) {
-            await windowManager.unmaximize();
-          }
-
-          await _updateWindowPosition(
-            Offset(
-              detail.globalPosition.dx - dragStartX,
-              detail.globalPosition.dy - dragStartY,
-            ),
-          );
-        },
+        onPanUpdate: (detail) async => await _updateWindowPosition(
+          Offset(
+            (detail.globalPosition.dx - dragStartX),
+            (detail.globalPosition.dy - dragStartY),
+          ),
+        ),
         onDoubleTap: _maximizeMinimizeWindow,
         onPanEnd: (detail) {},
         child: Container(

@@ -1,12 +1,104 @@
 import 'dart:developer' as dev;
+import 'package:equatable/equatable.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../config/environment/environment.dart';
 import '../router/navigator_key_provider.dart';
 
+class HistoryErrorLog extends HistoryLog {
+  final String? code;
+  final StackTrace? stackTrace;
+
+  HistoryErrorLog({
+    this.code,
+    this.stackTrace,
+    required super.message,
+    required super.showWhere,
+    super.debugModeOnly = true,
+    super.lexicalScope,
+    super.sign,
+    super.where,
+  });
+
+  @override
+  String get logString =>
+      '${sign ?? "😡"} ${showWhere ? (where) : ''}${lexicalScope is String ? "\n⚡ lexical scope: $lexicalScope" : ""}${code is String ? "\n💢 code: [$code]" : ""}\n💬 message: [$message]${stackTrace is StackTrace ? "\n\n🤯 stackTrace: $stackTrace 🥺" : ""}';
+}
+
+class HistoryMessageLog extends HistoryLog {
+  final bool showDedails;
+
+  HistoryMessageLog({
+    required super.message,
+    required super.showWhere,
+    super.debugModeOnly = true,
+    this.showDedails = false,
+    super.lexicalScope,
+    super.sign,
+    super.where,
+  });
+
+  @override
+  String get logString =>
+      "${sign ?? "💬"} ${showWhere ? (where) : ''}${lexicalScope is String ? " (lexical scope: $lexicalScope)" : ""}: $message";
+}
+
+sealed class HistoryLog with EquatableMixin {
+  final String message;
+  final String? lexicalScope;
+  final bool showWhere;
+  final bool debugModeOnly;
+  final String? sign;
+  final String? where;
+
+  String get logString;
+
+  const HistoryLog({
+    required this.message,
+    required this.showWhere,
+    required this.debugModeOnly,
+    this.sign,
+    this.lexicalScope,
+    this.where,
+  });
+
+  @override
+  List<Object?> get props => [
+        message,
+        showWhere,
+        debugModeOnly,
+        sign,
+        lexicalScope,
+        where,
+      ];
+}
+
+final class AppLoggerHistory {
+  AppLoggerHistory._();
+
+  static final instance = AppLoggerHistory._();
+
+  final List<HistoryLog> _logs = [];
+
+  List<HistoryLog> get logs => _logs;
+
+  void addLog(
+    HistoryLog log, {
+    String? where,
+  }) {
+    _logs.add(log);
+  }
+
+  void removeLog(HistoryLog log) {
+    _logs.remove(log);
+  }
+}
+
 @immutable
 class AppLogger {
+  static final _loggerHistory = AppLoggerHistory.instance;
+
   final String where;
 
   const AppLogger({
@@ -16,17 +108,32 @@ class AppLogger {
   void logError(
     String message, {
     String? code,
+    bool showWhere = true,
     String? lexicalScope,
     StackTrace? stackTrace,
     bool debugModeOnly = true,
     String? sign,
   }) {
-    if (!kDebugMode && debugModeOnly) {
+    if (!AppEnvironment.instance.isDev && !kDebugMode && debugModeOnly ||
+        AppEnvironment.instance.isProd) {
       return;
     }
 
     dev.log(
-      '${sign ?? "😡"} ($where)${lexicalScope is String ? "\n⚡ lexical scope: $lexicalScope" : ""}${code is String ? "\n💢 code: [$code]" : ""}\n💬 message: [$message]${stackTrace is StackTrace ? "\n\n🤯 stackTrace: $stackTrace 🥺" : ""}',
+      '${sign ?? "😡"} ${showWhere ? (where) : ''}${lexicalScope is String ? "\n⚡ lexical scope: $lexicalScope" : ""}${code is String ? "\n💢 code: [$code]" : ""}\n💬 message: [$message]${stackTrace is StackTrace ? "\n\n🤯 stackTrace: $stackTrace 🥺" : ""}',
+    );
+
+    _loggerHistory.addLog(
+      HistoryErrorLog(
+        message: message,
+        lexicalScope: lexicalScope,
+        showWhere: showWhere,
+        debugModeOnly: debugModeOnly,
+        stackTrace: stackTrace,
+        code: code,
+        sign: sign,
+        where: where,
+      ),
     );
   }
 
@@ -38,12 +145,25 @@ class AppLogger {
     bool showDedails = false,
     String? sign,
   }) {
-    if (!kDebugMode && debugModeOnly) {
+    if (!AppEnvironment.instance.isDev && !kDebugMode && debugModeOnly ||
+        AppEnvironment.instance.isProd) {
       return;
     }
 
     dev.log(
       "${sign ?? "💬"} ${showWhere ? (where) : ''}${lexicalScope is String ? " (lexical scope: $lexicalScope)" : ""}: $message",
+    );
+
+    _loggerHistory.addLog(
+      HistoryMessageLog(
+        message: message,
+        lexicalScope: lexicalScope,
+        showWhere: showWhere,
+        debugModeOnly: debugModeOnly,
+        showDedails: showDedails,
+        sign: sign,
+        where: where,
+      ),
     );
   }
 
@@ -132,7 +252,8 @@ class AppLogger {
     Map<String, dynamic> args, [
     bool debugModeOnly = true,
   ]) {
-    if (!kDebugMode && debugModeOnly) {
+    if (!AppEnvironment.instance.isDev && !kDebugMode && debugModeOnly ||
+        AppEnvironment.instance.isProd) {
       return;
     }
 

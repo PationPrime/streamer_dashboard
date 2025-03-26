@@ -61,15 +61,13 @@ class _StreamWidgetsScreenState extends State<StreamWidgetsScreen> {
                           SubsGlassWidget(
                             onTap: (widgetUrlPath) async {
                               final url =
-                                  '${streamWidgetsState.webAppHostingUri}/$widgetUrlPath';
+                                  '${streamWidgetsState.webAppHostingUri}';
 
-                              // print(url);
-
-                              // await Clipboard.setData(
-                              //   ClipboardData(
-                              //     text: url,
-                              //   ),
-                              // );
+                              await Clipboard.setData(
+                                ClipboardData(
+                                  text: url,
+                                ),
+                              );
 
                               context
                                   .read<SubsGlassWidgetController>()

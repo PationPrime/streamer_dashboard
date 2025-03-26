@@ -83,6 +83,7 @@ class PrimaryButton extends StatelessWidget {
                     width: 1,
                   ),
           ),
+          alignment: Alignment.center,
           child: loading
               ? Padding(
                   padding: padding,
@@ -96,22 +97,20 @@ class PrimaryButton extends StatelessWidget {
                     ),
                   ),
                 )
-              : Center(
-                  child: customContent ??
-                      Padding(
-                        padding: padding,
-                        child: title is! String
-                            ? const SizedBox()
-                            : _PrimaryButtonTitle(
-                                fontWeight500: fontWeight500,
-                                title: title,
-                                titleStyle: titleStyle,
-                                icon: icon,
-                                titleColor: titleColor,
-                                counter: counter,
-                              ),
-                      ),
-                ),
+              : customContent ??
+                  Padding(
+                    padding: padding,
+                    child: title is! String
+                        ? const SizedBox()
+                        : _PrimaryButtonTitle(
+                            fontWeight500: fontWeight500,
+                            title: title,
+                            titleStyle: titleStyle,
+                            icon: icon,
+                            titleColor: titleColor,
+                            counter: counter,
+                          ),
+                  ),
         ),
       );
 }
